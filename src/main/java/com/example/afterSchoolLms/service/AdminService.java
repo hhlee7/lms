@@ -6,7 +6,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
+import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -67,4 +71,30 @@ public class AdminService {
 	public int removePayment(int enrollmentId) {
 		return adminMapper.removePayment(enrollmentId);
 	}
+
+	// 수업 리스트 조회
+	public List<Map<String, Object>> getLectureList() {
+		return adminMapper.selectLectureList();
+	}
+
+	// 수업 등록
+	public int createLecture(Lecture lecture) {
+		return adminMapper.createLecture(lecture);
+	}
+	
+	// 강의실 리스트 조회
+	public List<Classroom> getClassroomList() {
+		return adminMapper.selectClassroomList();
+	}
+
+	// 강사 리스트 조회
+	public List<User> getTeacherList() {
+		return adminMapper.selectTeacherList();
+	}
+
+	// 해당 수업의 강사 배정
+	public int createTeacherAssignment(TeacherAssignment teacherAssignment) {
+		return adminMapper.createTeacherAssignment(teacherAssignment);
+	}
+
 }

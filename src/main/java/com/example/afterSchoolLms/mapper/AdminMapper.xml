@@ -13,7 +13,8 @@
 	
 	<!-- 과목 추가 -->
 	<insert id="createSubject" parameterType="com.example.afterSchoolLms.dto.Subject">
-		INSERT INTO subject (name, description) VALUES (#{subjectName}, #{description});
+		INSERT INTO subject (name, description)
+		VALUES (#{subjectName}, #{description});
 	</insert>
 	
 	<!-- 과목 수정 페이지에 표기할 데이터를 subjectId를 통해 조회 -->
@@ -29,13 +30,15 @@
 	
 	<!-- 해당 과목의 데이터 수정 -->
 	<update id="modifySubject" parameterType="com.example.afterSchoolLms.dto.Subject">
-		UPDATE subject SET name = #{subjectName}, description = #{description}
+		UPDATE subject SET
+		name = #{subjectName}, description = #{description}
 		WHERE subject_id = #{subjectId};
 	</update>
 	
 	<!-- 과목 삭제 -->
 	<delete id="removeSubject" parameterType="int">
-		DELETE FROM subject WHERE subject_id = #{subjectId};
+		DELETE FROM subject
+		WHERE subject_id = #{subjectId};
 	</delete>
 	
 	<!-- 수강 신청 내역 조회 -->
@@ -55,10 +58,11 @@
 	
 	<!-- 수강료 납부 내역 조회 -->
 	<select id="selectPaymentList" resultType="map">
-		SELECT sb.name AS subjectName,
-		       st.name AS studentName,
-		       p.amount,
-		       p.paid_at AS paidAt
+		SELECT
+			sb.name AS subjectName,
+			st.name AS studentName,
+			p.amount,
+			p.paid_at AS paidAt
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
@@ -68,11 +72,11 @@
 	
 	<!-- 수강 신청 취소 내역 조회 -->
 	<select id="selectEnrollmentCancelList">
-		SELECT sb.name AS subjectName,
-		       st.name AS studentName,
-		       st.phone
-		FROM
-		(SELECT * FROM student_enrollment WHERE STATUS = 'CANCLE') se
+		SELECT
+			sb.name AS subjectName,
+			st.name AS studentName,
+			st.phone
+		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCLE') se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN user st ON se.student_id = st.user_id
@@ -80,10 +84,11 @@
 	
 	<!-- 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회) -->
 	<select id="selectRefundList" resultType="map">
-		SELECT se.enrollment_id AS enrollmentId,
-				 u.name AS studentName,
-				 sb.name AS subjectName,
-				 se.status
+		SELECT
+			se.enrollment_id AS enrollmentId,
+			u.name AS studentName,
+			sb.name AS subjectName,
+			se.status
 		FROM (SELECT * FROM student_enrollment WHERE STATUS IN ('REFUNDWAIT', 'REFUND')) se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
@@ -98,6 +103,59 @@
 	
 	<!-- 환불 처리 후 payment 테이블의 결제 데이터 삭제 -->
 	<delete id="removePayment" parameterType="int">
-		DELETE FROM payment WHERE enrollment_id = #{enrollmentId}
+		DELETE FROM payment
+		WHERE enrollment_id = #{enrollmentId}
 	</delete>
+	
+	<!-- 수업 리스트 조회 -->
+	<select id="selectLectureList" resultType="map">
+		SELECT
+			lt.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			u.name AS teacherName,
+			cr.name AS classroomName,
+			cr.location AS location,
+			lt.start_time AS startTime,
+			lt.end_time AS endTime,
+			lt.day_of_week AS 'dayOfWeek',
+			lt.start_date AS startDate,
+			lt.end_date AS endDate
+		FROM lecture lt
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+	</select>
+	
+	<!-- 수업 등록 -->
+	<insert id="createLecture" useGeneratedKeys="true" keyProperty="lectureId" parameterType="com.example.afterSchoolLms.dto.Lecture">
+		INSERT INTO lecture (
+			subject_id, classroom_id, recruited, amount, start_time, end_time, day_of_week, start_date, end_date)
+		VALUES (#{subjectId}, #{classroomId}, #{recruited}, #{amount}, #{startTime}, #{endTime}, #{dayOfWeek}, #{startDate}, #{endDate})
+	</insert>
+	
+	<!-- 강의실 리스트 조회 -->
+	<select id="selectClassroomList" resultType="com.example.afterSchoolLms.dto.Classroom">
+		SELECT
+			classroom_id AS classroomId,
+			NAME AS classroomName,
+			location,
+			capacity
+		FROM classroom
+	</select>
+	
+	<!-- 강사 리스트 조회 -->
+	<select id="selectTeacherList" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName
+		FROM user
+		WHERE role_id = 3
+	</select>
+	
+	<!-- 해당 수업의 강사 배정 등록 -->
+	<insert id="createTeacherAssignment" parameterType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		INSERT INTO teacher_assignment (lecture_id, teacher_id)
+		VALUES (#{lectureId}, #{teacherId})
+	</insert>
 </mapper>

@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
+import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.service.AdminService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -127,7 +131,6 @@ public class AdminController {
 		if(row != 1) {
 			log.info("update error");
 			return "redirect:/admin/refundList";
-			
 		}
 		
 	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
@@ -140,5 +143,62 @@ public class AdminController {
 		}
 		
 		return "redirect:/admin/refundList";
+	}
+	
+	// 수업 리스트 조회
+	@GetMapping("admin/lectureList")
+	public String lectureList(Model model) {
+		List<Map<String, Object>> list = adminService.getLectureList();
+		model.addAttribute("lectureList", list);
+		return "admin/lectureList";
+	}
+	
+	// 수업 등록 페이지
+	@GetMapping("admin/createLecture")
+	public String createLecture(Model model) {
+		// 등록된 과목 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		model.addAttribute("subjectList", subjectList);
+		
+		// 등록된 강의실 조회
+		List<Classroom> classroomList = adminService.getClassroomList();
+		model.addAttribute("classroomList", classroomList);
+		
+		// 등록된 강사 조회
+		List<User> teacherList = adminService.getTeacherList();
+		model.addAttribute("teacherList", teacherList);
+		
+		return "admin/createLecture";
+	}
+	
+	// 수업 등록
+	@PostMapping("admin/createLecture")
+	public String createLecture(Lecture lecture, TeacherAssignment teacherAssignment) {
+		// 수업 등록 폼에서 전달된 데이터 확인용 출력
+		log.info(lecture.toString());
+		
+		// 수업 등록
+		int row = adminService.createLecture(lecture);
+		
+		if(row != 1) {
+			log.info("insert error");
+			return "redirect:/admin/lectureList";
+		}
+		
+		// DB에서 생성된 PK값(lectureId) 확인용 출력
+		log.info("생성된 lectureId: " + lecture.getLectureId());
+		
+		// 강사 배정 정보 준비
+		teacherAssignment.setLectureId(lecture.getLectureId());
+		
+		// DB에 강사 배정 정보 등록
+		int row2 = adminService.createTeacherAssignment(teacherAssignment);
+		
+		if(row2 != 1) {
+			log.info("강사 배정 insert 실패");
+			return "redirect:/admin/lectureList";
+		}
+		
+		return "redirect:/admin/lectureList";
 	}
 }

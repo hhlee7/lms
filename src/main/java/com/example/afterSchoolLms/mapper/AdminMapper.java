@@ -5,7 +5,11 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
+import com.example.afterSchoolLms.dto.User;
 
 @Mapper
 public interface AdminMapper {
@@ -41,4 +45,20 @@ public interface AdminMapper {
 
 	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
 	int removePayment(int enrollmentId);
+
+	// 수업 리스트 조회
+	List<Map<String, Object>> selectLectureList();
+	
+	// 수업 등록
+	int createLecture(Lecture lecture);
+
+	// 강의실 리스트 조회
+	List<Classroom> selectClassroomList();
+
+	// 강사 리스트 조회
+	List<User> selectTeacherList();
+
+	// 해당 수업의 강사 배정
+	int createTeacherAssignment(TeacherAssignment teacherAssignment);
+
 }
