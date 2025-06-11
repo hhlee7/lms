@@ -123,8 +123,37 @@ import lombok.extern.slf4j.Slf4j;
 	        return "redirect:/teacher/profile";
 	    }
 
-
-
+	 // 교보제 조회
+	    @GetMapping("/material/list")
+	    public String materialList(HttpSession session, Model model) {
+	    	User loginUser = (User) session.getAttribute("loginUser");
+	        String teacherId = loginUser.getUserId();
+	        
+	        List<Map<String, Object>> materialList = teacherMapper.selectMaterialListByTeacher(teacherId);
+	        model.addAttribute("materialList", materialList);
+	        return "teacher/materialList";
+	    }
+	    
+	 // 교보제 요청 폼
+	    @GetMapping("/material/request")
+	    public String requestMaterialForm(HttpSession session, Model model) {
+	    	User loginUser = (User) session.getAttribute("loginUser");
+	        String teacherId = loginUser.getUserId();
+	    	
+	    	// 강사가 배정된 강좌만 뽑기 (드롭다운)
+	        List<Map<String, Object>> lectureList = teacherMapper.selectLectureListByTeacher(teacherId);
+	        model.addAttribute("lectureList", lectureList);
+	   
+	        return "teacher/materialRequestForm";
+	    }
+	    
+	// 교보제 요청 처리
+	    @PostMapping("/material/request")
+	    public String insertMaterialRequest(@RequestParam Map<String, Object> paramMap, RedirectAttributes ra) {
+	    	teacherMapper.insertMaterialRequest(paramMap);
+	    	ra.addFlashAttribute("success", "교보제 요청이 등록되었습니다.");
+	    	return "redirect:/teacher/main";
+	    }
 
 	        
 }

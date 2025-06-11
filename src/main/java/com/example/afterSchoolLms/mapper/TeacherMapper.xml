@@ -80,6 +80,7 @@
     INNER JOIN teacher_history th ON u.user_id = th.teacher_id
     WHERE u.user_id = #{teacherId}
 </select>
+
 <!-- 개인정보수정-->
 <update id="updateTeacherProfile">
     UPDATE user
@@ -89,6 +90,26 @@
     WHERE user_id = #{teacherId}
 </update>
 
+<!-- 교보제 조회 -->
+<select id="selectMaterialListByTeacher" resultType="map">
+    SELECT 
+        m.material_title AS materialTitle,
+        m.total_count AS totalCount,
+        m.used_count AS usedCount,
+        s.name AS subjectName,
+        l.start_time AS startTime,
+        l.day_of_week AS dayOfWeek
+    FROM material m
+    INNER JOIN lecture l ON m.lecture_id = l.lecture_id
+    INNER JOIN subject s ON l.subject_id = s.subject_id
+    INNER JOIN teacher_assignment ta ON ta.lecture_id = l.lecture_id
+    WHERE ta.teacher_id = #{teacherId}
+</select>
 
+<!-- 교보제 요청 -->
+<insert id="insertMaterialRequest">
+    INSERT INTO material_request (lecture_id, content)
+    VALUES (#{lectureId}, #{content})
+</insert>
 
 </mapper>
