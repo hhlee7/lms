@@ -8,5 +8,7 @@
 <body>
 	<h1>admin Test</h1>
 	${loginUser.userName} 님 환영합니다.
+	
+	<div><a href="/admin/subjectManagement">과목 관리</a></div>
 </body>
 </html>
