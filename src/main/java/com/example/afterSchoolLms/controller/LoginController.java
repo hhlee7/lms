@@ -35,7 +35,7 @@ public class LoginController {
 			case 1:							// 관리자
 				return "/admin/test";
 			case 2:							// 학생
-				return "/student/test";
+				return "/student/main";
 			case 3:							// 강사
 				return "/teacher/test";
 			case 4:							// 학부모
