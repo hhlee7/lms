@@ -11,5 +11,10 @@ import com.example.afterSchoolLms.mapper.LoginMapper;
 @Service
 public class LoginService {
 	
-	@Autowired LoginMapper userMapper;
+	@Autowired LoginMapper loginMapper;
+	
+	public User login(User user) {
+		User loginUser = loginMapper.login(user);
+		return loginUser;
+	}
 }

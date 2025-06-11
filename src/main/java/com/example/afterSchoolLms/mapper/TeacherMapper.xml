@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.afterSchoolLms.mapper.TeacherMapper">
+ 
+<!-- 수업조회 --> 
+<select id="selectLectureListByTeacher" resultType="map">
+    SELECT 
+    	l.lecture_id AS lectureId,
+        l.start_time AS startTime,
+        l.end_time AS endTime,
+        l.day_of_week AS dayOfWeek,
+        l.start_date AS startDate,
+        l.end_date AS endDate,
+        s.name AS subjectName,
+        c.name AS classroomName,
+        t1.cnt AS studentCount
+    FROM lecture l
+    INNER JOIN subject s ON l.subject_id = s.subject_id
+    INNER JOIN teacher_assignment ta ON ta.lecture_id = l.lecture_id
+    INNER JOIN classroom c ON c.classroom_id = l.classroom_id
+    INNER JOIN (
+        SELECT COUNT(*) cnt, l.lecture_id
+        FROM lecture l
+        INNER JOIN student_enrollment se ON se.lecture_id = l.lecture_id
+        INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
+        GROUP BY l.lecture_id
+    ) t1 ON l.lecture_id = t1.lecture_id
+    WHERE ta.teacher_id = #{teacherId}
+</select>
+
+<!-- 학생 조회 -->
+<select id="selectStudentListByTeacher" resultType="map">
+    SELECT 
+        u.name AS studentName, 
+        l.start_time AS startTime, 
+        l.end_time AS endTime, 
+        l.day_of_week AS dayOfWeek, 
+        s.name AS subjectName
+    FROM payment p
+    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+    INNER JOIN user u ON se.student_id = u.user_id
+    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+    INNER JOIN subject s ON s.subject_id = l.subject_id
+    WHERE se.lecture_id IN (
+        SELECT lecture_id
+        FROM teacher_assignment 
+        WHERE teacher_id = #{teacherId}
+    )
+</select>
+
+<!-- 배차 조회 -->
+<select id="selectStudentVehicleByTeacher" resultType="map">
+    SELECT 
+        u.name AS studentName,
+        l.start_time AS startTime,
+        l.end_time AS endTime,
+        l.day_of_week AS dayOfWeek,
+        s.name AS subjectName,
+        v.vehicle_no AS vehicleNo,
+        u.address
+    FROM payment p 
+    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+    INNER JOIN user u ON se.student_id = u.user_id
+    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+    INNER JOIN subject s ON s.subject_id = l.subject_id
+    INNER JOIN vehicle_assignment va ON l.lecture_id = va.lecture_id
+    INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+    WHERE se.lecture_id IN (
+        SELECT lecture_id
+        FROM teacher_assignment 
+        WHERE teacher_id = #{teacherId}
+    )
+</select>
+
+<!-- 개인정보조회-->
+<select id="selectTeacherProfile" resultType="map">
+    SELECT u.user_id AS teacherId, u.name, u.phone, u.address, u.birth,
+           th.last_education AS lastEducation, th.personal_history AS personalHistory
+    FROM user u
+    INNER JOIN teacher_history th ON u.user_id = th.teacher_id
+    WHERE u.user_id = #{teacherId}
+</select>
+<!-- 개인정보수정-->
+<update id="updateTeacherProfile">
+    UPDATE user
+    SET phone = #{phone},
+        address = #{address},
+        password = #{password}
+    WHERE user_id = #{teacherId}
+</update>
+
+
+
+</mapper>

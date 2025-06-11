@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.afterSchoolLms.mapper.LoginMapper">
+	<select id="login" resultType="com.example.afterSchoolLms.dto.User" parameterType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			role_id AS roleId,
+			NAME AS userName,
+			email, password, phone, address,
+			created_at AS createdAt,
+			birth
+		FROM user
+		WHERE user_id = #{userId} AND PASSWORD = #{password};
+	</select>
 </mapper>
