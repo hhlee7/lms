@@ -33,6 +33,6 @@
 		</tr>
 	</table>
 	
-	<a href="/student/updateInformation">개인정보 수정</a>
+	<a href="/student/updateInformation">비밀번호 수정</a>
 </body>
 </html>
