@@ -10,13 +10,13 @@
 	<div class="header">
 		<div>방과후교육</div>
 		<div><a href="/parent/notice">공지사항</a></div>
-		<div><a href="">과목소개</a></div>
-		<div><a href="">강사소개</a></div>
-		<div><a href="">수강신청</a></div>
-		<div><a href="">수업료 납부</a></div>
-		<div><a href="">자녀 배차조회</a></div>
-		<div><a href="">사진첩</a></div>
-		<div><a href="">Q&A</a></div>
+		<div><a href="/parent/subjectInfo">과목소개</a></div>
+		<div><a href="/parent/teacherInfo">강사소개</a></div>
+		<div><a href="/parent/">수강신청</a></div>
+		<div><a href="/parent/">수업료 납부</a></div>
+		<div><a href="/parent/">자녀 배차조회</a></div>
+		<div><a href="/parent/">사진첩</a></div>
+		<div><a href="/parent/">Q&A</a></div>
 		<div><a href="/parent/modifyInfo">개인정보 수정</a></div>
 	</div>
 </body>
