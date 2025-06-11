@@ -2,4 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.afterSchoolLms.mapper.AdminMapper">
 
+	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			role_id AS roleId,
+			NAME AS userName,
+			email, phone, address,
+			created_at AS createdAt,
+			birth
+		FROM user
+		<where>
+		    <if test="searchType != 'all'">
+		        role_id = #{roleType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY roleId
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<select id="getTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+		FROM user
+		<where>
+		    <if test="searchType != 'all'">
+		        role_id = #{roleType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
+	<select id="selectRoleList" parameterType="com.example.afterSchoolLms.dto.Role">
+		SELECT
+			role_id AS roleId,
+			role_name AS roleName
+		FROM role
+		ORDER BY role_id
+	</select>
+	
 </mapper>
