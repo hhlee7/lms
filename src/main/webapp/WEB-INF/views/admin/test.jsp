@@ -10,5 +10,9 @@
 	${loginUser.userName} 님 환영합니다.
 	
 	<div><a href="/admin/subjectManagement">과목 관리</a></div>
+	<div><a href="/admin/studentEnrollmentList">수강 신청 현황</a></div>
+	<div><a href="/admin/paymentList">수업료 납부 내역</a></div>
+	<div><a href="/admin/enrollmentCancelList">수강 신청 취소 내역</a></div>
+	<div><a href="/admin/refundList">환불 내역</a></div>
 </body>
 </html>

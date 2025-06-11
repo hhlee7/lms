@@ -32,4 +32,72 @@
 		UPDATE subject SET name = #{subjectName}, description = #{description}
 		WHERE subject_id = #{subjectId};
 	</update>
+	
+	<!-- 과목 삭제 -->
+	<delete id="removeSubject" parameterType="int">
+		DELETE FROM subject WHERE subject_id = #{subjectId};
+	</delete>
+	
+	<!-- 수강 신청 내역 조회 -->
+	<select id="selectStudentEnrollmentList" resultType="map">
+		SELECT 
+			se.enrollment_id AS enrollmentId,
+			se.student_id AS studentId,
+			u.name AS studentName,
+			sb.name AS subjectName,
+			se.enrolled_at AS enrolledAt,
+			se.status
+		FROM student_enrollment se
+		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+	</select>
+	
+	<!-- 수강료 납부 내역 조회 -->
+	<select id="selectPaymentList" resultType="map">
+		SELECT sb.name AS subjectName,
+		       st.name AS studentName,
+		       p.amount,
+		       p.paid_at AS paidAt
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+	</select>
+	
+	<!-- 수강 신청 취소 내역 조회 -->
+	<select id="selectEnrollmentCancelList">
+		SELECT sb.name AS subjectName,
+		       st.name AS studentName,
+		       st.phone
+		FROM
+		(SELECT * FROM student_enrollment WHERE STATUS = 'CANCLE') se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+	</select>
+	
+	<!-- 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회) -->
+	<select id="selectRefundList" resultType="map">
+		SELECT se.enrollment_id AS enrollmentId,
+				 u.name AS studentName,
+				 sb.name AS subjectName,
+				 se.status
+		FROM (SELECT * FROM student_enrollment WHERE STATUS IN ('REFUNDWAIT', 'REFUND')) se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+	</select>
+	
+	<!-- 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리 -->
+	<update id="changeRefund" parameterType="int">
+		UPDATE student_enrollment SET status = 'REFUND'
+		WHERE status = 'REFUNDWAIT' AND enrollment_id = #{enrollmentId}
+	</update>
+	
+	<!-- 환불 처리 후 payment 테이블의 결제 데이터 삭제 -->
+	<delete id="removePayment" parameterType="int">
+		DELETE FROM payment WHERE enrollment_id = #{enrollmentId}
+	</delete>
 </mapper>

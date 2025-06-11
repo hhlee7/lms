@@ -14,7 +14,12 @@
 		<tr>
 			<td>${subject.subjectName}</td>
 			<td><a href="/admin/modifySubject?subjectId=${subject.subjectId}">수정</a></td>
-			<td><a href="/admin/removeSubject">삭제</a></td>
+			<td>
+				<form method="post" action="/admin/removeSubject">
+					<input type="hidden" name="subjectId" value="${subject.subjectId}">
+					<button type="submit">삭제</button>
+				</form>
+			</td>
 		</tr>
 	</c:forEach>
 	</table>

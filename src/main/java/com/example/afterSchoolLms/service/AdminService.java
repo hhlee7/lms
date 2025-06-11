@@ -1,6 +1,7 @@
 package com.example.afterSchoolLms.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class AdminService {
 	}
 	
 	// 과목 추가
-	public void createSubject(Subject subject) {
-		adminMapper.createSubject(subject);
+	public int createSubject(Subject subject) {
+		return adminMapper.createSubject(subject);
 	}
 	
 	// 과목 수정 페이지에 표기할 데이터 값을 subjectId를 통해 조회
@@ -28,7 +29,42 @@ public class AdminService {
 	}
 
 	// 해당 과목의 데이터 수정
-	public void modifySubject(Subject subject) {
-		adminMapper.modifySubject(subject);
+	public int modifySubject(Subject subject) {
+		return adminMapper.modifySubject(subject);
+	}
+	
+	// 과목 삭제
+	public int removeSubject(int subjectId) {
+		return adminMapper.removeSubject(subjectId);
+	}
+	
+	// 수강 신청 내역 조회
+	public List<Map<String, Object>> getStudentEnrollmentList() {
+		return adminMapper.selectStudentEnrollmentList();
+	}
+
+	// 수강료 납부 내역 조회
+	public List<Map<String, Object>> getPaymentList() {
+		return adminMapper.selectPaymentList();
+	}
+
+	// 수강 신청 취소 내역 조회
+	public List<Map<String, Object>> getEnrollmentCancelList() {
+		return adminMapper.selectEnrollmentCancelList();
+	}
+
+	// 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회)
+	public List<Map<String, Object>> getRefundList() {
+		return adminMapper.selectRefundList();
+	}
+
+	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
+	public int changeRefund(int enrollmentId) {
+		return adminMapper.changeRefund(enrollmentId);
+	}
+
+	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
+	public int removePayment(int enrollmentId) {
+		return adminMapper.removePayment(enrollmentId);
 	}
 }
