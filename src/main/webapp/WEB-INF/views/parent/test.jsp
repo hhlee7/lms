@@ -6,6 +6,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<h1>parent Test</h1>
+	${loginUser.userName} 님 환영합니다.
 </body>
 </html>
