@@ -6,6 +6,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<h1>개인정보 수정</h1>
+	
 </body>
 </html>

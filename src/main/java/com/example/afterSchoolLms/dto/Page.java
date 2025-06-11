@@ -12,17 +12,11 @@ public class Page {
 	private String searchType; // 검색타입
 	private String searchName; // 검색할 name
 	
-	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType, String empId) {
+	public Page(int rowPerPage, int currentPage, int totalCount) {
 		this.rowPerPage = rowPerPage;
 		this.currentPage = currentPage;
 		this.totalCount = totalCount;
-		this.searchWord= searchWord;
-		this.searchType = searchType;
 		this.beginRow = (currentPage - 1) * rowPerPage;
-		
-		if("name".equals(searchType)) {
-			this.searchName = searchWord;
-		}
 	}
 	
 	public int getLastPage() {
