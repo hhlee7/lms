@@ -38,8 +38,8 @@
 <body>
 	<h1>회원 관리 페이지 입니다.</h1>
 	${loginUser.userName} 님 환영합니다.
-	
-	<div>회원 리스트</div>
+	<br>
+	<div><a href="userInsert">회원 추가</a></div>
 	역할 선택 : <select name="targetRole" id="targetRole">
 		<option id="targetRole" value="all">전체</option>
 		<c:if test="${roleList != null}">
@@ -52,7 +52,10 @@
 		</c:if>
 	</select>
 	
+	<br>
+	
 	<!-- 회원 리스트 출력 -->
+	<div>회원 리스트</div>
 	<c:if test="${userList != null}">
 		<table border="1">
 			<tr>
@@ -64,6 +67,7 @@
 				<th>전화번호</th>
 				<th>주소</th>
 				<th>아이디 생성일</th>
+				<th>자세히</th>
 			</tr>
 			<c:forEach var="user" items="${userList}">
 			<tr>
@@ -75,6 +79,7 @@
 				<td>${user.phone}</td>
 				<td>${user.address}</td>
 				<td>${user.createdAt}</td>
+				<td><a href="userOne?userId=${user.userId}">자세히</a></td>
 			</tr>
 			</c:forEach>
 		</table>

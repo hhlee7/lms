@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.afterSchoolLms.mapper.AdminMapper">
 
+	<!-- ======= SELECT ======= -->
+	<!-- 회원 리스트 조회 (페이징, 검색 가능) -->
 	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.User">
 		SELECT
 			user_id AS userId,
@@ -23,6 +25,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
+	<!-- 유저 리스트 전체 데이터 가져오기 -->
 	<select id="getTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
 		SELECT COUNT(*) 
 		FROM user
@@ -36,6 +39,7 @@
 		</where>
 	</select>
 	
+	<!-- 역할 리스트 조회 -->
 	<select id="selectRoleList" parameterType="com.example.afterSchoolLms.dto.Role">
 		SELECT
 			role_id AS roleId,
@@ -43,5 +47,92 @@
 		FROM role
 		ORDER BY role_id
 	</select>
+	
+	<!-- 아이디로 회원 조회 -->
+	<select id="selectUserByUserId" parameterType="String" resultType="map">
+		SELECT 
+			u.user_id AS userId,
+			u.name AS userName,
+			u.role_id AS roleId,
+			r.role_name AS roleName,
+			u.email,
+			u.phone,
+			u.address,
+			u.birth
+		FROM user u
+		INNER JOIN role r ON r.role_id = u.role_id
+		WHERE u.user_id = #{userId}
+	</select>
+	
+	<!-- 부모의 아이디로 자녀 회원 조회 -->
+	<select id="selectUserByParentId" parameterType="String" resultType="map">
+		SELECT
+			st.user_id AS userId,
+			st.name AS userName,
+			st.role_id AS roleId,
+			r.role_name AS roleName,
+			st.email,
+			st.phone,
+			st.address,
+			st.birth
+		FROM
+			(SELECT * FROM user WHERE user_id = #{parentId}) pa
+		INNER JOIN student_parent sp ON pa.user_id = sp.parent_id
+		INNER JOIN user st ON sp.student_id = st.user_id
+		INNER JOIN role r ON r.role_id = st.role_id
+	</select>
+	
+	<!-- 자녀의 아이디로 학부모 회원 조회 -->
+	<select id="selectUserByStudentId" parameterType="String" resultType="map">
+		SELECT
+			pa.user_id AS userId,
+			pa.name AS userName,
+			pa.role_id AS roleId,
+			r.role_name AS roleName,
+			pa.email,
+			pa.phone,
+			pa.address,
+			pa.birth
+		FROM
+			(SELECT * FROM user WHERE user_id = #{studentId}) st
+		INNER JOIN student_parent sp ON st.user_id = sp.student_id
+		INNER JOIN user pa ON sp.parent_id = pa.user_id
+		INNER JOIN role r ON r.role_id = pa.role_id
+	</select>
+	
+	<!-- ======= UPDATE ======= -->
+	<update id="modifyUser" parameterType="com.example.afterSchoolLms.dto.User">
+	    UPDATE user
+	    <set>
+	        <if test="roleId != null">role_id = #{roleId},</if>
+	        <if test="email != null">email = #{email},</if>
+	        <if test="userName != null">name = #{userName},</if>
+	        <if test="phone != null">phone = #{phone},</if>
+	        <if test="address != null">address = #{address},</if>
+	        <if test="birth != null">birth = #{birth},</if>
+	    </set>
+	    WHERE user_id = #{userId}
+	</update>
+
+	
+	
+	<!-- ======= INSERT ======= -->
+	<insert id="insertUser" parameterType="com.example.afterSchoolLms.dto.User">
+		INSERT INTO user(
+			user_id, role_id, NAME, email, PASSWORD, phone, address, birth
+		) VALUES(
+			#{userId}, #{roleId}, #{userName}, #{email}, #{password}, #{phone}, #{address}, #{birth}
+		)
+	</insert>
+	
+	<insert id="insertStudentParent" parameterType="com.example.afterSchoolLms.dto.StudentParent">
+		INSERT INTO student_parent(
+			student_id, parent_id
+		) VALUES(
+			#{studentId}, #{parentId}
+		)
+	</insert>
+	
+	<!-- ======= DELETE ======= -->
 	
 </mapper>
