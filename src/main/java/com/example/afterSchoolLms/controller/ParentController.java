@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
@@ -104,7 +105,6 @@ public class ParentController {
 	    return "/parent/modifyInfo";
 	}
 
-	
 	// 학부모 비밀번호 수정
 	@PostMapping("/parent/modifyInfo")
 	public String updateInformation(HttpSession session, Model model
@@ -116,6 +116,54 @@ public class ParentController {
 		parentService.updatePw(userId, currentPw, updatePw);
 		return "redirect:/login";
 	}
+	
+	// 자녀 배차 조회
+	@GetMapping("/parent/vehicleInfo")
+	public String vehicleInfo(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		String userId = loginUser.getUserId();
+		Map<String, Object> vehicleInfo = parentService.getVehicleInfo(userId);
+		model.addAttribute("vehicleInfo", vehicleInfo);
+		return "/parent/vehicleInfo";
+	}
+	
+	//자녀 수업 조회
+	@GetMapping("/parent/subject")
+	public String subjectInfo(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		Map<String, Object> subject = parentService.getSubjectInfo(userId);
+		model.addAttribute("subject", subject);
+		
+		return "/parent/subject";
+	}
+	
+	// 자녀 출석 조회
+	@GetMapping("/parent/attendance")
+	public String attendance(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		List<Attendance> attendance = parentService.getAttendance(userId);
+		model.addAttribute("attendance", attendance);
+		
+		return "/parent/attendance";
+	}
+	
+	
 	
 	// 강사 소개 페이지
 	@GetMapping("/parent/teacherInfo")

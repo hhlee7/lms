@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
@@ -30,6 +31,15 @@ public interface ParentMapper {
 
 	// 부모개인정보 수정시 자녀 정보 표시
 	Map<String, Object> studentInfo(String userId);
+	
+	// 자녀 탑승 차량 조회
+	Map<String, Object> vehicleInfo(String userId);
+
+	// 자녀 수업 조회
+	Map<String, Object> subjectInfo(String userId);
+
+	// 자녀 출결 조회
+	List<Attendance> attendance(String userId);
 
 
 }

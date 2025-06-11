@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
@@ -43,9 +44,25 @@ public class ParentService {
 	public String checkPw(String id, String pw) {
 		return parentMapper.checkPw(id, pw);
 	}
-
+	
+	// 부모 개인정보 수정 페이지에 학생 정보 표시
 	public Map<String, Object> getStudentInfo(String userId) {
 	    return parentMapper.studentInfo(userId);
+	}
+	
+	// 자녀 탑승 차량 조회
+	public Map<String, Object> getVehicleInfo(String userId) {
+	    return parentMapper.vehicleInfo(userId);
+	}
+
+	// 자녀 수업 조회
+	public Map<String, Object> getSubjectInfo(String userId) {
+		return parentMapper.subjectInfo(userId);
+	}
+
+	// 자녀 출결 조회
+	public List<Attendance> getAttendance(String userId) {
+		return parentMapper.attendance(userId);
 	}
 
 }
