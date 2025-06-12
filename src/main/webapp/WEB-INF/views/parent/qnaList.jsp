@@ -35,7 +35,9 @@
 </head>
 <body>
   <h2>QnA 목록</h2>
-
+	
+	<a href="/parent/insertQna?userId=${userId}">질문하기</a>
+	
 	<c:forEach var="qna" items="${qnaList}">
 		<div class="qna-box">
 				<div class="question">Q: ${qna.question}</div>
@@ -47,16 +49,22 @@
 				<fmt:parseDate value="${qna.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
 				<fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd"/>
 			</div>
-			<div class="actions">
-				<form action="/parent/qnaEdit" method="get" style="display:inline;">
-					<input type="hidden" name="qnaId" value="${qna.qnaId}"/>
-					<button type="submit">수정</button>
-				</form>
-				<form action="/parent/qnaDelete" method="post" style="display:inline;">
-					<input type="hidden" name="qnaId" value="${qna.qnaId}"/>
-					<button type="submit">삭제</button>
-				</form>
-			</div>
+			
+			<c:if test="${qna.parentId == userId and (qna.answer == null or empty qna.answer)}">
+				<div class="actions">
+					<form action="/parent/modifyQna" method="get" style="display:inline;">
+						<input type="hidden" name="qnaId" value="${qna.qnaId}">
+						<input type="hidden" name="userId" value="${userId}">
+						<button type="submit">수정</button>
+					</form>
+					<form action="/parent/qnaDelete" method="post" style="display:inline;">
+						<input type="hidden" name="qnaId" value="${qna.qnaId}">
+						<input type="hidden" name="userId" value="${userId}">
+						<button type="submit">삭제</button>
+					</form>
+				</div>
+			</c:if>
+			
 		</div>
 	</c:forEach>
 	

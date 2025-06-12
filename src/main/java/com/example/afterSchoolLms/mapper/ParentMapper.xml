@@ -184,8 +184,28 @@
 		VALUES(#{studentId}, #{lectureId}, 'PENDING', NOW())
 	</insert>
 	
+	<!-- qna목록 -->
 	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">
-		SELECT qna_id AS qnaId, question, answer, created_at AS createdAt
+		SELECT qna_id AS qnaId, parent_id AS parentId, question, answer, created_at AS createdAt
 		FROM qna
 	</select>
+	
+	<!-- qna 등록 -->
+	<insert id="insertQna">
+		INSERT INTO qna(parent_id, question) 
+		VALUES(#{userId}, #{question})
+	</insert>
+	
+	<!-- qna 수정 -->
+	<update id="modifyQna">
+		update qna set question = #{question}
+		where qna_id = #{qnaId}
+	</update>
+	
+	<!-- qna 삭제 -->
+	<delete id="qnaDelete">
+		DELETE 
+		FROM qna 
+		WHERE qna_id = #{qnaId}
+	</delete>
 </mapper>

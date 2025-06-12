@@ -58,4 +58,11 @@ public interface ParentMapper {
 	// qna게시판
 	List<Qna> qnaList(int beginRow, int size);
 
+	// qna 질문
+	int insertQna(String userId, String question);
+
+	int modifyQna(int qnaId, String question);
+
+	int qnaDelete(int qnaId);
+
 }

@@ -81,5 +81,20 @@ public class ParentService {
 	public List<Qna> qnaList(int beginRow, int size) {
 		return parentMapper.qnaList(beginRow, size);
 	}
+	
+	// qna 질문
+	public int insertQna(String userId, String question) {
+		return parentMapper.insertQna(userId, question);
+	}
+
+	public int modifyQna(int qnaId, String question) {
+		return parentMapper.modifyQna(qnaId, question);
+	}
+
+	public int qnaDelete(int qnaId) {
+		return parentMapper.qnaDelete(qnaId);
+	}
+
+
 
 }

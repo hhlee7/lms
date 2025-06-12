@@ -22,6 +22,8 @@ import com.example.afterSchoolLms.service.ParentService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Slf4j
 @Controller
@@ -230,6 +232,65 @@ public class ParentController {
 		model.addAttribute("userId", userId);
 		model.addAttribute("qnaList", qnaList);
 		return "/parent/qnaList";
+	}
+	
+	// qna작성
+	@GetMapping("/parent/insertQna")
+	public String insertQna(HttpSession session, Model model
+						, @RequestParam("userId") String userId) {
+		model.addAttribute("userId", userId);
+		return "/parent/insertQna";
+	}
+	
+	@PostMapping("/parent/insertQna")
+	public String insertQna(HttpSession session
+				, @RequestParam("userId") String userId
+				, @RequestParam("question") String question) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		parentService.insertQna(userId, question);
+		return "redirect:/parent/qnaList";
+	}
+	
+	// qna 수정
+	@GetMapping("/parent/modifyQna")
+	public String modifyQna(HttpSession session, Model model
+						, @RequestParam("qnaId") int qnaId
+						, @RequestParam("userId") String userId) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		log.info("qnaId: {}", qnaId);
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		} 
+		
+		model.addAttribute("qnaId", qnaId);
+		return "parent/modifyQna";
+	}
+	
+	@PostMapping("/parent/modifyQna")
+	public String modifyQna(HttpSession session
+						, @RequestParam("qnaId") int qnaId
+						, @RequestParam("question") String question) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		} 
+		
+		parentService.modifyQna(qnaId, question);
+		
+		return "redirect:/parent/qnaList";
+	}
+	
+	// qna 삭제
+	@PostMapping("/parent/qnaDelete")
+	public String qnaDelete(@RequestParam("qnaId") int qnaId) {
+		parentService.qnaDelete(qnaId);
+		return "redirect:/parent/qnaList";
 	}
 	
 	
