@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.afterSchoolLms.dto.Notice;
+import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.mapper.StudentMapper;
 
 @Service
@@ -49,5 +50,30 @@ public class StudentService {
 	// 공지사항 하나
 	public Notice noticeOne(int noticeId) {
 		return studentMapper.selectNoticeOne(noticeId);
+	}
+	
+	// 과목 전체 검색
+	public List<Subject> subject() {
+		return studentMapper.selectSubject();
+	}
+	
+	// 과목 상세 검색
+	public Subject subjectOne(String subjectName) {
+		return studentMapper.selectSubjectOne(subjectName);
+	}
+	
+	// 과목 상세 - 평균 평점 조회
+	public double subjectOneRating(String subjectName) {
+		return studentMapper.selectSubjectOneRating(subjectName);
+	}
+	
+	// 과목 상세 - 리뷰 조회
+	public List<Map<String, Object>> subjectOneReview(String subjectName) {
+		return studentMapper.selectSubjectOneReview(subjectName);
+	}
+	
+	// 학생 본인 끝난 수업 + 만족도 평가
+	public List<Map<String, Object>> selectLectureDone(String id) {
+		return studentMapper.selectLectureDone(id);
 	}
 }

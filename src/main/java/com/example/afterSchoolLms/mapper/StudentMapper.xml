@@ -73,6 +73,74 @@
 		WHERE notice_id = #{noticeId}
 	</select>
 	
+	<select id="selectSubject" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			subject_id AS subjectId,
+			NAME AS subjectName
+		FROM subject
+	</select>
+	
+	<select id="selectSubjectOne" parameterType="String" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			name AS subjectName,
+			description
+		FROM subject
+		WHERE name = #{subjectName}
+	</select>
+	
+	<select id="selectSubjectOneRating" parameterType="String" resultType="double">
+		SELECT ROUND(AVG(sf.rating_lecture), 1) AS avgRating
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		WHERE sb.name = #{subjectName}
+	</select>
+	
+	<select id="selectSubjectOneReview" parameterType="String" resultType="map">
+		SELECT sf.rating_lecture AS ratingLecture,
+		       r.content AS content
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		INNER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+		WHERE sb.name = #{subjectName}
+		ORDER BY r.review_id DESC
+		LIMIT 0, 3
+	</select>
+	
+	<select id="selectLectureDone" parameterType="String" resultType="map">
+		SELECT
+		   p.payment_id AS paymentId,
+		   sb.name AS subjectName,
+		   lt.start_time AS startTime,
+		   lt.end_time AS endTime,
+		   lt.day_of_week AS dayOfWeek,
+		   lt.start_date AS startDate,
+		   lt.end_date AS endDate,
+		   cr.name AS classroomName,
+		   cr.location AS classroomLocation,
+		   t.name AS teacherName,
+		   CASE 
+		       WHEN s.satisfaction_id IS NOT NULL THEN TRUE 
+		       ELSE FALSE 
+		   END AS isEvaluated
+		FROM (SELECT * FROM user WHERE user_id = 'stu002') u
+		INNER JOIN student_enrollment se ON se.student_id = u.user_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+		LEFT JOIN payment p ON p.enrollment_id = se.enrollment_id
+		LEFT JOIN satisfaction s ON s.payment_id = p.payment_id
+		WHERE CURDATE() &gt;= lt.end_date
+	</select>
+	
 	<update id="updatePw" parameterType="String">
 		UPDATE user 
 		SET PASSWORD = #{updatePw} 

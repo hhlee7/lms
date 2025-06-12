@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.afterSchoolLms.dto.Notice;
+import com.example.afterSchoolLms.dto.Subject;
 
 @Mapper
 public interface StudentMapper {
@@ -30,4 +31,19 @@ public interface StudentMapper {
 	
 	// 공지사항 하나
 	Notice selectNoticeOne(int noticeId);
+	
+	// 과목 전체
+	List<Subject> selectSubject();
+	
+	// 과목 상세
+	Subject selectSubjectOne(String subjectName);
+	
+	// 과목 상세 - 평균 평점 조회
+	double selectSubjectOneRating(String subjectName);
+	
+	// 과목 상세 - 리뷰 조회
+	List<Map<String, Object>> selectSubjectOneReview(String subjectName);
+	
+	// 학생 본인 끝난 수업 + 만족도 평가
+	List<Map<String, Object>> selectLectureDone(String id);
 }

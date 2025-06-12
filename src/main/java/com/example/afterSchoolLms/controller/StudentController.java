@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.service.StudentService;
 
@@ -104,5 +105,61 @@ public class StudentController {
 		Notice notice = studentService.noticeOne(noticeId);
 		model.addAttribute("notice", notice);
 		return "/student/noticeOne";
+	}
+	
+	// 과목소개 전체
+	@GetMapping("/student/subject")
+	public String subject(Model model) {
+		List<Subject> subjectList = studentService.subject();
+		//log.info(subjectList.toString());
+		model.addAttribute("subjectList", subjectList);
+		return "/student/subject";
+	}
+	
+	// 과목소개 상세 페이지
+	@GetMapping("/student/subjectOne")
+	public String subjectOne(Model model
+			, @RequestParam String subjectName) {
+		//log.info("subjecName: " + subjectName);
+		Subject subject = studentService.subjectOne(subjectName);
+		// 과목 평균평점 넣기
+		double rating = studentService.subjectOneRating(subjectName);
+		// 과목 리뷰 최신 3개 넣기
+		List<Map<String, Object>> reviewList = studentService.subjectOneReview(subjectName);
+		//log.info("reviewList: " + reviewList);
+		model.addAttribute("subject", subject);
+		model.addAttribute("rating", rating);
+		model.addAttribute("reviewList", reviewList);
+		return "/student/subjectOne";
+	}
+	
+	// 학생 만족도 평가 가능 과목 보여주기
+	@GetMapping("/student/satisfaction")
+	public String satisfaction(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		// 끝난 수업과 만족도평가 여부를 조회해서 넘겨줌
+		List<Map<String, Object>> lectureDoneList = studentService.selectLectureDone(loginUser.getUserId());
+		//log.info("lectureDone: " + lectureDoneList);
+		model.addAttribute("lectureDoneList", lectureDoneList);
+		return "/student/satisfaction";
+	}
+	
+	// 학생 만족도 평가 실시
+	@GetMapping("/student/evaluation")
+	public String evaluation(Model model
+			, @RequestParam String paymentId
+			, @RequestParam String subjectName) {
+		//log.info("paymentId: " + paymentId);
+		//log.info("subjectName: " + subjectName);
+		model.addAttribute("paymentId", paymentId);
+		model.addAttribute("subjectName", subjectName);
+		return "/student/evaluate";
+	}
+	
+	@PostMapping("/student/evaluation")
+	public String evaluation(@RequestParam String paymentId
+			, @RequestParam String teacherRating
+			, @RequestParam String contentRating) {
+		return "redirect:/student/satisfaction";
 	}
 }
