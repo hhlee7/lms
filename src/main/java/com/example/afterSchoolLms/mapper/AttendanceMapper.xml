@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.afterSchoolLms.mapper.AttendanceMapper">
+
+  <insert id="insertDailyDefaultAttendance">
+    INSERT INTO attendance (payment_id, attend_date, status)
+    SELECT p.payment_id, CURDATE(), '결석'
+    FROM payment p
+    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+    WHERE NOT EXISTS (
+      SELECT 1 FROM attendance a
+      WHERE a.payment_id = p.payment_id AND a.attend_date = CURDATE()
+    )
+  </insert>
+  
+  
+<!-- 출석체크 -->
+<select id="selectAttendanceCheckListByTeacher" resultType="map" parameterType="string">
+  SELECT 
+    p.payment_id,
+    u.name AS studentName,
+    s.name AS subjectName,
+    l.start_time AS startTime,
+    l.day_of_week AS dayOfWeek,
+    c.name AS classroomName,
+    t1.teacherName,
+    IFNULL(a.status, '결석') AS status,
+    IFNULL(a.attend_date, CURDATE()) AS attendDate,
+    a.attendance_id AS attendanceId
+  FROM payment p
+  JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+  JOIN user u ON u.user_id = se.student_id
+  JOIN lecture l ON l.lecture_id = se.lecture_id
+  JOIN subject s ON s.subject_id = l.subject_id
+  JOIN classroom c ON l.classroom_id = c.classroom_id
+  JOIN (
+    SELECT l.lecture_id, u.name AS teacherName, u.user_id AS teacherId
+    FROM user u 
+    JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
+    JOIN lecture l ON l.lecture_id = ta.lecture_id
+  ) t1 ON l.lecture_id = t1.lecture_id
+  LEFT JOIN attendance a 
+    ON a.payment_id = p.payment_id AND DATE(a.attend_date) = CURDATE()
+  WHERE t1.teacherId = #{teacherId}
+</select>
+
+<!-- 출석 상태 업데이트 쿼리 -->
+<update id="updateAttendanceStatus">
+  UPDATE attendance
+  SET status = #{status}
+  WHERE attendance_id = #{attendanceId}
+</update>
+
+<!-- 출석 상태 최초 삽입 쿼리 -->
+<insert id="insertAttendance">
+  <!-- 
+    오늘 날짜(CURDATE()) 기준으로 
+    payment_id와 출석 상태를 삽입한다 
+  -->
+  INSERT INTO attendance (payment_id, status, attend_date)
+  VALUES (#{paymentId}, #{status}, CURDATE())
+</insert>
+</mapper>

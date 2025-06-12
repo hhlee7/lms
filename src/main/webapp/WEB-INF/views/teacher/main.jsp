@@ -44,7 +44,7 @@
 	    <th><a href="/teacher/album/list">사진첩</a></th>
 	    
 	    <!-- 공지사항 -->
-	    <th><a href="/teacher/notice">공지사항</a></th>
+	    <th><a href="/teacher/notice/list">공지사항</a></th>
 	
 	    <!-- 개인정보 수정 -->
 	    <th><a href="/teacher/profile">개인정보</a></th>

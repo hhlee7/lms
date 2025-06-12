@@ -29,23 +29,46 @@
 </select>
 
 <!-- 학생 조회 -->
-<select id="selectStudentListByTeacher" resultType="map">
-    SELECT 
-        u.name AS studentName, 
-        l.start_time AS startTime, 
-        l.end_time AS endTime, 
-        l.day_of_week AS dayOfWeek, 
-        s.name AS subjectName
-    FROM payment p
-    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
-    INNER JOIN user u ON se.student_id = u.user_id
-    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
-    INNER JOIN subject s ON s.subject_id = l.subject_id
-    WHERE se.lecture_id IN (
-        SELECT lecture_id
-        FROM teacher_assignment 
-        WHERE teacher_id = #{teacherId}
-    )
+<select id="selectStudentListByTeacher" resultType="map" parameterType="map">
+  SELECT 
+      u.name AS studentName, 
+      l.start_time AS startTime, 
+      l.end_time AS endTime, 
+      l.day_of_week AS dayOfWeek, 
+      s.name AS subjectName
+  FROM payment p
+  INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+  INNER JOIN user u ON se.student_id = u.user_id
+  INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+  INNER JOIN subject s ON s.subject_id = l.subject_id
+  WHERE se.lecture_id IN (
+      SELECT lecture_id
+      FROM teacher_assignment 
+      WHERE teacher_id = #{teacherId}
+  )
+  <if test="keyword != null and keyword != ''">
+    AND (u.name LIKE CONCAT('%', #{keyword}, '%')
+         OR s.name LIKE CONCAT('%', #{keyword}, '%'))
+  </if>
+  ORDER BY u.name
+  LIMIT #{startRow}, #{rowPerPage}
+</select>
+<select id="countStudentListByTeacher" resultType="int" parameterType="map">
+  SELECT COUNT(*)
+  FROM payment p
+  INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+  INNER JOIN user u ON se.student_id = u.user_id
+  INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+  INNER JOIN subject s ON s.subject_id = l.subject_id
+  WHERE se.lecture_id IN (
+      SELECT lecture_id
+      FROM teacher_assignment 
+      WHERE teacher_id = #{teacherId}
+  )
+  <if test="keyword != null and keyword != ''">
+    AND (u.name LIKE CONCAT('%', #{keyword}, '%')
+         OR s.name LIKE CONCAT('%', #{keyword}, '%'))
+  </if>
 </select>
 
 <!-- 배차 조회 -->
@@ -111,5 +134,93 @@
     INSERT INTO material_request (lecture_id, content)
     VALUES (#{lectureId}, #{content})
 </insert>
+
+<!-- 출결조회(본인수업 학생만) -->
+<select id="selectAttendanceListByTeacher" resultType="map" parameterType="map">
+    SELECT 
+        u.name AS studentName, 
+        l.start_time AS startTime, 
+        l.end_time AS endTime, 
+        l.day_of_week AS dayOfWeek, 
+        s.name AS subjectName, 
+        a.attend_date AS attendDate, 
+        a.status
+    FROM payment p 
+    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+    INNER JOIN user u ON se.student_id = u.user_id
+    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+    INNER JOIN subject s ON s.subject_id = l.subject_id
+    INNER JOIN attendance a ON p.payment_id = a.payment_id
+    WHERE se.lecture_id IN (
+        SELECT lecture_id FROM teacher_assignment WHERE teacher_id = #{teacherId}
+    )
+    <if test="keyword != null and keyword != ''">
+        AND (
+            u.name LIKE CONCAT('%', #{keyword}, '%') OR
+            s.name LIKE CONCAT('%', #{keyword}, '%') OR
+            a.status LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </if>
+    ORDER BY a.attend_date DESC
+    LIMIT #{startRow}, #{rowPerPage}
+</select>
+<select id="countAttendanceListByTeacher" resultType="int" parameterType="map">
+    SELECT COUNT(*)
+    FROM payment p 
+    INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+    INNER JOIN user u ON se.student_id = u.user_id
+    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+    INNER JOIN subject s ON s.subject_id = l.subject_id
+    INNER JOIN attendance a ON p.payment_id = a.payment_id
+    WHERE se.lecture_id IN (
+        SELECT lecture_id FROM teacher_assignment WHERE teacher_id = #{teacherId}
+    )
+    <if test="keyword != null and keyword != ''">
+        AND (
+            u.name LIKE CONCAT('%', #{keyword}, '%') OR
+            s.name LIKE CONCAT('%', #{keyword}, '%') OR
+            a.status LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </if>
+</select>
+
+<!-- 공지사항 목록 조회 (검색 + 페이징) -->
+  <select id="selectNoticeList" resultType="map" parameterType="map">
+    SELECT 
+      notice_id, title, admin_id, created_at
+    FROM notice
+    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+       OR content LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY created_at DESC
+    LIMIT #{startRow}, #{rowPerPage}
+  </select>
+  
+<!-- 공지사항 개수 -->
+  <select id="countNoticeList" resultType="int" parameterType="string">
+    SELECT COUNT(*)
+    FROM notice
+    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+       OR content LIKE CONCAT('%', #{keyword}, '%')
+  </select>
+
+<!-- 전체 사진첩 목록 조회 (검색+페이징) -->
+<select id="selectAlbumList" resultType="map" parameterType="map">
+  SELECT album_id, lecture_id, title, description, created_at
+  FROM album
+  <if test="keyword != null and keyword != ''">
+    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+  </if>
+  ORDER BY created_at DESC
+  LIMIT #{startRow}, #{rowPerPage}
+</select>
+
+<!-- 전체 사진첩 개수 조회 (검색 포함) -->
+<select id="countAlbumList" resultType="int" parameterType="map">
+  SELECT COUNT(*)
+  FROM album
+  <if test="keyword != null and keyword != ''">
+    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+  </if>
+</select>
 
 </mapper>

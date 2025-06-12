@@ -17,7 +17,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	
-	@GetMapping("/")
+	@GetMapping("/login")
 	public String login() {
 		return "login";
 	}

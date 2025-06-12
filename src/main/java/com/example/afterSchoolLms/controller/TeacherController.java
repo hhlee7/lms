@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.afterSchoolLms.dto.User;
+import com.example.afterSchoolLms.mapper.AttendanceMapper;
 import com.example.afterSchoolLms.mapper.TeacherMapper;
+import com.example.afterSchoolLms.service.AttendanceService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 	public class TeacherController {
 		
 		private final TeacherMapper teacherMapper;
+		private final AttendanceMapper attendanceMapper;
+		private final AttendanceService attendanceService;
+		
 		
 	// 생성자 = 의존성 주입
-		public TeacherController(TeacherMapper teacherMapper) {
-			this.teacherMapper = teacherMapper;
+		public TeacherController(TeacherMapper teacherMapper, AttendanceMapper attendanceMapper, AttendanceService attendanceService) {
+		    this.teacherMapper = teacherMapper;
+		    this.attendanceMapper = attendanceMapper;
+		    this.attendanceService = attendanceService;
 		}
-		
+
 		
 	// 강사 메인페이지	
 	    @GetMapping("/main")
@@ -49,13 +57,36 @@ import lombok.extern.slf4j.Slf4j;
 	    
 	// 강사 학생 조회 페이지
 	    @GetMapping("/student/list")
-	    public String getStudentList(HttpSession session, Model model) {
-	    	User loginUser = (User) session.getAttribute("loginUser");
-	    	String teacherId = loginUser.getUserId();
-	        List<Map<String, Object>> studentList = teacherMapper.selectStudentListByTeacher(teacherId);
+	    public String getStudentList(
+	            HttpSession session,
+	            Model model,
+	            @RequestParam(defaultValue = "1") int page,
+	            @RequestParam(defaultValue = "") String keyword
+	    ) {
+	        User loginUser = (User) session.getAttribute("loginUser");
+	        String teacherId = loginUser.getUserId();
+
+	        int rowPerPage = 10;
+	        int startRow = (page - 1) * rowPerPage;
+
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("teacherId", teacherId);
+	        param.put("startRow", startRow);
+	        param.put("rowPerPage", rowPerPage);
+	        param.put("keyword", keyword);
+
+	        List<Map<String, Object>> studentList = teacherMapper.selectStudentListByTeacher(param);
+	        int totalRow = teacherMapper.countStudentListByTeacher(param);
+	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
+
 	        model.addAttribute("studentList", studentList);
+	        model.addAttribute("page", page);
+	        model.addAttribute("lastPage", lastPage);
+	        model.addAttribute("keyword", keyword);
+
 	        return "teacher/studentList";
 	    }
+
 	    
 	// 학생 배차 조회
 	    @GetMapping("/student/vehicle")
@@ -155,5 +186,120 @@ import lombok.extern.slf4j.Slf4j;
 	    	return "redirect:/teacher/main";
 	    }
 
-	        
-}
+	// 출석조회 (본인수업학생만, 검색+페이징)
+	    @GetMapping("/attendance/list")
+	    public String getAttendanceList(
+	            HttpSession session,
+	            Model model,
+	            @RequestParam(defaultValue = "1") int page,
+	            @RequestParam(defaultValue = "") String keyword
+	    ) {
+	        User loginUser = (User) session.getAttribute("loginUser");
+	        String teacherId = loginUser.getUserId();
+
+	        int rowPerPage = 10;
+	        int startRow = (page - 1) * rowPerPage;
+
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("teacherId", teacherId);
+	        param.put("startRow", startRow);
+	        param.put("rowPerPage", rowPerPage);
+	        param.put("keyword", keyword);
+
+	        List<Map<String, Object>> attendanceList = teacherMapper.selectAttendanceListByTeacher(param);
+	        int totalRow = teacherMapper.countAttendanceListByTeacher(param);
+	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
+
+	        model.addAttribute("attendanceList", attendanceList);
+	        model.addAttribute("page", page);
+	        model.addAttribute("lastPage", lastPage);
+	        model.addAttribute("keyword", keyword);
+
+	        return "teacher/attendanceList";
+	    }
+
+	  
+	 // 출석체크
+	    @GetMapping("/attendance/check")
+	    public String attendanceCheckForm(HttpSession session, Model model) {
+	        User loginUser = (User) session.getAttribute("loginUser");
+	        String teacherId = loginUser.getUserId();
+
+	        // 오늘 날짜의 출결 대상자 리스트
+	        List<Map<String, Object>> checkList = attendanceMapper.selectAttendanceCheckListByTeacher(teacherId);
+	        model.addAttribute("checkList", checkList);
+	        return "teacher/attendanceCheck";
+	    }
+	 // 출석 체크 처리
+	    @PostMapping("/attendance/check")
+	    public String updateAttendanceStatus(@RequestParam(value = "attendanceId", required = false) String attendanceId,
+	                                         @RequestParam(value = "paymentId", required = false) String paymentId,
+	                                         @RequestParam("status") String status,
+	                                         RedirectAttributes redirectAttributes) {
+	    	 System.out.println("📝 받은 attendanceId: " + attendanceId);
+	    	    System.out.println("📝 받은 paymentId: " + paymentId);
+	    	    System.out.println("📝 받은 status: " + status);
+	    	
+	        if (attendanceId != null && !attendanceId.isBlank()) {
+	            attendanceService.updateAttendanceStatus(Integer.parseInt(attendanceId), status);
+	        } else if (paymentId != null && !paymentId.isBlank()) {
+	            attendanceService.insertAttendance(paymentId, status);
+	        }
+
+	        redirectAttributes.addFlashAttribute("success", "출석 상태가 변경되었습니다.");
+	        return "redirect:/teacher/attendance/check";
+	    }
+	    
+	// 공지사항
+	    @GetMapping("/notice/list")
+	    public String noticeList(Model model,
+	                             @RequestParam(defaultValue = "1") int page,
+	                             @RequestParam(defaultValue = "") String keyword) {
+
+	        int rowPerPage = 10;
+	        int startRow = (page - 1) * rowPerPage;
+
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("startRow", startRow);
+	        param.put("rowPerPage", rowPerPage);
+	        param.put("keyword", keyword);
+
+	        List<Map<String, Object>> noticeList = teacherMapper.selectNoticeList(param);
+	        int totalRow = teacherMapper.countNoticeList(keyword);
+	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
+
+	        model.addAttribute("noticeList", noticeList);
+	        model.addAttribute("page", page);
+	        model.addAttribute("lastPage", lastPage);
+	        model.addAttribute("keyword", keyword);
+
+	        return "teacher/noticeList"; // JSP 경로에 맞춰 조절
+	    }
+	 // 사진첩 
+	    @GetMapping("/album/list")
+	    public String getAlbumList(HttpSession session, Model model,
+	                               @RequestParam(defaultValue = "1") int page,
+	                               @RequestParam(defaultValue = "") String keyword) {
+	        int rowPerPage = 10;
+	        int startRow = (page - 1) * rowPerPage;
+
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("startRow", startRow);
+	        param.put("rowPerPage", rowPerPage);
+	        param.put("keyword", keyword);
+
+	        List<Map<String, Object>> albumList = teacherMapper.selectAlbumList(param);
+	        int totalRow = teacherMapper.countAlbumList(param);
+	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
+
+	        model.addAttribute("albumList", albumList);
+	        model.addAttribute("page", page);
+	        model.addAttribute("lastPage", lastPage);
+	        model.addAttribute("keyword", keyword);
+
+	        return "teacher/albumList";
+	    }
+
+	    
+
+	}
