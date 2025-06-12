@@ -92,6 +92,23 @@ public class AdminController {
 		return "redirect:/vehicleManagement";
 	}
 	
+	/** 차량 배정 페이지 **/
+	@GetMapping("vehicleAssignmentInsert")
+	public String vehicleAssignmentInsert(@RequestParam String vehicleId, Model model) {
+		
+		// 차량 정보
+		Vehicle vehicle = adminService.selectVehicleByVehicleId(Integer.parseInt(vehicleId));
+		model.addAttribute("vehicle",vehicle);
+		
+		// 강좌 리스트
+		List<Map<String,Object>> lectureList = adminService.selectLectureList();
+		model.addAttribute("lectureList",lectureList);
+		
+		// 운전기사 리스트
+		
+		return "admin/vehicleAssignmentInsert";
+	}
+	
 	/** 강사 경력 입력/수정 **/
 	@PostMapping("modifyHistory")
 	public String modifyHistory(TeacherHistory th) {

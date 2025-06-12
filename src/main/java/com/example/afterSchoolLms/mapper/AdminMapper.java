@@ -23,7 +23,8 @@ public interface AdminMapper {
 	
 	TeacherHistory selectTeacherHistoryListByTeacherId(String teacherId);	// 강사 아이디로 경력 조회
 	
-	List<Map<String,Object>> selectVehicleList();
+	List<Map<String,Object>> selectVehicleList();	// 차량 조회
+	List<Map<String,Object>> selectLectureList();	// 수업 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회

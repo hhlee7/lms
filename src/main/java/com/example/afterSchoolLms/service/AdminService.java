@@ -45,6 +45,11 @@ public class AdminService {
 		return adminMapper.selectRoleList();
 	}
 	
+	/** 수업 리스트를 가져옴 **/
+	public List<Map<String,Object>> selectLectureList(){
+		return adminMapper.selectLectureList();
+	}
+	
 	/** 부모 아이디로 자식 조회 **/
 	public List<Map<String,Object>> selectUserByParentId(String parentId) {
 		return adminMapper.selectUserByParentId(parentId);

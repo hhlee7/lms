@@ -48,11 +48,30 @@
 		ORDER BY role_id
 	</select>
 	
+	<!-- 수업 조회 -->
+	<select id="selectLectureList" resultType="map">
+		SELECT sb.name AS subjectName,
+		       u.name AS teacherName,
+		       cr.name AS classroomName,
+		       cr.location AS location,
+		       lt.start_time AS startTime,
+		       lt.end_time AS endTime,
+		       lt.day_of_week AS 'dayOfWeek',
+		       lt.start_date AS startDate,
+		       lt.end_date AS endDate
+		FROM (SELECT * FROM lecture WHERE end_date >= CURDATE() )lt
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+	</select>
+	
 	<!-- 차량 리스트 조회 -->
 	<select id="selectVehicleList" resultType="map">
 		SELECT 
 			vc.vehicle_id AS vehicleId,
 			vc.vehicle_no AS vehicleNo,
+			dr.user_id AS driverId,
 			vc.capacity,
 			IFNULL(dr.name,'') AS driverName,
 			IFNULL(dr.phone,'') AS phone
