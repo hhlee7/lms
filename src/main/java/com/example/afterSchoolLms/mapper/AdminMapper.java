@@ -61,4 +61,16 @@ public interface AdminMapper {
 	// 해당 수업의 강사 배정
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);
 
+	// 해당 lectureId를 가지는 lecture 데이터 조회
+	Lecture selectLectureById(int lectureId);
+
+	// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
+	TeacherAssignment selectTeacherById(int lectureId);
+
+	// 수업 정보 수정
+	int modifyLecture(Lecture lecture);
+
+	// 해당 수업의 강사 배정 정보 수정
+	int modifyTeacherAssignment(TeacherAssignment teacherAssignment);
+
 }

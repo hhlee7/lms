@@ -23,6 +23,7 @@
 			<th>요일</th>
 			<th>개강일</th>
 			<th>종강일</th>
+			<th>수정</th>
 		</tr>
 	<c:forEach var="list" items="${lectureList}">
 		<tr>
@@ -36,6 +37,9 @@
 			<td>${list.dayOfWeek}</td>
 			<td>${list.startDate}</td>
 			<td>${list.endDate}</td>
+			<td>
+				<a href="/admin/modifyLecture?lectureId=${list.lectureId}">수정</a>
+			</td>
 		</tr>
 	</c:forEach>
 	</table>

@@ -158,4 +158,47 @@
 		INSERT INTO teacher_assignment (lecture_id, teacher_id)
 		VALUES (#{lectureId}, #{teacherId})
 	</insert>
+	
+	<!-- 해당 lectureId를 가지는 lecture 데이터 조회 -->
+	<select id="selectLectureById" resultType="com.example.afterSchoolLms.dto.Lecture">
+		SELECT
+			lecture_id AS lectureId,
+			subject_id AS subjectId,
+			classroom_id AS classroomId,
+			recruited,
+			amount,
+			start_time AS startTime,
+			end_time AS endTime,
+			day_of_week AS 'dayOfWeek',
+			start_date AS startDate,
+			end_date AS endDate
+		FROM lecture
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
+	<!-- 해당 lectureId를 가지는 teacherAssignment 데이터 조회 -->
+	<select id="selectTeacherById" resultType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		SELECT
+			lecture_id AS lectureId,
+			teacher_id AS teacherId
+		FROM teacher_assignment
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
+	<!-- 수업 정보 수정 -->
+	<update id="modifyLecture" parameterType="com.example.afterSchoolLms.dto.Lecture">
+		UPDATE lecture SET
+			subject_id = #{subjectId}, classroom_id = #{classroomId},
+			recruited = #{recruited}, amount = #{amount},
+			start_time = #{startTime}, end_time = #{endTime}, day_of_week = #{dayOfWeek},
+			start_date = #{startDate}, end_date = #{endDate}
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 해당 수업의 강사 배정 정보 수정 -->
+	<update id="modifyTeacherAssignment" parameterType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		UPDATE teacher_assignment SET
+			teacher_id = #{teacherId}
+		WHERE lecture_id = #{lectureId}
+	</update>
 </mapper>

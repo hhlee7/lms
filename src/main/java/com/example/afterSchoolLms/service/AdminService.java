@@ -97,4 +97,24 @@ public class AdminService {
 		return adminMapper.createTeacherAssignment(teacherAssignment);
 	}
 
+	// 해당 lectureId를 가지는 lecture 데이터 조회
+	public Lecture getLectureById(int lectureId) {
+		return adminMapper.selectLectureById(lectureId);
+	}
+
+	// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
+	public TeacherAssignment getTeacherById(int lectureId) {
+		return adminMapper.selectTeacherById(lectureId);
+	}
+
+	// 수업 정보 수정
+	public int modifyLecture(Lecture lecture) {
+		return adminMapper.modifyLecture(lecture);
+	}
+
+	// 해당 수업의 강사 배정 정보 수정
+	public int modifyTeacherAssignment(TeacherAssignment teacherAssignment) {
+		return adminMapper.modifyTeacherAssignment(teacherAssignment);
+	}
+
 }
