@@ -7,7 +7,7 @@
 <title>refundList</title>
 </head>
 <body>
-	<h1>환불 내역</h1>
+	<h1>환불 관리</h1>
 	
 	<table border="1">
 		<tr>

@@ -7,7 +7,7 @@
 <title>lectureList</title>
 </head>
 <body>
-	<h1>수업 목록</h1>
+	<h1>수업 관리</h1>
 	
 	<a href="/admin/createLecture">수업 등록</a>
 	

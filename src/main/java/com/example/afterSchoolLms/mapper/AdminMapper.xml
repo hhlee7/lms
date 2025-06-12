@@ -59,6 +59,7 @@
 	<!-- 수강료 납부 내역 조회 -->
 	<select id="selectPaymentList" resultType="map">
 		SELECT
+			p.payment_id AS paymentId,
 			sb.name AS subjectName,
 			st.name AS studentName,
 			p.amount,

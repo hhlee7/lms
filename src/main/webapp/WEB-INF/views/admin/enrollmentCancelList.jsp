@@ -7,7 +7,7 @@
 <title>enrollmentCancelList</title>
 </head>
 <body>
-	<h1>수강 신청 취소</h1>
+	<h1>수강 신청 취소 내역</h1>
 	
 	<table border="1">
 		<tr>

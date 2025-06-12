@@ -11,6 +11,7 @@
 	
 	<table border="1">
 		<tr>
+			<th>번호</th>
 			<th>과목</th>
 			<th>이름</th>
 			<th>금액</th>
@@ -18,6 +19,7 @@
 		</tr>
 	<c:forEach var="list" items="${paymentList}">
 		<tr>
+			<td>${list.paymentId}</td>
 			<td>${list.subjectName}</td>
 			<td>${list.studentName}</td>
 			<td>${list.amount}</td>
