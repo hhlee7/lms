@@ -137,7 +137,14 @@
 	    WHERE user_id = #{userId}
 	</update>
 
-	
+	<update id="modifyHistory" parameterType="com.example.afterSchoolLms.dto.TeacherHistory">
+		UPDATE teacher_history
+	    <set>
+	        <if test="lastEducation != null">last_education = #{lastEducation},</if>
+	        <if test="personalHistory != null">personal_history = #{personalHistory},</if>
+	    </set>
+	    WHERE teacher_id = #{teacherId}
+	</update>
 	
 	<!-- ======= INSERT ======= -->
 	<insert id="insertUser" parameterType="com.example.afterSchoolLms.dto.User">
@@ -153,6 +160,14 @@
 			student_id, parent_id
 		) VALUES(
 			#{studentId}, #{parentId}
+		)
+	</insert>
+	
+	<insert id="insertHistory" parameterType="com.example.afterSchoolLms.dto.TeacherHistory">
+		INSERT INTO teacher_history(
+			teacher_id, last_education, personal_history
+		) VALUES(
+			#{teacherId}, #{lastEducation}, #{personalHistory}
 		)
 	</insert>
 	

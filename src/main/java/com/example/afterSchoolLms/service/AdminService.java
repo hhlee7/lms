@@ -49,7 +49,7 @@ public class AdminService {
 	}
 	
 	/** 강사 아이디로 경력 조회 **/
-	public List<TeacherHistory> selectTeacherHistoryListByTeacherId(String teacherId){
+	public TeacherHistory selectTeacherHistoryListByTeacherId(String teacherId){
 		return adminMapper.selectTeacherHistoryListByTeacherId(teacherId);
 	}
 	
@@ -59,8 +59,15 @@ public class AdminService {
 	}
 	
 	// ------ UPDATE ------
+	
+	/** 회원 정보 수정 **/
 	public int modifyUser(User user) {
 		return adminMapper.modifyUser(user);
+	}
+	
+	/** 강사 경력 수정 **/
+	public int modifyHistory(TeacherHistory th) {
+		return adminMapper.modifyHistory(th);
 	}
 	
 	// ------ DELETE ------
@@ -75,6 +82,11 @@ public class AdminService {
 	/** 학부모 자녀 등록 **/
 	public int insertStudentParent(StudentParent studentParent) {
 		return adminMapper.insertStudentParent(studentParent);
+	}
+	
+	/** 강사 경력 등록 **/
+	public int insertHistory(TeacherHistory th) {
+		return adminMapper.insertHistory(th);
 	}
 	
 }

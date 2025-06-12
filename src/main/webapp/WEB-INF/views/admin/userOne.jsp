@@ -88,22 +88,47 @@
 		<button type="button" id="modifyBtn" name="modifyBtn">수정</button>
 	</form>
 	
-	<!-- 강사 정보이면서, 수업 데이터를 출력 -->
+	<!-- 강사 정보이면서, 수업, 경력을 출력 -->
 	<c:if test="${lectureList != null}">
 		<h3>강사 경력</h3>
-		<a href="historyInsert?userId=${selectedUser.userId}">경력 등록</a>
-		<c:forEach var="his" items="${historyList}">
+		<form action="modifyHistory" method="post">
+			<input type="hidden" name="teacherId" id="teacherId" value="${selectedUser.userId}">
 			<table border="1">
+				<%-- 최종 학력 값 설정 --%>
+				<c:choose>
+				  <c:when test="${empty historyList.lastEducation}">
+				    <c:set var="edu" value="미입력" />
+				  </c:when>
+				  <c:otherwise>
+				    <c:set var="edu" value="${historyList.lastEducation}" />
+				  </c:otherwise>
+				</c:choose>
+				
+				<%-- 수상/경력 값 설정 --%>
+				<c:choose>
+				  <c:when test="${empty historyList.personalHistory}">
+				    <c:set var="his" value="미입력" />
+				  </c:when>
+				  <c:otherwise>
+				    <c:set var="his" value="${historyList.personalHistory}" />
+				  </c:otherwise>
+				</c:choose>
+				
 				<tr>
-					<th>최종 학력</th>
-					<th>수상/경력</th>			
+				  <th>최종 학력</th>
+				  <td>
+				    <input type="text" name="lastEducation" id="lastEducation" value="${edu}" />
+				  </td>
 				</tr>
 				<tr>
-					<td>${his.lastEducation}</td>
-					<td>${his.personalHistory}</td>
+				  <th>수상/경력</th>
+				  <td>
+				    <input type="text" name="personalHistory" id="personalHistory" value="${his}" />
+				  </td>
 				</tr>
 			</table>
-		</c:forEach>
+			<button type="submit">수정</button>
+		</form>
 		
 		<h3>수업 정보</h3>
 		<a href="lectureInsert?userId=${selectedUser.userId}">수업 등록</a>

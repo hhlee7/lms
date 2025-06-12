@@ -20,7 +20,7 @@ public interface AdminMapper {
 	List<Role> selectRoleList();			// 역할 리스트 조회
 	Map<String,Object> selectUserByUserId(String userId);				// 회원 아이디로 유저 한 명 조회
 	
-	List<TeacherHistory> selectTeacherHistoryListByTeacherId(String teacherId);	// 강사 아이디로 경력 조회
+	TeacherHistory selectTeacherHistoryListByTeacherId(String teacherId);	// 강사 아이디로 경력 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
@@ -28,8 +28,10 @@ public interface AdminMapper {
 	
 	// UPDATE
 	int modifyUser(User user);				// 회원 데이터 수정
+	int modifyHistory(TeacherHistory teacherHistory);	// 강사 경력 수정
 	
 	// INSERT
+	int insertHistory(TeacherHistory teacherHistory);	// 강사 경력 등록
 	int insertUser(User user);				// 회원 등록
 	int insertStudentParent(StudentParent studentParet);	// 학부모,자녀 관계 등록
 }

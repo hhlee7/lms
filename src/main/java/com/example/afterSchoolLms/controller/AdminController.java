@@ -33,6 +33,29 @@ public class AdminController {
 	@Autowired TeacherMapper teacherMapper;
 	@Autowired JavaMailSender javaMailSender;
 	
+	/** 강사 경력 입력/수정 **/
+	@PostMapping("modifyHistory")
+	public String modifyHistory(TeacherHistory th) {
+		TeacherHistory teacherHistory = adminService.selectTeacherHistoryListByTeacherId(th.getTeacherId());
+		
+		if(teacherHistory == null) { // 강사 경력이 없음
+			int row = adminService.insertHistory(th);
+			if(row != 1) {	// 삽입 이상
+				
+				return "redirect:/userOne?userId="+th.getTeacherId();
+			}
+		}
+		else {
+			int row = adminService.modifyHistory(th);
+			if(row != 1) {	// 갱신 이상
+				
+				return "redirect:/userOne?userId="+th.getTeacherId();
+			}
+		}
+		
+		return "redirect:/userOne?userId="+th.getTeacherId();
+	}
+	
 	/** 회원 등록 페이지 **/
 	@GetMapping("userInsert")
 	public String userInsert(Model model) {
@@ -93,9 +116,10 @@ public class AdminController {
 				break;
 			case 3:				// 강사
 				List<Map<String,Object>> lectureList = new ArrayList<>();
-				List<TeacherHistory> historyList = new ArrayList<>();
+				TeacherHistory historyList = new TeacherHistory();
 				lectureList = teacherMapper.selectLectureListByTeacher((String)selectedUser.get("userId"));
 				historyList = adminService.selectTeacherHistoryListByTeacherId((String)selectedUser.get("userId"));
+				log.info(historyList.toString());
 				model.addAttribute("lectureList",lectureList);
 				model.addAttribute("historyList", historyList);
 				break;
