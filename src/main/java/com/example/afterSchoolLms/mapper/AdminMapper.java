@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.User;
@@ -84,6 +85,24 @@ public interface AdminMapper {
 
 	// 강의실 정보 수정
 	int modifyClassroom(Classroom classroom);
+
+	// 교보재 목록 조회
+	List<Map<String, Object>> selectMaterialList();
+
+	// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
+	List<Map<String, Object>> selectLecture();
+
+	// 교보재 등록
+	int createMaterial(Material material);
+
+	// 해당 materialId 값을 가지는 material 정보 조회
+	Material selectMaterialById(int materialId);
+
+	// 교보재 수정
+	int modifyMaterial(Material material);
+
+	// 교보재 삭제
+	int removeMaterial(int materialId);
 
 
 }

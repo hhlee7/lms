@@ -16,5 +16,6 @@
 	<div><a href="/admin/refundList">환불 관리</a></div>
 	<div><a href="/admin/lectureList">수업 관리</a></div>
 	<div><a href="/admin/classroomManagement">강의실 관리</a></div>
+	<div><a href="/admin/materialManagement">교보재 관리</a></div>
 </body>
 </html>

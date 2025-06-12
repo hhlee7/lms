@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.User;
@@ -260,7 +261,7 @@ public class AdminController {
 	public String classroomManagement(Model model) {
 		List<Map<String, Object>> list = adminService.getClassroom();
 		model.addAttribute("classroomList", list);
-		return "/admin/classroomManagement";
+		return "admin/classroomManagement";
 	}
 	
 	// 강의실 등록
@@ -281,7 +282,7 @@ public class AdminController {
 		// 해당 classroomId를 가지는 classroom 데이터 조회
 		Classroom classroom = adminService.getClassroomById(classroomId);
 		model.addAttribute("classroom", classroom);
-		return "/admin/modifyClassroom";
+		return "admin/modifyClassroom";
 	}
 	
 	// 강의실 정보 수정
@@ -297,4 +298,71 @@ public class AdminController {
 		return "redirect:/admin/classroomManagement";
 	}
 	
+	// 교보재 관리 페이지
+	@GetMapping("/admin/materialManagement")
+	public String materialManagement(Model model) {
+		// 교보재 목록 조회
+		List<Map<String, Object>> list = adminService.getMaterialList();
+		model.addAttribute("materialList", list);
+		return "admin/materialManagement";
+	}
+	
+	// 교보재 등록 페이지
+	@GetMapping("/admin/createMaterial")
+	public String createMaterial(Model model) {
+		// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
+		List<Map<String, Object>> list = adminService.getLecture();
+		model.addAttribute("list", list);
+		return "admin/createMaterial";
+	}
+	
+	// 교보재 등록
+	@PostMapping("/admin/createMaterial")
+	public String createMeterial(Material material) {
+		int row = adminService.createMaterial(material);
+		if(row != 1) {
+			log.info("교보재 등록 실패");
+			return "redirect:/admin/materialManagement";
+		}
+		return "redirect:/admin/materialManagement";
+	}
+	
+	// 교보재 수정 페이지
+	@GetMapping("/admin/modifyMaterial")
+	public String modifyMaterial(@RequestParam int materialId, Model model) {
+		// 해당 materialId 값을 가지는 material 정보 조회
+		Material material = adminService.getMaterialById(materialId);
+		model.addAttribute("material", material);
+		
+		// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
+		List<Map<String, Object>> list = adminService.getLecture();
+		model.addAttribute("list", list);
+		return "admin/modifyMaterial";
+	}
+	
+	// 교보재 수정
+	@PostMapping("/admin/modifyMaterial")
+	public String modifyMaterial(Material material) {
+		int row = adminService.modifyMaterial(material);
+		
+		if(row != 1) {
+			log.info("교보재 수정 실패");
+			return "redirect:/admin/materialManagement";
+		}
+		
+		return "redirect:/admin/materialManagement";
+	}
+	
+	// 교보재 삭제
+	@PostMapping("/admin/removeMaterial")
+	public String removeMaterial(@RequestParam int materialId) {
+		int row = adminService.removeMaterial(materialId);
+		
+		if(row != 1) {
+			log.info("교보재 삭제 실패");
+			return "redirect:/admin/materialManagement";
+		}
+		
+		return "redirect:/admin/materialManagement";
+	}
 }

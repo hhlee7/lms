@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.User;
@@ -135,6 +136,36 @@ public class AdminService {
 	// 강의실 정보 수정
 	public int modifyClassroom(Classroom classroom) {
 		return adminMapper.modifyClassroom(classroom);
+	}
+
+	// 교보재 목록 조회
+	public List<Map<String, Object>> getMaterialList() {
+		return adminMapper.selectMaterialList();
+	}
+
+	// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
+	public List<Map<String, Object>> getLecture() {
+		return adminMapper.selectLecture();
+	}
+
+	// 교보재 등록
+	public int createMaterial(Material material) {
+		return adminMapper.createMaterial(material);
+	}
+
+	// 해당 materialId 값을 가지는 material 정보 조회
+	public Material getMaterialById(int materialId) {
+		return adminMapper.selectMaterialById(materialId);
+	}
+
+	// 교보재 수정
+	public int modifyMaterial(Material material) {
+		return adminMapper.modifyMaterial(material);
+	}
+
+	// 교보재 삭제
+	public int removeMaterial(int materialId) {
+		return adminMapper.removeMaterial(materialId);
 	}
 
 
