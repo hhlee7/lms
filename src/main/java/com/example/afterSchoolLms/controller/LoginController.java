@@ -17,7 +17,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	
-	@GetMapping("/")
+	@GetMapping({"/","login"})
 	public String login() {
 		return "login";
 	}
@@ -33,7 +33,7 @@ public class LoginController {
 		
 		switch(loginUser.getRoleId()) {
 			case 1:							// 관리자
-				return "/admin/test";
+				return "/admin/userManagement";
 			case 2:							// 학생
 				return "/student/test";
 			case 3:							// 강사

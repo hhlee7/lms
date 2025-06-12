@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
+import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
@@ -45,6 +46,16 @@ public class AdminService {
 	/** 자식 아이디로 부모 조회 **/
 	public List<Map<String,Object>> selectUserByStudentId(String studentId) {
 		return adminMapper.selectUserByStudentId(studentId);
+	}
+	
+	/** 강사 아이디로 경력 조회 **/
+	public List<TeacherHistory> selectTeacherHistoryListByTeacherId(String teacherId){
+		return adminMapper.selectTeacherHistoryListByTeacherId(teacherId);
+	}
+	
+	/** 기사 아이디로 차량 조회 **/
+	public List<Map<String,Object>> selectVehicleByDriverId(String driverId){
+		return adminMapper.selectVehicleByDriverId(driverId);
 	}
 	
 	// ------ UPDATE ------

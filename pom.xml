@@ -71,6 +71,13 @@
          <artifactId>mybatis-spring-boot-starter</artifactId>
          <version>3.0.4</version>
       </dependency>
+      
+      <!-- 구글 메일 관련 [윤성권 추가] -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

@@ -100,6 +100,29 @@
 		INNER JOIN role r ON r.role_id = pa.role_id
 	</select>
 	
+	<!-- 기사 아이디로 차량 조회 -->
+	<select id="selectVehicleByDriverId" parameterType="String" resultType="map">
+		SELECT v.vehicle_no AS vehicleNo, v.capacity, l.end_time AS endTime, l.day_of_week AS dayOfWeek
+		FROM vehicle v INNER JOIN vehicle_assignment va
+		   ON v.vehicle_id = va.vehicle_id
+		               INNER JOIN user u
+		   ON u.user_id = va.driver_id
+		               INNER JOIN lecture l
+		   ON l.lecture_id = va.lecture_id
+		WHERE u.user_id = #{driverId}
+	</select>
+	
+	<!-- 강사 경력 조회 -->
+	<select id="selectTeacherHistoryListByTeacherId" parameterType="String" resultType="com.example.afterSchoolLms.dto.TeacherHistory">
+		SELECT
+			history_id AS historyId,
+			teacher_id AS teacherId,
+			last_education AS lastEducation,
+			personal_history AS personalHistory
+		FROM teacher_history
+		WHERE teacher_id = #{teacherId}
+	</select>
+	
 	<!-- ======= UPDATE ======= -->
 	<update id="modifyUser" parameterType="com.example.afterSchoolLms.dto.User">
 	    UPDATE user

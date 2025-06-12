@@ -3,8 +3,11 @@ package com.example.afterSchoolLms.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
+import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.TeacherMapper;
 import com.example.afterSchoolLms.service.AdminService;
@@ -27,14 +31,19 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 	@Autowired AdminService adminService;
 	@Autowired TeacherMapper teacherMapper;
+	@Autowired JavaMailSender javaMailSender;
 	
 	/** 회원 등록 페이지 **/
 	@GetMapping("userInsert")
 	public String userInsert(Model model) {
 		
+		String uuid = UUID.randomUUID().toString().replaceAll("-","").substring(0,16);
+		
+		
 		// 역할 리스트
 		List<Role> roleList = adminService.selectRoleList();
 		model.addAttribute("roleList",roleList);
+		model.addAttribute("uuid",uuid);
 		return "admin/userInsert";
 	}
 	
@@ -52,6 +61,15 @@ public class AdminController {
 		if(row != 1) {	// 실패 했을 때 코드
 			
 		}
+		
+		// 메일로 가입을 알리고 임시 비밀번호와 아이디를 보낸다
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setFrom("admin@localhost.com");
+		msg.setTo(user.getEmail());
+		msg.setSubject("ㅇㅇ초등학교 입니다. 계정 가입을 완료 했습니다.");
+		msg.setText("아이디 : "+user.getUserId()+" 비밀번호 : "+user.getPassword()+" 로그인 하여 비밀번호를 수정해 주세요.");
+		
+		javaMailSender.send(msg);
 		
 		return "redirect:/userOne?userId="+user.getUserId();
 	}
@@ -75,8 +93,11 @@ public class AdminController {
 				break;
 			case 3:				// 강사
 				List<Map<String,Object>> lectureList = new ArrayList<>();
+				List<TeacherHistory> historyList = new ArrayList<>();
 				lectureList = teacherMapper.selectLectureListByTeacher((String)selectedUser.get("userId"));
+				historyList = adminService.selectTeacherHistoryListByTeacherId((String)selectedUser.get("userId"));
 				model.addAttribute("lectureList",lectureList);
+				model.addAttribute("historyList", historyList);
 				break;
 			case 4:				// 학부모
 				List<Map<String,Object>> studentUser = new ArrayList<>();
@@ -84,6 +105,9 @@ public class AdminController {
 				model.addAttribute("studentUser",studentUser);
 				break;
 			case 5:				// 운전기사
+				List<Map<String,Object>> vehicleList = new ArrayList<>();
+				vehicleList = adminService.selectVehicleByDriverId((String)selectedUser.get("userId"));
+				model.addAttribute("vehicleList",vehicleList);
 				break;
 		}
 		

@@ -29,6 +29,4 @@ public interface TeacherMapper {
     
     // 교보제 요청
     void insertMaterialRequest(Map<String, Object> paramMap);
- 
-	
 }
