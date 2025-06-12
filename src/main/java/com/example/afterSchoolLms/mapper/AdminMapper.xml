@@ -48,6 +48,29 @@
 		ORDER BY role_id
 	</select>
 	
+	<!-- 차량 리스트 조회 -->
+	<select id="selectVehicleList" resultType="map">
+		SELECT 
+			vc.vehicle_id AS vehicleId,
+			vc.vehicle_no AS vehicleNo,
+			vc.capacity,
+			IFNULL(dr.name,'') AS driverName,
+			IFNULL(dr.phone,'') AS phone
+		FROM vehicle vc
+		LEFT OUTER JOIN vehicle_assignment va ON va.vehicle_id = vc.vehicle_id
+		LEFT OUTER JOIN user dr ON dr.user_id = va.driver_id;
+	</select>
+	
+	<!-- 차량 아이디로 차량 조회 -->
+	<select id="selectVehicleByVehicleId" resultType="com.example.afterSchoolLms.dto.Vehicle">
+		SELECT
+			vehicle_id AS vehicleId,
+			vehicle_no AS vehicleNo,
+			capacity
+		FROM vehicle
+		WHERE vehicle_id = #{vehicleId};
+	</select>
+	
 	<!-- 아이디로 회원 조회 -->
 	<select id="selectUserByUserId" parameterType="String" resultType="map">
 		SELECT 
@@ -63,6 +86,12 @@
 		INNER JOIN role r ON r.role_id = u.role_id
 		WHERE u.user_id = #{userId}
 	</select>
+	
+	<!-- 이메일 중복 조회 -->
+	<select id="selectUserEmail" parameterType="String" resultType="com.example.afterSchoolLms.dto.User">
+	    SELECT * FROM user WHERE email = #{email}
+	</select>
+
 	
 	<!-- 부모의 아이디로 자녀 회원 조회 -->
 	<select id="selectUserByParentId" parameterType="String" resultType="map">
@@ -146,7 +175,17 @@
 	    WHERE teacher_id = #{teacherId}
 	</update>
 	
+	<update id="modifyVehicle" parameterType="com.example.afterSchoolLms.dto.Vehicle">
+		UPDATE vehicle
+	    <set>
+	        <if test="vehicleNo != null">vehicle_no = #{vehicleNo},</if>
+	        <if test="capacity != null">capacity = #{capacity},</if>
+	    </set>
+	    WHERE vehicle_id = #{vehicleId}
+	</update>
+	
 	<!-- ======= INSERT ======= -->
+	<!-- 회원 등록 -->
 	<insert id="insertUser" parameterType="com.example.afterSchoolLms.dto.User">
 		INSERT INTO user(
 			user_id, role_id, NAME, email, PASSWORD, phone, address, birth
@@ -155,6 +194,7 @@
 		)
 	</insert>
 	
+	<!-- 학생/부모 관계 등록 -->
 	<insert id="insertStudentParent" parameterType="com.example.afterSchoolLms.dto.StudentParent">
 		INSERT INTO student_parent(
 			student_id, parent_id
@@ -163,11 +203,21 @@
 		)
 	</insert>
 	
+	<!-- 강사 수상/경력 등록 -->
 	<insert id="insertHistory" parameterType="com.example.afterSchoolLms.dto.TeacherHistory">
 		INSERT INTO teacher_history(
 			teacher_id, last_education, personal_history
 		) VALUES(
 			#{teacherId}, #{lastEducation}, #{personalHistory}
+		)
+	</insert>
+	
+	<!-- 차량 등록 -->
+	<insert id="insertVehicle" parameterType="com.example.afterSchoolLms.dto.Vehicle">
+		INSERT INTO vehicle(
+			vehicle_no, capacity
+		) VALUES(
+			#{vehicleNo}, #{capacity}
 		)
 	</insert>
 	

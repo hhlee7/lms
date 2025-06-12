@@ -33,7 +33,7 @@ public class LoginController {
 		
 		switch(loginUser.getRoleId()) {
 			case 1:							// 관리자
-				return "/admin/userManagement";
+				return "redirect:/adminMain";
 			case 2:							// 학생
 				return "/student/test";
 			case 3:							// 강사

@@ -10,6 +10,7 @@ import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
+import com.example.afterSchoolLms.dto.Vehicle;
 
 @Mapper
 public interface AdminMapper {
@@ -22,16 +23,24 @@ public interface AdminMapper {
 	
 	TeacherHistory selectTeacherHistoryListByTeacherId(String teacherId);	// 강사 아이디로 경력 조회
 	
+	List<Map<String,Object>> selectVehicleList();
+	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
 	List<Map<String,Object>> selectVehicleByDriverId(String driverId);			// 기사 아이디로 차량 조회
 	
+	Vehicle selectVehicleByVehicleId(int vehicleId);							// 차량 아이디로 차량 조회
+	
+	User selectUserEmail(String email);											// 유저 이메일 중복 검사를 위해 조회
+	
 	// UPDATE
-	int modifyUser(User user);				// 회원 데이터 수정
-	int modifyHistory(TeacherHistory teacherHistory);	// 강사 경력 수정
+	int modifyUser(User user);								// 회원 데이터 수정
+	int modifyHistory(TeacherHistory teacherHistory);		// 강사 경력 수정
+	int modifyVehicle(Vehicle vehicle);						// 차량 정보 수정
 	
 	// INSERT
-	int insertHistory(TeacherHistory teacherHistory);	// 강사 경력 등록
-	int insertUser(User user);				// 회원 등록
+	int insertHistory(TeacherHistory teacherHistory);		// 강사 경력 등록
+	int insertUser(User user);								// 회원 등록
 	int insertStudentParent(StudentParent studentParet);	// 학부모,자녀 관계 등록
+	int insertVehicle(Vehicle vehicle);						// 차량 등록
 }

@@ -11,6 +11,7 @@ import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
+import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -32,6 +33,12 @@ public class AdminService {
 	public Map<String,Object> selectUserByUserId(String userId) {
 		return adminMapper.selectUserByUserId(userId);
 	}
+	
+	public boolean isUserEmailExists(String email) {
+	    User user = adminMapper.selectUserEmail(email);
+	    return user != null;  // 있으면 true (중복 존재), 없으면 false
+	}
+
 	
 	/** 역할 리스트를 가져옴 **/
 	public List<Role> selectRoleList(){
@@ -58,6 +65,14 @@ public class AdminService {
 		return adminMapper.selectVehicleByDriverId(driverId);
 	}
 	
+	public List<Map<String,Object>> selectVehicleList(){
+		return adminMapper.selectVehicleList();
+	}
+	
+	public Vehicle selectVehicleByVehicleId(int vehicleId) {
+		return adminMapper.selectVehicleByVehicleId(vehicleId);
+	}
+	
 	// ------ UPDATE ------
 	
 	/** 회원 정보 수정 **/
@@ -68,6 +83,11 @@ public class AdminService {
 	/** 강사 경력 수정 **/
 	public int modifyHistory(TeacherHistory th) {
 		return adminMapper.modifyHistory(th);
+	}
+	
+	/** 차량 정보 수정 **/
+	public int modifyVehicle(Vehicle vc) {
+		return adminMapper.modifyVehicle(vc);
 	}
 	
 	// ------ DELETE ------
@@ -87,6 +107,11 @@ public class AdminService {
 	/** 강사 경력 등록 **/
 	public int insertHistory(TeacherHistory th) {
 		return adminMapper.insertHistory(th);
+	}
+	
+	/** 차량 등록 **/
+	public int insertVehicle(Vehicle vc) {
+		return adminMapper.insertVehicle(vc);
 	}
 	
 }

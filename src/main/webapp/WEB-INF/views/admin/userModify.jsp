@@ -7,30 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원 추가</title>
+<title>회원 수정</title>
 <!-- jQuery CDN (페이지에 없으면 추가) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	$(document).ready(function () {
-
-		// 역할 선택을 변경함
-		$('#roleId').change(function () {
-			let selectedRole = $(this).val();
-			let roleFieldsHtml = '';
-			if (selectedRole === '4') {	// 학부모는 자녀 ID 기입란 추가
-				roleFieldsHtml = `
-					<tr>
-						<td>자녀 ID</td>
-						<td><input type="text" name="studentId" id="studentId" /></td>
-					</tr>`;
-			}
-	
-			// 기존 내용 지우고 새로 추가
-			$('#roleFieldsArea').html(roleFieldsHtml);
-		});
-		
-		// 추가 버튼 눌렀음
-		$('#insertBtn').click(function(){
+	$(document).ready(function () {		
+		// 수정 버튼 눌렀음
+		$('#modifyBtn').click(function(){
 			const postcode = $('#postcode').val();
 			const roadAddress = $('#roadAddress').val();
 			const jibunAddress = $('#jibunAddress').val();
@@ -56,104 +39,25 @@
 		        $('#phoneError').text("");
 		    }
 		});
-		
-		// 이메일 정규표현식
-		const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,20}$/;
-
-		// 이메일 형식 실시간 검사
-		$('#email').on('input', function () {
-		    const email = $(this).val().trim();
-
-		    if (!emailRegex.test(email)) {
-		        $('#checkResult').css('color', 'red').text('올바른 이메일 형식이 아닙니다.');
-		    } else {
-		        $('#checkResult').text('');
-		    }
-		});
-		
-		// 이메일 중복 검사 로직
-		function emailCheck(){
-			const email = $('#email').val().trim();
-
-			if (!emailRegex.test(email)) {
-		        $('#checkResult').css('color', 'red').text('이메일 형식을 다시 확인해주세요.');
-		        $('#userId').val('');
-		        return;
-		    }
-
-	        $.ajax({
-	            url: '/user/checkUserEmail',
-	            type: 'GET',
-	            data: { email: email },
-	            success: function(data) {
-	                if (data.exists) {
-	                    $('#checkResult').css('color', 'red').text('이미 사용 중인 이메일입니다.');
-	                    $('#userId').val('');
-	                } else {
-	                    $('#checkResult').css('color', 'green').text('사용 가능한 이메일입니다.');
-	                    const userId = $('#email').val().split('@')[0];
-	                    $('#userId').val(userId);
-	                }
-	            },
-	            error: function() {
-	                $('#checkResult').css('color', 'red').text('서버 오류가 발생했습니다.');
-	            }
-	        });
-		}
-		
-		
-		// 이메일 중복 검사 버튼 클릭
-		$('#checkEmailBtn').click(emailCheck);
 	});
 </script>
 </head>
 <body>
-	<h1>관리자 회원 추가 페이지</h1>
-	<form:form action="userInsert" method="post" modelAttribute="user">
+	<h1>관리자 회원 수정 페이지</h1>
+	<form:form action="userModify" method="post" modelAttribute="user">
+		<input type="hidden" id="userId" name="userId" value="${selectedUser.userId}"/>
 		<table border="1">
-			<tr>
-				<td>역할</td>
-				<td>
-					<form:select path="roleId">
-						<form:options items="${roleList}" itemValue="roleId" itemLabel="roleName" />
-					</form:select>
-					<form:errors path="roleId" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>이메일</td>
-				<td>
-					<form:input path="email" />
-					<button type="button" id="checkEmailBtn">중복 검사</button>
-			        <span id="checkResult" style="color:red; margin-left:10px;"></span>
-					<form:errors path="email" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>아이디</td>
-				<td>
-					<form:input path="userId" />
-			        <form:errors path="userId" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>비밀번호</td>
-				<td>
-					<form:password path="password" value="${uuid}"/>
-					<form:errors path="password" cssClass="error" />
-				</td>
-			</tr>
 			<tr>
 				<td>이름</td>
 				<td>
-					<form:input path="userName" />
+					<form:input path="userName" value="${selectedUser.userName}"/>
 					<form:errors path="userName" cssClass="error" />
 				</td>
 			</tr>
 			<tr>
 				<td>전화번호</td>
 				<td>
-					<form:input path="phone" />
+					<form:input path="phone" value="${selectedUser.phone}"/>
 					<form:errors path="phone" cssClass="error" />
 					<span id="phoneError"></span>
 				</td>
@@ -161,6 +65,8 @@
 			<tr>
 				<td>주소</td>
 				<td>
+					<span>${selectedUser.address}</span>
+					<br>
 					<input type="text" name="postcode" id="postcode" placeholder="우편번호">
 					<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
 					<input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
@@ -172,17 +78,10 @@
 					<form:errors path="address" cssClass="error" />
 				</td>
 			</tr>
-			<tr>
-				<td>생년월일</td>
-				<td>
-					<form:input type="date" path="birth" />
-					<form:errors path="birth" cssClass="error" />
-				</td>
-			</tr>
 		</table>
-		<button type="submit" id="insertBtn" name="insertBtn">추가</button>
+		<button type="submit" id="modifyBtn" name="modifyBtn">수정</button>
 	</form:form>
-	<a href="userManagement">뒤로</a>
+	<a href="userOne?userId=${selectedUser.userId}">뒤로</a>
 	
 	
 	<!-- 카카오 주소API 호출을 위한 CDN주소 -->
