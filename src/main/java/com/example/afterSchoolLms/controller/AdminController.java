@@ -365,4 +365,26 @@ public class AdminController {
 		
 		return "redirect:/admin/materialManagement";
 	}
+	
+	// 교보재 요청 관리 페이지
+	@GetMapping("/admin/materialRequestManagement")
+	public String materialRequestManagement(Model model) {
+		// 교보재 요청 목록 조회
+		List<Map<String, Object>> list = adminService.getMaterialRequestList();
+		model.addAttribute("materialRequestList", list);
+		return "admin/materialRequestManagement";
+	}
+	
+	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
+	@PostMapping("/admin/changeMaterialRequestStatus")
+	public String changeMaterialRequestStatus(@RequestParam int requestId) {
+		int row = adminService.changeMaterialRequestStatus(requestId);
+		
+		if(row != 1) {
+			log.info("교보재 요청 완료 처리 실패");
+			return "redirect:/admin/materialRequestManagement";
+		}
+		
+		return "redirect:/admin/materialRequestManagement";
+	}
 }

@@ -168,5 +168,15 @@ public class AdminService {
 		return adminMapper.removeMaterial(materialId);
 	}
 
+	// 교보재 요청 목록 조회
+	public List<Map<String, Object>> getMaterialRequestList() {
+		return adminMapper.selectMaterialRequestList();
+	}
+
+	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
+	public int changeMaterialRequestStatus(int requestId) {
+		return adminMapper.changeMaterialRequestStatus(requestId);
+	}
+
 
 }

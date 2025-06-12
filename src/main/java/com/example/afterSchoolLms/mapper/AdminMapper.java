@@ -104,5 +104,11 @@ public interface AdminMapper {
 	// 교보재 삭제
 	int removeMaterial(int materialId);
 
+	// 교보재 요청 목록 조회
+	List<Map<String, Object>> selectMaterialRequestList();
+
+	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
+	int changeMaterialRequestStatus(int requestId);
+
 
 }
