@@ -253,4 +253,48 @@ public class AdminController {
 		
 		return "redirect:/admin/lectureList";
 	}
+	
+	// 강의실 관리 페이지
+	// 강의실 목록 조회
+	@GetMapping("/admin/classroomManagement")
+	public String classroomManagement(Model model) {
+		List<Map<String, Object>> list = adminService.getClassroom();
+		model.addAttribute("classroomList", list);
+		return "/admin/classroomManagement";
+	}
+	
+	// 강의실 등록
+	@PostMapping("/admin/createClassroom")
+	public String createClassroom(Classroom classroom) {
+		int row = adminService.createClassroom(classroom);
+		
+		if(row != 1) {
+			log.info("강의실 등록 insert error");
+			return "redirect:/admin/classroomManagement";
+		}
+		return "redirect:/admin/classroomManagement";
+	}
+	
+	// 강의실 수정 페이지
+	@GetMapping("/admin/modifyClassroom")
+	public String modifyClassroom(@RequestParam int classroomId, Model model) {
+		// 해당 classroomId를 가지는 classroom 데이터 조회
+		Classroom classroom = adminService.getClassroomById(classroomId);
+		model.addAttribute("classroom", classroom);
+		return "/admin/modifyClassroom";
+	}
+	
+	// 강의실 정보 수정
+	@PostMapping("/admin/modifyClassroom")
+	public String modifyClassroom(Classroom classroom) {
+		int row = adminService.modifyClassroom(classroom);
+		
+		if(row != 1) {
+			log.info("강의실 정보 update error");
+			return "redirect:/admin/classroomManagement";
+		}
+		
+		return "redirect:/admin/classroomManagement";
+	}
+	
 }

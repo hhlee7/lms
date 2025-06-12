@@ -117,4 +117,25 @@ public class AdminService {
 		return adminMapper.modifyTeacherAssignment(teacherAssignment);
 	}
 
+	// 강의실 관리 페이지에서 강의실 목록 조회
+	public List<Map<String, Object>> getClassroom() {
+		return adminMapper.selectClassroom();
+	}
+
+	// 강의실 등록
+	public int createClassroom(Classroom classroom) {
+		return adminMapper.createClassroom(classroom);
+	}
+	
+	// 해당 classroomId를 가지는 classroom 데이터 조회
+	public Classroom getClassroomById(int classroomId) {
+		return adminMapper.selectClassroomById(classroomId);
+	}
+
+	// 강의실 정보 수정
+	public int modifyClassroom(Classroom classroom) {
+		return adminMapper.modifyClassroom(classroom);
+	}
+
+
 }
