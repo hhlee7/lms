@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StudentController {
 	
 	@Autowired StudentService studentService;
-	
+
 	// 학생 메인페이지
 	@GetMapping("/student/main")
 	public String main(HttpSession session, Model model) {
@@ -148,18 +148,55 @@ public class StudentController {
 	@GetMapping("/student/evaluation")
 	public String evaluation(Model model
 			, @RequestParam String paymentId
-			, @RequestParam String subjectName) {
+			, @RequestParam String subjectName
+			, @RequestParam String teacherName) {
 		//log.info("paymentId: " + paymentId);
 		//log.info("subjectName: " + subjectName);
+		//log.info("teacherName: " + teacherName);
 		model.addAttribute("paymentId", paymentId);
 		model.addAttribute("subjectName", subjectName);
-		return "/student/evaluate";
+		model.addAttribute("teacherName", teacherName);
+		return "/student/evaluation";
 	}
 	
 	@PostMapping("/student/evaluation")
 	public String evaluation(@RequestParam String paymentId
 			, @RequestParam String teacherRating
-			, @RequestParam String contentRating) {
+			, @RequestParam String lectureRating) {
+		//log.info("paymentId: " + paymentId);
+		//log.info("teacherRating: " + teacherRating);
+		//log.info("contentRating: " + lectureRating);
+		studentService.insertEvaluation(paymentId, teacherRating, lectureRating);
 		return "redirect:/student/satisfaction";
+	}
+	
+	// 학생 리뷰 작성
+	@GetMapping("/student/review")
+	public String reveiw(Model model
+			, @RequestParam String satisfactionId
+			, @RequestParam String subjectName
+			, @RequestParam String teacherName) {
+		model.addAttribute("satisfactionId", satisfactionId);
+		model.addAttribute("subjectName", subjectName);
+		model.addAttribute("teacherName", teacherName);
+		return "/student/review";
+	}
+	
+	@PostMapping("/student/review")
+	public String review(@RequestParam String satisfactionId
+			, @RequestParam String content) {
+		//log.info("satisfactionId: " + satisfactionId);
+		//log.info("content: " + content);
+		studentService.insertReview(satisfactionId, content);
+		return "redirect:/student/satisfaction";
+	}
+	
+	// 학생이 작성한 만족도평가, 리뷰 보기
+	@GetMapping("/student/history")
+	public String history(Model model
+			, @RequestParam String paymentId) {
+		List<Map<String, Object>> historyList = studentService.selectHistory(paymentId);
+		model.addAttribute("historyList", historyList);
+		return "/student/history";
 	}
 }

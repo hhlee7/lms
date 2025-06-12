@@ -72,8 +72,25 @@ public class StudentService {
 		return studentMapper.selectSubjectOneReview(subjectName);
 	}
 	
-	// 학생 본인 끝난 수업 + 만족도 평가
+	// 학생 본인 끝난 수업 + 만족도 평가 조회
 	public List<Map<String, Object>> selectLectureDone(String id) {
 		return studentMapper.selectLectureDone(id);
 	}
+	
+	// 학생 만족도 평가 입력
+	public int insertEvaluation(String paymentId, String teacherRating, String lectureRating) {
+		return studentMapper.insertEvaluation(paymentId, teacherRating, lectureRating);
+	}
+	
+	// 학생 리뷰 작성
+	public int insertReview(String satisfactionId, String content) {
+		return studentMapper.insertReview(satisfactionId, content);
+	}
+	
+	// 학생이 작성한 만족도평가, 리뷰 보기
+	public List<Map<String, Object>> selectHistory(String paymentId) {
+		return studentMapper.selectHistory(paymentId);
+	}
+	
+
 }

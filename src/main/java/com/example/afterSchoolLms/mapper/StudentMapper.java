@@ -44,6 +44,15 @@ public interface StudentMapper {
 	// 과목 상세 - 리뷰 조회
 	List<Map<String, Object>> selectSubjectOneReview(String subjectName);
 	
-	// 학생 본인 끝난 수업 + 만족도 평가
+	// 학생 본인 끝난 수업 + 만족도 평가 조회
 	List<Map<String, Object>> selectLectureDone(String id);
+	
+	// 학생 만족도 평가 입력
+	int insertEvaluation(String paymentId, String teacherRating, String lectureRating);
+	
+	// 학생 리뷰 작성
+	int insertReview(String satisfactionId, String content);
+	
+	// 학생이 작성한 만족도평가, 리뷰 보기
+	List<Map<String, Object>> selectHistory(String paymentId);
 }

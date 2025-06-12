@@ -21,24 +21,24 @@
             <p>수업 기간: ${lecture.startDate} ~ ${lecture.endDate}</p>
 
  			<c:choose>
-            	<c:when test="${lecture.isEvaluated == 1}">
+            	<c:when test="${not empty lecture.satisfactionId}">
                 	<span>만족도 평가 완료</span>
             	</c:when>
             	<c:otherwise>
-                	<a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}">만족도 평가</a>
+                	<a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">만족도 평가</a>
             	</c:otherwise>
        		</c:choose>
         
         	&nbsp;&nbsp;
 
         	<c:choose>
-			    <c:when test="${lecture.isEvaluated == 1}">
+			    <c:when test="${not empty lecture.satisfactionId}">
 			        <c:choose>
-			            <c:when test="${not empty lecture.review_id}">
+			            <c:when test="${not empty lecture.reviewId}">
 			                <span>리뷰 작성 완료</span>
 			            </c:when>
 			            <c:otherwise>
-			                <a href="">리뷰 작성</a>
+			                <a href="/student/review?satisfactionId=${lecture.satisfactionId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">리뷰 작성</a>
 			            </c:otherwise>
 			        </c:choose>
 			    </c:when>
@@ -50,8 +50,8 @@
 	        
 	        &nbsp;&nbsp;&nbsp;&nbsp;
 	        
-	        <c:if test="${lecture.isEvaluated == 1}">
-			    <a href="">내 작성내역 보기</a>
+	        <c:if test="${not empty lecture.satisfactionId}">
+			    <a href="/student/history?paymentId=${lecture.paymentId}">내 작성내역 보기</a>
 			</c:if>
 
 	        <hr>

@@ -116,6 +116,8 @@
 	<select id="selectLectureDone" parameterType="String" resultType="map">
 		SELECT
 		   p.payment_id AS paymentId,
+		   s.satisfaction_id AS satisfactionId,
+		   r.review_id AS reviewId,
 		   sb.name AS subjectName,
 		   lt.start_time AS startTime,
 		   lt.end_time AS endTime,
@@ -124,11 +126,7 @@
 		   lt.end_date AS endDate,
 		   cr.name AS classroomName,
 		   cr.location AS classroomLocation,
-		   t.name AS teacherName,
-		   CASE 
-		       WHEN s.satisfaction_id IS NOT NULL THEN TRUE 
-		       ELSE FALSE 
-		   END AS isEvaluated
+		   t.name AS teacherName
 		FROM (SELECT * FROM user WHERE user_id = 'stu002') u
 		INNER JOIN student_enrollment se ON se.student_id = u.user_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
@@ -138,8 +136,40 @@
 		INNER JOIN user t ON ta.teacher_id = t.user_id
 		LEFT JOIN payment p ON p.enrollment_id = se.enrollment_id
 		LEFT JOIN satisfaction s ON s.payment_id = p.payment_id
+		LEFT JOIN review r ON r.satisfaction_id = s.satisfaction_id
 		WHERE CURDATE() &gt;= lt.end_date
 	</select>
+	
+	<select id="selectHistory" parameterType="String" resultType="map">
+	SELECT 
+		p.payment_id AS paymentId, 
+		s.rating_lecture AS ratingLecture, 
+		s.rating_teacher AS ratingTeacher, 
+		r.content, 
+		sb.name AS subjectName, 
+		u.name AS teacherName
+	FROM satisfaction s
+	LEFT JOIN review r ON s.satisfaction_id = r.satisfaction_id
+	INNER JOIN payment p ON s.payment_id = p.payment_id 
+	INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+	INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+	INNER JOIN subject sb ON l.subject_id = sb.subject_id
+	INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+	INNER JOIN user u ON ta.teacher_id = u.user_id
+	WHERE p.payment_id = #{paymentId}
+	</select>
+	
+	<insert id="insertEvaluation" parameterType="String">
+		INSERT INTO
+			satisfaction(payment_id, rating_lecture, rating_teacher)
+		VALUES (#{paymentId}, #{lectureRating}, #{teacherRating})
+	</insert>
+	
+	<insert id="insertReview" parameterType="String">
+		INSERT INTO
+			review(satisfaction_id, content)
+		VALUES (#{satisfactionId}, #{content})
+	</insert>
 	
 	<update id="updatePw" parameterType="String">
 		UPDATE user 
