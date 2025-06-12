@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
+import com.example.afterSchoolLms.mapper.ParentMapper;
 import com.example.afterSchoolLms.service.ParentService;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,8 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ParentController {
 	@Autowired ParentService parentService;
+	@Autowired ParentMapper parentMapper;
 	
-	@GetMapping("/index")
+	@GetMapping("/parent/index")
 	public String index() {
 		return "parent/index";
 	}
@@ -162,6 +165,48 @@ public class ParentController {
 		
 		return "/parent/attendance";
 	}
+	
+	// 수강신청 목록
+	// 개강일 기준 3일전 까지만 출력(수강신청가능)
+	@GetMapping("/parent/lectureList")
+	public String lectureList(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+
+		List<Map<String, Object>> lectureList = parentService.getLectureList();
+		model.addAttribute("lectureList", lectureList);
+		return "/parent/lectureList";
+	}
+	
+    // 사진첩 
+    @GetMapping("/parent/album")
+    public String getAlbumList(HttpSession session, Model model,
+                               @RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "") String keyword) {
+        int rowPerPage = 10;
+        int startRow = (page - 1) * rowPerPage;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("startRow", startRow);
+        param.put("rowPerPage", rowPerPage);
+        param.put("keyword", keyword);
+
+        List<Map<String, Object>> albumList = parentMapper.selectAlbumList(param);
+        int totalRow = parentMapper.countAlbumList(param);
+        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
+
+        model.addAttribute("albumList", albumList);
+        model.addAttribute("page", page);
+        model.addAttribute("lastPage", lastPage);
+        model.addAttribute("keyword", keyword);
+
+        return "parent/album";
+    }
+
+	
 	
 	
 	

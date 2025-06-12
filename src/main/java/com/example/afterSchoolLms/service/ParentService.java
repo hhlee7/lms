@@ -10,6 +10,7 @@ import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.mapper.ParentMapper;
 
 @Service
@@ -63,6 +64,11 @@ public class ParentService {
 	// 자녀 출결 조회
 	public List<Attendance> getAttendance(String userId) {
 		return parentMapper.attendance(userId);
+	}
+
+	// 수강신청 가능 리스트 출력
+	public List<Map<String, Object>> getLectureList() {
+		return parentMapper.lectureList();
 	}
 
 }

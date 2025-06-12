@@ -9,6 +9,7 @@ import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.Lecture;
 
 @Mapper
 public interface ParentMapper {
@@ -40,6 +41,14 @@ public interface ParentMapper {
 
 	// 자녀 출결 조회
 	List<Attendance> attendance(String userId);
+	
+	// 수강신청 가능 리스트 출력
+	List<Map<String, Object>> lectureList();
 
+    // 전체 사진첩 조회 (검색+페이징)
+    List<Map<String, Object>> selectAlbumList(Map<String, Object> param);
+    
+    // 전체 사진첩 총 개수 조회
+    int countAlbumList(Map<String, Object> param);
 
 }

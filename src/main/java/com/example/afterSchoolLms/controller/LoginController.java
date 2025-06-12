@@ -17,7 +17,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	
-	@GetMapping("login")
+	@GetMapping("/")
 	public String login() {
 		return "login";
 	}
@@ -39,7 +39,7 @@ public class LoginController {
 			case 3:							// 강사
 				return "/teacher/test";
 			case 4:							// 학부모
-				return "/parent/index";
+				return "redirect:/parent/index";
 			case 5:							// 운전기사
 				return "/driver/test";
 		}
