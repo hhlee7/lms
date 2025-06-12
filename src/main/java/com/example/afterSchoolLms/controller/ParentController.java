@@ -320,7 +320,34 @@ public class ParentController {
         return "parent/album";
     }
 
-	
+	// 배차 취소 신청
+    @GetMapping("/parent/cancelVehicle")
+    public String cancelVehicle(HttpSession session, Model model) {
+    	
+    	User loginUser = (User) session.getAttribute("loginUser");
+    	if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+    	Map<String, Object> studentInfo = parentService.getStudentInfo(loginUser.getUserId());
+    	String studentName = (String) studentInfo.get("studentName");
+    	
+    	model.addAttribute("studentName", studentName);
+		return "/parent/cancelVehicle";
+    }
+    
+    @PostMapping("/parent/cancelVehicle")
+    public String cancelVehicle(HttpSession session
+    						, @RequestParam("reason") String reason) {
+    	
+    	User loginUser = (User) session.getAttribute("loginUser");
+    	if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+    	// FK키 payment_id, assignment_id 값 구해오기
+    	parentService.insertVehicleCancel(loginUser.getUserId(), reason);
+    	
+		return "redirect:/parent/vehicleInfo";
+    }
 	
 	
 	

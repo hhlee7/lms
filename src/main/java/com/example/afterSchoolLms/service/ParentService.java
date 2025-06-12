@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
-import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.mapper.ParentMapper;
 
 @Service
@@ -93,6 +93,22 @@ public class ParentService {
 
 	public int qnaDelete(int qnaId) {
 		return parentMapper.qnaDelete(qnaId);
+	}
+
+	public void insertVehicleCancel(String parentId, String reason) {
+		Map<String, Object> map = parentMapper.findPaymentAndAssignmentByParentId(parentId);
+		if (map != null) {
+			int paymentId = (int) map.get("paymentId");
+			int assignmentId = (int) map.get("assignmentId");
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("paymentId", paymentId);
+			param.put("assignmentId", assignmentId);
+			param.put("reason", reason);
+			
+			    parentMapper.insertVehicleCancel(param);
+			}
+		
 	}
 
 

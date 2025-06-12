@@ -61,8 +61,16 @@ public interface ParentMapper {
 	// qna 질문
 	int insertQna(String userId, String question);
 
+	// qna 수정
 	int modifyQna(int qnaId, String question);
-
+	
+	// qna 삭제
 	int qnaDelete(int qnaId);
+	
+	// 자녀 탑승 취소신청을 위한 FK키값 구해오기
+	Map<String, Object> findPaymentAndAssignmentByParentId(String parentId);
+	// 자녀 탑승 취소신청
+	void insertVehicleCancel(Map<String, Object> param);
+
 
 }

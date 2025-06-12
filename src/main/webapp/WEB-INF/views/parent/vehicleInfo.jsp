@@ -13,6 +13,7 @@
 		<div>차량번호 : ${vehicleInfo.vehicleNo}</div>
 		<div>기사님 이름 : ${vehicleInfo.driverName}</div>
 		<div>기사님 연락처 : ${vehicleInfo.phone}</div>
+		<a href="/parent/cancelVehicle?studentName=${vehicleInfo.studentName}">배차 취소신청</a>
 	</c:if>
 
 	<c:if test="${empty vehicleInfo}">

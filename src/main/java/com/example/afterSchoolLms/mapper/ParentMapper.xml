@@ -84,7 +84,9 @@
 														FROM user u INNER JOIN vehicle_assignment va
 															ON u.user_id = va.driver_id) t1
 			ON t1.driver_id = va.driver_id AND va.assignment_id = t1.assignment_id
-		WHERE sp.parent_id = #{userId}
+										LEFT JOIN vehicle_cancel vc 
+			ON vc.payment_id = p.payment_id AND vc.assignment_id = va.assignment_id
+		WHERE sp.parent_id = #{userId} AND vc.decision_id IS NULL
 	</select>
 	
 	<!-- 자녀 수업 조회 -->
@@ -208,4 +210,25 @@
 		FROM qna 
 		WHERE qna_id = #{qnaId}
 	</delete>
+	
+	<!-- FK키 payment_id, assignment_id 조회 -->
+	<select id="findPaymentAndAssignmentByParentId" parameterType="String" resultType="map">
+	    SELECT p.payment_id AS paymentId, va.assignment_id AS assignmentId
+	    FROM user parent
+	    JOIN student_parent sp ON parent.user_id = sp.parent_id
+	    JOIN user student ON sp.student_id = student.user_id
+	    JOIN student_enrollment se ON student.user_id = se.student_id
+	    JOIN payment p ON se.enrollment_id = p.enrollment_id
+	    JOIN vehicle_passenger vp ON p.payment_id = vp.payment_id
+	    JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
+	    WHERE parent.user_id = #{parentId}
+	    LIMIT 1
+	</select>
+	
+	<!-- 취소 신청 INSERT -->
+	<insert id="insertVehicleCancel" parameterType="map">
+	    INSERT INTO vehicle_cancel (payment_id, assignment_id, cancel_reason)
+	    VALUES (#{paymentId}, #{assignmentId}, #{reason})
+	</insert>
+	
 </mapper>
