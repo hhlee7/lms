@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.Lecture;
 
@@ -50,5 +51,11 @@ public interface ParentMapper {
     
     // 전체 사진첩 총 개수 조회
     int countAlbumList(Map<String, Object> param);
+
+	// 수강신청(결제x)
+	int lectureApply(String userId, String lectureId, String studentId);
+	
+	// qna게시판
+	List<Qna> qnaList(int beginRow, int size);
 
 }

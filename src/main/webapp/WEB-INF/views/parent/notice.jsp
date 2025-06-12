@@ -27,25 +27,25 @@
 	</table>
 	
 	<div class="page">
-    <c:if test="${page > 1}">
-        <a href="?page=${page - 1}&size=${size}">이전</a>
-    </c:if>
-
-    <c:forEach var="i" begin="1" end="${totalPage}">
-        <c:choose>
-            <c:when test="${i == page}">
-                <strong>${i}</strong>
-            </c:when>
-            <c:otherwise>
-                <a href="?page=${i}&size=${size}">${i}</a>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-
-    <c:if test="${page < totalPage}">
-        <a href="?page=${page + 1}&size=${size}">다음</a>
-    </c:if>
-</div>
+	    <c:if test="${page > 1}">
+	        <a href="?page=${page - 1}&size=${size}">이전</a>
+	    </c:if>
+	
+	    <c:forEach var="i" begin="1" end="${totalPage}">
+	        <c:choose>
+	            <c:when test="${i == page}">
+	                <strong>${i}</strong>
+	            </c:when>
+	            <c:otherwise>
+	                <a href="?page=${i}&size=${size}">${i}</a>
+	            </c:otherwise>
+	        </c:choose>
+	    </c:forEach>
+	
+	    <c:if test="${page < totalPage}">
+	        <a href="?page=${page + 1}&size=${size}">다음</a>
+	    </c:if>
+	</div>
 
 </body>
 </html>

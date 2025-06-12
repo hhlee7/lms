@@ -36,10 +36,23 @@
 		    <td>${lec.location} ${lec.classroomName}</td>
 		    <td>${lec.status}</td>
 		    <td><fmt:formatNumber value="${lec.amount}" type="number" groupingUsed="true"/>원</td>
-		    <td>신청</td>
+		    <td>
+		    	<c:choose>
+			        <c:when test="${lec.currentCount lt lec.recruited}">
+			          <form action="/parent/lectureApply" method="post" style="margin:0;">
+			            <input type="hidden" name="lectureId" value="${lec.lectureId}"/>
+			            <input type="hidden" name="userId" value="${userId}">
+			            <input type="hidden" name="studentId" value="${studentId}">
+			            <button type="submit">수강신청하기</button>
+			          </form>
+			        </c:when>
+			        <c:otherwise>
+			          신청불가
+			        </c:otherwise>
+			      </c:choose>
+		    </td>
 		  </tr>
 		</c:forEach>
-
 	</table>
 </body>
 </html>

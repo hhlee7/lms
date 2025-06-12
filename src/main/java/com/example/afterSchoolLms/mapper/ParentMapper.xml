@@ -127,32 +127,34 @@
 		ORDER BY attendDate DESC
 	</select>
 
+	<!-- 수강가능 강좌 목록 -->
 	<select id="lectureList" resultType="map">
 		SELECT 
-		      s.name AS subjectName,
-		      u.name AS teacherName,
-		      l.start_time AS startTime,
-		      l.end_time AS endTime,
-		      l.day_of_week AS dayOfWeek,
-		      l.start_date AS startDate,
-		      l.end_date AS endDate,
-		      c.location,
-		      c.name AS classroomName,
-		      l.amount,
-		      l.recruited,
-		      IFNULL(e.current_count, 0) AS currentCount,
-		      CONCAT(IFNULL(e.current_count, 0), '/', l.recruited) AS status
-		  FROM lecture l
+			l.lecture_id AS lectureId,
+			s.name AS subjectName,
+			u.name AS teacherName,
+			l.start_time AS startTime,
+			l.end_time AS endTime,
+			l.day_of_week AS dayOfWeek,
+			l.start_date AS startDate,
+			l.end_date AS endDate,
+			c.location,
+			c.name AS classroomName,
+			l.amount,
+			l.recruited,
+			IFNULL(e.current_count, 0) AS currentCount,
+			CONCAT(IFNULL(e.current_count, 0), '/', l.recruited) AS status
+		FROM lecture l
 		INNER JOIN subject s ON l.subject_id = s.subject_id
 		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
 		LEFT JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
 		LEFT JOIN user u ON ta.teacher_id = u.user_id
 		LEFT JOIN (
-		    SELECT lecture_id, COUNT(*) AS current_count
-		    FROM student_enrollment
-		    WHERE status IN ('PENDING', 'PAID')
-		    GROUP BY lecture_id
-		) e ON l.lecture_id = e.lecture_id
+			SELECT lecture_id, COUNT(*) AS current_count
+			FROM student_enrollment
+			WHERE status IN ('PENDING', 'PAID')
+			GROUP BY lecture_id
+			) e ON l.lecture_id = e.lecture_id
 		WHERE CURDATE() &lt;= DATE_SUB(l.start_date, INTERVAL 3 DAY)
 	</select>
 	
@@ -174,5 +176,16 @@
 	  <if test="keyword != null and keyword != ''">
 	    WHERE title LIKE CONCAT('%', #{keyword}, '%')
 	  </if>
+	</select>
+	
+	<!-- 수강신청(결제x) -->
+	<insert id="lectureApply">
+		INSERT INTO student_enrollment(student_id, lecture_id, STATUS, enrolled_at)
+		VALUES(#{studentId}, #{lectureId}, 'PENDING', NOW())
+	</insert>
+	
+	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">
+		SELECT qna_id AS qnaId, question, answer, created_at AS createdAt
+		FROM qna
 	</select>
 </mapper>

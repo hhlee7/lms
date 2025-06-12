@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.mapper.ParentMapper;
@@ -69,6 +70,16 @@ public class ParentService {
 	// 수강신청 가능 리스트 출력
 	public List<Map<String, Object>> getLectureList() {
 		return parentMapper.lectureList();
+	}
+	
+	// 수강신청(결제x)
+	public int lectureApply(String userId, String lectureId, String studentId) {
+		return parentMapper.lectureApply(userId, lectureId, studentId);
+	}
+	
+	// qna게시판
+	public List<Qna> qnaList(int beginRow, int size) {
+		return parentMapper.qnaList(beginRow, size);
 	}
 
 }

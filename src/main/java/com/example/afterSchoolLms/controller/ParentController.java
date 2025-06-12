@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.ParentMapper;
@@ -175,11 +176,62 @@ public class ParentController {
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		}
-
+		
+		String userId = loginUser.getUserId();
 		List<Map<String, Object>> lectureList = parentService.getLectureList();
+		// 자녀정보 가져오기
+	    Map<String, Object> studentInfo = parentService.getStudentInfo(loginUser.getUserId());
+	    String studentId = (String) studentInfo.get("studentId");
 		model.addAttribute("lectureList", lectureList);
+		model.addAttribute("userId", userId);
+		model.addAttribute("studentId", studentId);
 		return "/parent/lectureList";
 	}
+	
+	// 수강신청 접수(결제x)
+	@PostMapping("/parent/lectureApply")
+	public String lectureApply(HttpSession session, Model model
+							, @RequestParam("userId") String userId
+							, @RequestParam("lectureId") String lectureId
+							, @RequestParam("studentId") String studentId) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		parentService.lectureApply(userId, lectureId, studentId);
+		 
+		
+		return "redirect:/parent/lectureList";
+	}
+	
+	// qna
+	@GetMapping("/parent/qnaList")
+	public String qnaList(HttpSession session, Model model
+						,@RequestParam(defaultValue = "1") int page
+						,@RequestParam(defaultValue = "10") int size) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		
+		Page paging = new Page(size, page, 0);
+		int totalCount = parentService.totalCount(paging);
+		List<Qna> qnaList = parentService.qnaList(paging.getBeginRow(), size);
+		int totalPage = (int) Math.ceil((double) totalCount / size);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("userId", userId);
+		model.addAttribute("qnaList", qnaList);
+		return "/parent/qnaList";
+	}
+	
 	
     // 사진첩 
     @GetMapping("/parent/album")
@@ -202,6 +254,7 @@ public class ParentController {
         model.addAttribute("page", page);
         model.addAttribute("lastPage", lastPage);
         model.addAttribute("keyword", keyword);
+        
 
         return "parent/album";
     }
