@@ -1,5 +1,10 @@
 package com.example.afterSchoolLms.controller;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +16,10 @@ import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.service.DriverService;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class DriverController {
 
 	@Autowired DriverService driverService;
@@ -78,4 +85,34 @@ public class DriverController {
 		return "redirect:/";
 	}
 
+	// 기사 배차 조회
+	@GetMapping("/driver/dispatch")
+	public String dispatch(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		List<Map<String, Object>> dispatchList = driverService.dispatch(loginUser.getUserId());
+		model.addAttribute("dispatchList", dispatchList);
+		return "/driver/dispatch";
+	}
+	
+	// 배차된 학생 조회
+	@GetMapping("/driver/dispatchStudent")
+	public String dispatchStudent(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		List<Map<String, Object>> dispatchStudentList = driverService.dispatchStudent(loginUser.getUserId());
+		log.info(dispatchStudentList.toString());
+		
+	    // 고유한 시간(endTime) 추출
+	    Set<String> timeSet = new LinkedHashSet<>();
+	    for (Map<String, Object> student : dispatchStudentList) {
+	        Object endTimeObj = student.get("endTime");
+	        if (endTimeObj != null) {
+	            timeSet.add(endTimeObj.toString());
+	        }
+	    }
+	    
+	    //log.info("timeSet: " + timeSet.toString());
+	    model.addAttribute("dispatchStudentList", dispatchStudentList);
+	    model.addAttribute("timeList", timeSet);  // 시간 리스트도 모델에 추가
+		return "/driver/dispatchStudent";
+	}
 }
