@@ -39,6 +39,37 @@
 		</where>
 	</select>
 	
+	<!-- 공지사항 리스트 전체 데이터 가져오기 -->
+	<select id="noticeTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+			FROM notice
+		<where>
+		    <if test="searchType != 'all'">
+		        target_role_id = #{roleType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND title LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 공지사항 하나 조회 -->
+	<select id="selectNoticeOne" parameterType="map">
+		SELECT 
+			n.notice_id AS noticeId,
+			u.user_id AS adminId,
+			u.name AS adminName,
+			n.title,
+			n.content,
+			n.notice_id AS noticeId,
+			n.target_role_id AS targetRoleId,
+			r.role_name AS roleName,
+			DATE_FORMAT(n.created_at, '%Y-%m-%d') AS createdAt
+		FROM (SELECT * FROM notice WHERE notice_id = #{noticeId}) n
+		INNER JOIN role r ON r.role_id = n.target_role_id
+		INNER JOIN user u ON n.admin_id = u.user_id
+	</select>
+	
 	<!-- 역할 리스트 조회 -->
 	<select id="selectRoleList" parameterType="com.example.afterSchoolLms.dto.Role">
 		SELECT
@@ -66,6 +97,28 @@
 		INNER JOIN user u ON ta.teacher_id = u.user_id
 	</select>
 	
+	<!-- 공지사항 리스트 조회 -->
+	<select id="selectNoticeList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
+		SELECT 
+			n.notice_id AS noticeId,
+			n.title,
+			n.content,
+			r.role_name AS roleName,
+			DATE_FORMAT(n.created_at, '%Y-%m-%d') AS createdAt
+		FROM notice n
+		INNER JOIN role r ON r.role_id = n.target_role_id
+		<where>
+		    <if test="searchType != 'all' and roleType != null">
+		        n.target_role_id = #{roleType}
+		    </if>
+		    <if test="searchWord != null and searchWord != ''">
+		        AND n.title LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY n.created_at DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
 	<!-- 차량 리스트 조회 -->
 	<select id="selectVehicleList" resultType="map">
 		SELECT 
@@ -74,7 +127,8 @@
 			dr.user_id AS driverId,
 			vc.capacity,
 			IFNULL(dr.name,'') AS driverName,
-			IFNULL(dr.phone,'') AS phone
+			IFNULL(dr.phone,'') AS phone,
+			IFNULL(va.location,'') AS location
 		FROM vehicle vc
 		LEFT OUTER JOIN vehicle_assignment va ON va.vehicle_id = vc.vehicle_id
 		LEFT OUTER JOIN user dr ON dr.user_id = va.driver_id;
@@ -111,6 +165,15 @@
 	    SELECT * FROM user WHERE email = #{email}
 	</select>
 
+	<select id="selectDrvierlist" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName,
+			phone,
+			email
+		FROM user
+		WHERE role_id = 5;
+	</select>
 	
 	<!-- 부모의 아이디로 자녀 회원 조회 -->
 	<select id="selectUserByParentId" parameterType="String" resultType="map">
@@ -171,6 +234,18 @@
 		WHERE teacher_id = #{teacherId}
 	</select>
 	
+	<!-- 차량 아이디로 차량 배정 조회 -->
+	<select id="selectVehicleAssignmentByVehicleId" resultType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		SELECT
+			assignment_id AS assignmentId,
+			lecture_id AS lectureId,
+			vehicle_id AS vehicleId,
+			driver_id AS driverId,
+			location
+		FROM vehicle_assignment
+		WHERE vehicle_id = #{vehicleId};
+	</select>
+	
 	<!-- ======= UPDATE ======= -->
 	<update id="modifyUser" parameterType="com.example.afterSchoolLms.dto.User">
 	    UPDATE user
@@ -201,6 +276,17 @@
 	        <if test="capacity != null">capacity = #{capacity},</if>
 	    </set>
 	    WHERE vehicle_id = #{vehicleId}
+	</update>
+	
+	<update id="modifyVehicleAssignment" parameterType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		UPDATE vehicle_assignment
+	    <set>
+	        <if test="lectureId != null">lecture_id = #{lectureId},</if>
+	        <if test="vehicleId != null">vehicle_id = #{vehicleId},</if>
+	        <if test="location != null">location = #{location},</if>
+	        driver_id = #{driverId}
+	    </set>
+	    WHERE assignment_id = #{assignmentId}
 	</update>
 	
 	<!-- ======= INSERT ======= -->
@@ -237,6 +323,24 @@
 			vehicle_no, capacity
 		) VALUES(
 			#{vehicleNo}, #{capacity}
+		)
+	</insert>
+	
+	<!-- 차량 배정 등록 -->
+	<insert id="insertVehicleAssignment" parameterType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		INSERT INTO vehicle_assignment(
+			vehicle_id, driver_id, location
+		) VALUES(
+			#{vehicleId}, #{driverId}, #{location}
+		)
+	</insert>
+	
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice" parameterType="com.example.afterSchoolLms.dto.Notice">
+		INSERT INTO notice(
+			admin_id, title, content, target_role_id
+		) VALUES(
+			#{adminId}, #{title}, #{content}, #{targetRoleId}
 		)
 	</insert>
 	

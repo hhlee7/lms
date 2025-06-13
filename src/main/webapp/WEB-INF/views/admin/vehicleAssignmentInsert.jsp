@@ -12,40 +12,55 @@
 </head>
 <body>
 	<h1>차량 배정 페이지 입니다.</h1>
-	
-	<table border="1">
-	<tr>
-		<th>#</th>
-		<td>${vehicle.vehicleId}</td>
-	</tr>
-	<tr>
-		<th>차량 번호</th>
-		<td>${vehicle.vehicleNo}</td>
-	</tr>
-	<tr>
-		<th>최대 인원</th>
-		<td>${vehicle.capacity}</td>
-	</tr>
-	
-	<tr>
-		<th>수업 선택</th>
-		<td>
-			<select>
-				<option>==수업선택==</option>
-				<c:forEach var="lec" items="${lectureList}">
-					<option>[${lec.subjectName}] ${lec.dayOfWeek}요일 ${lec.startTime} ~ ${lec.endTime}</option>
-				</c:forEach>
-			</select>
-		</td>
-	</tr>
-	
-	<tr>
-		<th>주차 위치</th>
-		<td><input type="text" id="location" name="location"></td>
-	</tr>
-	
-	</table>
-	
+	<form action="vehicleAssignmentInsert" method="post" name="vehicleAssignment" id="vehicleAssignment">
+		<c:if test="${vehicleAssignment != null}">
+			    <input type="hidden" id="assignmentId" name="assignmentId" value="${vehicleAssignment.assignmentId}">
+		</c:if>
+		<table border="1">
+		<tr>
+			<th>#</th>
+			<td><input type="text" id="vehicleId" name="vehicleId" value="${vehicle.vehicleId}" readonly></td>
+		</tr>
+		<tr>
+			<th>차량 번호</th>
+			<td><input type="text" id="vehicleNo" name="vehicleNo" value="${vehicle.vehicleNo}" readonly></td>
+		</tr>
+		<tr>
+			<th>최대 인원</th>
+			<td>${vehicle.capacity}</td>
+		</tr>
+		
+		<tr>
+			<th>수업 선택</th>
+			<td>
+				<select name="driverId" id="driverId">
+				    <option value="">기사 없음</option>
+				    <c:forEach var="dr" items="${driverList}">
+				        <option value="${dr.userId}" 
+				            <c:if test="${vehicleAssignment != null && vehicleAssignment.driverId == dr.userId}">
+				                selected
+				            </c:if>
+				        >[${dr.userId}] ${dr.userName}</option>
+				    </c:forEach>
+				</select>
+			</td>
+		</tr>
+		
+		<tr>
+			<th>주차 위치</th>
+			<td>
+			<c:if test="${vehicleAssignment != null}">
+			    <input type="text" id="location" name="location" value="${vehicleAssignment.location}">
+			</c:if>
+			<c:if test="${vehicleAssignment == null}">
+			    <input type="text" id="location" name="location">
+			</c:if>
+			</td>
+		</tr>
+			
+		</table>
+		<button type="submit">배정</button>
+	</form>
 	<a href="vehicleManagement">뒤로</a>
 </body>
 </html>

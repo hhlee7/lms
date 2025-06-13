@@ -27,6 +27,7 @@
 			<th>차량 정보 수정</th>
 			<th>기사님</th>
 			<th>전화번호</th>
+			<th>주차</th>
 			<th>차량 배정</th>
 		</tr>
 			<c:forEach var="vehicle" items="${vehicleList}">
@@ -37,6 +38,7 @@
 					<td><a href="vehicleModify?vehicleId=${vehicle.vehicleId}">수정</a></td>
 					<td><a href="userOne?userId=${vehicle.driverId}">${vehicle.driverName}</a></td>
 					<td>${vehicle.phone}</td>
+					<td>${vehicle.location}</td>
 					<td><a href="vehicleAssignmentInsert?vehicleId=${vehicle.vehicleId}">배정</a></td>
 				</tr>
 			</c:forEach>

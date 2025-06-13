@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
+import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.mapper.TeacherMapper;
 import com.example.afterSchoolLms.service.AdminService;
 
@@ -46,6 +48,85 @@ public class AdminController {
 		return "admin/adminMain";
 	}
 	
+	/** 공지사항 관리 페이지 **/
+	@GetMapping("noticeManagement")
+	public String noticeManagement(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "10") int size
+			,@RequestParam(defaultValue = "") String searchWord
+			,@RequestParam(defaultValue = "all") String searchType) {
+		
+		int roleType = 0;
+		switch(searchType) {
+		case "관리자":			// 관리자	
+			roleType = 1; break;
+		case "학생":				// 학생
+			roleType = 2; break;
+		case "강사":				// 강사
+			roleType = 3; break;
+		case "학부모":			// 학부모
+			roleType = 4; break;
+		case "운전기사":			// 운전기사
+			roleType = 5; break;
+		}
+		
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType, roleType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.noticeTotalCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		List<Map<String,Object>> noticeList = adminService.selectNoticeList(paging);
+		
+		// 역할 리스트
+		List<Role> roleList = adminService.selectRoleList();
+
+		model.addAttribute("roleList",roleList);
+		model.addAttribute("page",paging);
+		model.addAttribute("noticeList",noticeList);
+		return "admin/noticeManagement";
+	}
+	
+	/** 공지사항 등록 페이지 **/
+	@GetMapping("noticeInsert")
+	public String noticeInsert(Model model) {
+		List<Role> roleList = adminService.selectRoleList();
+        model.addAttribute("roleList", roleList);
+		return "admin/noticeInsert";
+	}
+	
+	/** 공지사항 등록 기능 **/
+	@PostMapping("noticeInsert")
+	public String noticeInsert(Notice notice) {
+		int row =adminService.insertNotice(notice);
+		
+		if(row != 1) {	// 삽입 이상
+			
+		}
+
+		return "admin/noticeOne?noticeId="+notice.getNoticeId();
+	}
+	
+	/** 공지사항 상세 페이지 **/
+	@GetMapping("noticeOne")
+	public String noticeOne(Model model, @RequestParam String noticeId) {
+		Map<String,Object> notice = adminService.selectNoticeOne(Integer.parseInt(noticeId));
+		model.addAttribute("notice",notice);
+		return "admin/noticeOne";
+	}
+	
+	/** 공지사항 수정 페이지 **/
+	@GetMapping("noticeModify")
+	public String noticeModify(Model model, @RequestParam String noticeId) {
+		List<Role> roleList = adminService.selectRoleList();
+		Map<String,Object> notice = adminService.selectNoticeOne(Integer.parseInt(noticeId));
+		model.addAttribute("notice",notice);
+		model.addAttribute("roleList", roleList);
+		return "admin/noticeModify";
+	}
+	
+	
 	/** 차량 관리 페이지 **/
 	@GetMapping("vehicleManagement")
 	public String vehicleManagement(Model model) {
@@ -56,7 +137,7 @@ public class AdminController {
 	
 	/** 차량 등록 페이지 **/
 	@GetMapping("vehicleInsert")
-	public String vehicleInsert() {
+	public String vehicleInsert(Model model) {
 		return "admin/vehicleInsert";
 	}
 	
@@ -95,18 +176,46 @@ public class AdminController {
 	/** 차량 배정 페이지 **/
 	@GetMapping("vehicleAssignmentInsert")
 	public String vehicleAssignmentInsert(@RequestParam String vehicleId, Model model) {
-		
 		// 차량 정보
 		Vehicle vehicle = adminService.selectVehicleByVehicleId(Integer.parseInt(vehicleId));
 		model.addAttribute("vehicle",vehicle);
 		
-		// 강좌 리스트
-		List<Map<String,Object>> lectureList = adminService.selectLectureList();
-		model.addAttribute("lectureList",lectureList);
-		
 		// 운전기사 리스트
+		List<User> driverList = adminService.selectDriverList();
+		model.addAttribute("driverList", driverList);
+		
+		VehicleAssignment vehicleAssignment = adminService.selectVehicleAssignmentByVehicleId(Integer.parseInt(vehicleId));
+		if(vehicleAssignment != null) {
+			model.addAttribute("vehicleAssignment",vehicleAssignment);
+		}
 		
 		return "admin/vehicleAssignmentInsert";
+	}
+	
+	/** 차량 배정 등록 **/
+	@PostMapping("vehicleAssignmentInsert")
+	public String vehicleAssignmentInsert(@RequestParam(defaultValue = "") String driverId, VehicleAssignment va) {
+		
+		if (driverId == null || driverId.isEmpty()) {	// 기사를 선택 안 함
+		    va.setDriverId(null);
+		}
+		
+		if(va != null) {	// 배정이 있을때는 UPDATE
+			int row = adminService.modifyVehicleAssignment(va);
+			
+			if(row != 1) {	// 갱신 이상
+				
+			}
+		}
+		else {	// 배정이 없을때는 INSERT
+			int row = adminService.insertVehicleAssignment(va);
+			
+			if(row != 1) {	// 삽입 이상
+				
+			}
+		}
+		
+		return "redirect:/vehicleManagement";
 	}
 	
 	/** 강사 경력 입력/수정 **/

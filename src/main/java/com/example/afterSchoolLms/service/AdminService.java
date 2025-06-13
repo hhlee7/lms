@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
+import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -24,6 +26,11 @@ public class AdminService {
 		return adminMapper.getTotalCount(page);
 	}
 	
+	/** 공지사항 전체 카운트 가져오기 **/
+	public int noticeTotalCount(Page page) {
+		return adminMapper.noticeTotalCount(page);
+	}
+	
 	/** 관리자가 유저 리스트를 가져옴 **/
 	public List<User> selectUserList(Page page){
 		return adminMapper.selectUserList(page);
@@ -34,11 +41,21 @@ public class AdminService {
 		return adminMapper.selectUserByUserId(userId);
 	}
 	
+	/** 이메일 중복 검사를 위한 조회 **/
 	public boolean isUserEmailExists(String email) {
 	    User user = adminMapper.selectUserEmail(email);
 	    return user != null;  // 있으면 true (중복 존재), 없으면 false
 	}
 
+	/** 공지사항 조회 **/
+	public List<Map<String,Object>> selectNoticeList(Page page){
+		return adminMapper.selectNoticeList(page);
+	}
+	
+	/** 공지사항 상세 조회 **/
+	public Map<String,Object> selectNoticeOne(int noticeId){
+		return adminMapper.selectNoticeOne(noticeId);
+	}
 	
 	/** 역할 리스트를 가져옴 **/
 	public List<Role> selectRoleList(){
@@ -48,6 +65,11 @@ public class AdminService {
 	/** 수업 리스트를 가져옴 **/
 	public List<Map<String,Object>> selectLectureList(){
 		return adminMapper.selectLectureList();
+	}
+	
+	/** 운전기사 리스트를 가져옴 **/
+	public List<User> selectDriverList(){
+		return adminMapper.selectDrvierlist();
 	}
 	
 	/** 부모 아이디로 자식 조회 **/
@@ -70,10 +92,17 @@ public class AdminService {
 		return adminMapper.selectVehicleByDriverId(driverId);
 	}
 	
+	/** 차량 아이디로 배정 조회 **/
+	public VehicleAssignment selectVehicleAssignmentByVehicleId(int vehicleId) {
+		return adminMapper.selectVehicleAssignmentByVehicleId(vehicleId);
+	}
+	
+	/** 차량 리스트 조회 **/
 	public List<Map<String,Object>> selectVehicleList(){
 		return adminMapper.selectVehicleList();
 	}
 	
+	/** 차량 아이디로 차량 조회 **/
 	public Vehicle selectVehicleByVehicleId(int vehicleId) {
 		return adminMapper.selectVehicleByVehicleId(vehicleId);
 	}
@@ -93,6 +122,11 @@ public class AdminService {
 	/** 차량 정보 수정 **/
 	public int modifyVehicle(Vehicle vc) {
 		return adminMapper.modifyVehicle(vc);
+	}
+	
+	/** 차량 배정 정보 수정 **/
+	public int modifyVehicleAssignment(VehicleAssignment va) {
+		return adminMapper.modifyVehicleAssignment(va);
 	}
 	
 	// ------ DELETE ------
@@ -119,4 +153,13 @@ public class AdminService {
 		return adminMapper.insertVehicle(vc);
 	}
 	
+	/** 차량 배정 등록 **/
+	public int insertVehicleAssignment(VehicleAssignment va) {
+		return adminMapper.insertVehicleAssignment(va);
+	}
+	
+	/** 공지사항 등록 **/
+	public int insertNotice(Notice notice) {
+		return adminMapper.insertNotice(notice);
+	}
 }
