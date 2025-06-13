@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.afterSchoolLms.mapper.DriverMapper">
+
+	<select id="selectInformation" parameterType="String" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName,
+			birth,
+			email,
+			address,
+			phone
+		FROM user
+		WHERE user_id=#{id} AND PASSWORD=#{password}
+	</select>
+	
+	<select id="selectDispatch" parameterType="String" resultType="map">
+		SELECT 
+			v.vehicle_no AS vehicleNo, 
+			l.end_time AS endTime, 
+			l.day_of_week AS dayOfWeek
+		FROM vehicle v 
+		INNER JOIN vehicle_assignment va ON v.vehicle_id = va.vehicle_id
+		INNER JOIN user u ON u.user_id = va.driver_id
+		INNER JOIN lecture l ON l.lecture_id = va.lecture_id
+		WHERE u.user_id = #{userId}
+	</select>
+	
+	<select id="selectDispatchStudent" parameterType="String" resultType="map">
+		SELECT 
+			v.vehicle_no AS vehicleNo, 
+			l.end_time AS endTime, 
+			l.day_of_week AS dayOfWeek, 
+			t1.name AS studentName
+		FROM vehicle v 
+		INNER JOIN vehicle_assignment va ON v.vehicle_id = va.vehicle_id
+		INNER JOIN user u ON u.user_id = va.driver_id
+		INNER JOIN lecture l ON l.lecture_id = va.lecture_id
+		INNER JOIN (SELECT 
+							vp.assignment_id, 
+							u.name, 
+							vp.checked_at
+						FROM vehicle_passenger vp 
+						INNER JOIN payment p ON vp.payment_id = p.payment_id
+						INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+						INNER JOIN user u ON se.student_id = u.user_id) t1
+			ON va.assignment_id = t1.assignment_id
+		WHERE u.user_id = #{userId}
+			AND DATE(t1.checked_at) = CURDATE()
+		ORDER BY l.end_time;
+	</select>
+	
+	<update id="updateInformation" parameterType="com.example.afterSchoolLms.dto.User">
+		UPDATE user SET
+			email = #{email}, 
+			phone = #{phone},
+			address = #{address}
+		WHERE user_id = #{userId} AND PASSWORD = #{password} 
+	</update>
+	
+	<update id="updatePw" parameterType="String">
+		UPDATE user 
+		SET PASSWORD = #{updatePw} 
+		WHERE user_id = #{id} AND PASSWORD = #{currentPw}
+	</update>
+
+</mapper>

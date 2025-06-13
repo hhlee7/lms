@@ -26,7 +26,7 @@ public class LoginController {
 	public String login(User user, HttpSession session) {
 		User loginUser = loginService.login(user);
 		if(loginUser == null) {
-			return "redirect:/login";
+			return "redirect:/";
 		}
 		
 		session.setAttribute("loginUser", loginUser);
@@ -35,13 +35,13 @@ public class LoginController {
 			case 1:							// 관리자
 				return "redirect:/adminMain";
 			case 2:							// 학생
-				return "/student/test";
+				return "redirect:/student/main";
 			case 3:							// 강사
 				return "/teacher/test";
 			case 4:							// 학부모
 				return "/parent/test";
 			case 5:							// 운전기사
-				return "/driver/test";
+				return "redirect:/driver/main";
 		}
 		return "";
 	}
