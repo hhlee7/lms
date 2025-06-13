@@ -13,6 +13,7 @@ import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
@@ -29,6 +30,16 @@ public class AdminService {
 	/** 리스트 전체 카운트 가져오기 **/
 	public int getTotalCount(Page page) {
 		return adminMapper.getTotalCount(page);
+	}
+	
+	/** Q&A 리스트 조회 **/
+	public List<Qna> selectQnaList() {
+		return adminMapper.selectQnaList();
+	}
+	
+	/** Q&A 상세 조회 **/
+	public Qna selectQnaOne(int qnaId) {
+		return adminMapper.selectQnaOne(qnaId);
 	}
 	
 	/** 앨범 전체 리스트 조회 **/
@@ -152,6 +163,11 @@ public class AdminService {
 	/** 차량 배정 정보 수정 **/
 	public int modifyVehicleAssignment(VehicleAssignment va) {
 		return adminMapper.modifyVehicleAssignment(va);
+	}
+	
+	/** Q&A 관리자 답하기 **/
+	public int modifyQna(Qna qna) {
+		return adminMapper.modifyQna(qna);
 	}
 	
 	// ------ DELETE ------

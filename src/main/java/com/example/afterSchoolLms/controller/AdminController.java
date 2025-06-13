@@ -25,6 +25,7 @@ import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
@@ -33,6 +34,7 @@ import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.mapper.TeacherMapper;
 import com.example.afterSchoolLms.service.AdminService;
+import com.example.afterSchoolLms.service.LoginService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +43,48 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class AdminController {
+
+    private final LoginService loginService;
 	@Autowired AdminService adminService;
 	@Autowired TeacherMapper teacherMapper;
 	@Autowired JavaMailSender javaMailSender;
+
+    AdminController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 	
 	/** 관리자 메인 페이지 **/
 	@GetMapping("adminMain")
 	public String adminMain() {
 		return "admin/adminMain";
+	}
+	
+	/** Q&A 리스트 페이지 **/
+	@GetMapping("qnaManagement")
+	public String qnaManagement(Model model) {
+		List<Qna> qnaList = adminService.selectQnaList();
+		model.addAttribute("qnaList",qnaList);
+		return "admin/qnaManagement";
+	}
+	
+	/** Q&A 상세 페이지 **/
+	@GetMapping("qnaOne")
+	public String qnaOne(Model model, @RequestParam String qnaId) {
+		Qna qna = adminService.selectQnaOne(Integer.parseInt(qnaId));
+		model.addAttribute(qna);
+		return "admin/qnaOne";
+	}
+	
+	/** Q&A 관리자 응답 **/
+	@PostMapping("qnaAnswer")
+	public String qnaAnswer(Qna qna) {
+		int row = adminService.modifyQna(qna);
+		
+		if(row != 1) {	// 갱신 이상
+			
+		}
+		
+		return "redirect:/qnaOne?qnaId="+qna.getQnaId();
 	}
 	
 	/** 앨범 등록 페이지 **/

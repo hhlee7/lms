@@ -9,6 +9,7 @@ import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
+import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
@@ -37,7 +38,10 @@ public interface AdminMapper {
 	
 	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
-	Map<String,Object> selectAlbumOne(int albumId);		// 앨범 상세 조회
+	Map<String,Object> selectAlbumOne(int albumId);			// 앨범 상세 조회
+	
+	List<Qna> selectQnaList();								// Qna 리스트 조회
+	Qna selectQnaOne(int qnaId);							// Qna 상세 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
@@ -54,6 +58,7 @@ public interface AdminMapper {
 	int modifyVehicle(Vehicle vehicle);									// 차량 정보 수정
 	int modifyVehicleAssignment(VehicleAssignment vehicleAssignment);	// 차량 배정 정보 수정
 	int modifyNotice(Notice notice);									// 공지사항 수정
+	int modifyQna(Qna qna);												// 관리자가 Q&A에 답 합니다.
 	
 	// INSERT
 	int insertNotice(Notice notice);						// 공지사항 등록

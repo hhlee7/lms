@@ -111,6 +111,34 @@
 		WHERE album_id = #{albumId};
 	</select>
 	
+	<!-- Q&A 조회 (검색 페이징 해야함)-->
+	<select id="selectQnaList" resultType="com.example.afterSchoolLms.dto.Qna">
+		SELECT
+			qna_id AS qnaId,
+			parent_id AS parentId,
+			admin_id AS adminId,
+			question,
+			answer,
+			created_at AS createdAt,
+			answered_at AS answeredAt
+		FROM qna;
+	</select>
+	
+	<!-- Q&A 상세 조회 -->
+	<select id="selectQnaOne" resultType="com.example.afterSchoolLms.dto.Qna">
+		SELECT
+			qna_id AS qnaId,
+			parent_id AS parentId,
+			admin_id AS adminId,
+			question,
+			answer,
+			created_at AS createdAt,
+			answered_at AS answeredAt
+		FROM qna
+		WHERE qna_id = #{qnaId};
+	</select>
+	
+	
 	<!-- 역할 리스트 조회 -->
 	<select id="selectRoleList" parameterType="com.example.afterSchoolLms.dto.Role">
 		SELECT
@@ -339,6 +367,17 @@
 	        <if test="targetRoleId != null">target_role_id = #{targetRoleId},</if>
 	    </set>
 	    WHERE notice_id = #{noticeId}
+	</update>
+	
+	<!-- 관리자가 Q&A에 답 함 -->
+	<update id="modifyQna" parameterType="com.example.afterSchoolLms.dto.Qna">
+		UPDATE qna
+	    <set>
+	        <if test="adminId != null">admin_id = #{adminId},</if>
+	        <if test="answer != null">answer = #{answer},</if>
+	        answered_at = NOW()
+	    </set>
+	     WHERE qna_id = #{qnaId}
 	</update>
 	
 	<!-- ======= INSERT ======= -->
