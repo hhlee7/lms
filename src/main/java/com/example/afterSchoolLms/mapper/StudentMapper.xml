@@ -53,7 +53,7 @@
 		INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
 		INNER JOIN vehicle_assignment va ON se.lecture_id = va.lecture_id
 		INNER JOIN vehicle v ON v.vehicle_id = va.vehicle_id
-		INNER JOIN user d ON d.user_id = va.driver_id
+		LEFT JOIN user d ON d.user_id = va.driver_id
 		WHERE CURDATE() BETWEEN lt.start_date AND lt.end_date
 	</select>
 	

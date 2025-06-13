@@ -41,7 +41,7 @@ public class LoginController {
 			case 4:							// 학부모
 				return "/parent/test";
 			case 5:							// 운전기사
-				return "/driver/test";
+				return "redirect:/driver/main";
 		}
 		return "";
 	}
