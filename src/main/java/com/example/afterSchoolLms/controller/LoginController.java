@@ -17,7 +17,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	
-	@GetMapping({"/","login"})
+	@GetMapping("/login")
 	public String login() {
 		return "login";
 	}
@@ -26,23 +26,26 @@ public class LoginController {
 	public String login(User user, HttpSession session) {
 		User loginUser = loginService.login(user);
 		if(loginUser == null) {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 		
 		session.setAttribute("loginUser", loginUser);
-		
+		/*
+		 * 여기 있는건 홈컨트롤러로 옮김 - 조서진
 		switch(loginUser.getRoleId()) {
+		// 
 			case 1:							// 관리자
-				return "redirect:/adminMain";
+				return "redirect:/admin/main";
 			case 2:							// 학생
 				return "redirect:/student/main";
 			case 3:							// 강사
-				return "/teacher/test";
+				return "redirect:/teacher/main";
 			case 4:							// 학부모
-				return "redirect:/parent/index";
+				return "redirect:/parent/main";
 			case 5:							// 운전기사
 				return "redirect:/driver/main";
 		}
-		return "";
+		*/
+		return "redirect:/";
 	}
 }
