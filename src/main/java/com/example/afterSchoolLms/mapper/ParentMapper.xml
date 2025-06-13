@@ -268,6 +268,9 @@
 			lt.end_time AS endTime,
 			lt.day_of_week AS dayOfWeek,
 			se.enrolled_at AS enrollmentAt,
+			se.student_id AS StudentId,
+			lt.lecture_id AS lectureId,
+			se.status,
 			lt.amount
 		FROM (SELECT * FROM user WHERE user_id = #{userId}) p
 		INNER JOIN student_parent sp ON p.user_id = sp.parent_id

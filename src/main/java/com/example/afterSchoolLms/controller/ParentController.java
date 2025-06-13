@@ -215,10 +215,7 @@ public class ParentController {
 	        return "redirect:/parent/lectureList?error=" + errorMessage;
 	    }
 
-	    return "redirect:/parent/payment?userId=" + userId 
-	            + "&lectureId=" + lectureId
-	            + "&studentId=" + studentId
-	            + "&amount=" + amount;
+	    return "redirect:/parent/lectureLegistrationList";
 	}
 	
 	// 수강료 결제
@@ -253,9 +250,24 @@ public class ParentController {
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		}
-		String userId = loginUser.getUserId();
 		
 		parentService.payment(lectureId, studentId,amount);
+		
+		return "redirect:/parent/lectureLegistrationList";
+	}
+	
+	// 수강 취소 및 환불신청
+	@PostMapping("/parent/cancelLecture")
+	public String cancelLecture(HttpSession session
+							, @RequestParam("lectureId") int lectureId
+							, @RequestParam("studentId") String studentId
+							, @RequestParam("status") String status) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		parentService.cancelLecture(lectureId,studentId,status);
 		
 		return "redirect:/parent/lectureLegistrationList";
 	}

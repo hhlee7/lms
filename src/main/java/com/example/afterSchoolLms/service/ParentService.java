@@ -135,4 +135,13 @@ public class ParentService {
 		parentMapper.insertPayment(param);
 	}
 
+	public void cancelLecture(int lectureId, String studentId, String status) {
+		
+		int count = parentMapper.updateToCancel(lectureId, studentId, status);   // 결제 전 상태(status = PENDING) 상태면 단순히 cancel로 변경
+		
+		if(count == 0) {
+			parentMapper.updateToRefund(lectureId, studentId, status);
+		}
+	}
+
 }

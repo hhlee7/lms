@@ -80,6 +80,11 @@ public interface ParentMapper {
 	int updateEnrollmentStatus(Map<String, Object> param);
 	void insertPayment(Map<String, Object> param);
 
+	// 1) 결제전 수강 취소
+	int updateToCancel(int lectureId, String studentId, String status);
+	// 2) 결제 후 수강 취소 
+	void updateToRefund(int lectureId, String studentId, String status);
+
 
 
 }
