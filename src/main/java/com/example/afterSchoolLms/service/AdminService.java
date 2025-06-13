@@ -312,7 +312,7 @@ public class AdminService {
 
 	// 수업 리스트 조회
 	public List<Map<String, Object>> getLectureList() {
-		return adminMapper.selectLectureList();
+		return adminMapper.selectAllLectureList();
 	}
 
 	// 수업 등록

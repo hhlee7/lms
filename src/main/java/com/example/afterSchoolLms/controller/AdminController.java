@@ -4,24 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.example.afterSchoolLms.dto.Attendance;
-import com.example.afterSchoolLms.dto.Classroom;
-import com.example.afterSchoolLms.dto.Lecture;
-import com.example.afterSchoolLms.dto.Material;
-import com.example.afterSchoolLms.dto.Subject;
-import com.example.afterSchoolLms.dto.TeacherAssignment;
-import com.example.afterSchoolLms.dto.User;
-import com.example.afterSchoolLms.service.AdminService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -41,11 +23,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
+import com.example.afterSchoolLms.dto.Attendance;
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
+import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;

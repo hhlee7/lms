@@ -13,7 +13,6 @@ import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.User;
 
-import org.apache.ibatis.annotations.Mapper;
 import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
@@ -22,7 +21,6 @@ import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
-import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
 
@@ -113,8 +111,8 @@ public interface AdminMapper {
 	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
 	int removePayment(int enrollmentId);
 
-	// 수업 리스트 조회
-	List<Map<String, Object>> selectLectureList();
+	// 수업 리스트 조회(전체 수업 조회 (종강 수업 포함))
+	List<Map<String, Object>> selectAllLectureList();
 	
 	// 수업 등록
 	int createLecture(Lecture lecture);

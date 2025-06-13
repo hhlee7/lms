@@ -148,19 +148,23 @@
 		ORDER BY role_id
 	</select>
 	
-	<!-- 수업 조회 -->
+	<!-- 수업 조회 (진행중인 수업만 조회) -->
 	<select id="selectLectureList" resultType="map">
 		SELECT sb.name AS subjectName,
 		       u.name AS teacherName,
 		       cr.name AS classroomName,
 		       cr.location AS location,
-		       lt.lecture_id AS lectureId,
-		       DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
-		       DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
+		       lt.start_time AS startTime,
+		       lt.end_time AS endTime,
 		       lt.day_of_week AS 'dayOfWeek',
 		       lt.start_date AS startDate,
 		       lt.end_date AS endDate
 		FROM (SELECT * FROM lecture WHERE end_date >= CURDATE() )lt
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+	</select>
 	<!-- 과목 조회 -->
 	<select id="selectSubjectList" resultType="com.example.afterSchoolLms.dto.Subject">
 		SELECT 
@@ -268,8 +272,8 @@
 		WHERE enrollment_id = #{enrollmentId}
 	</delete>
 	
-	<!-- 수업 리스트 조회 -->
-	<select id="selectLectureList" resultType="map">
+	<!-- 수업 리스트 조회 (전체 수업 조회 (종강된 수업 포함))-->
+	<select id="selectAllLectureList" resultType="map">
 		SELECT
 			lt.lecture_id AS lectureId,
 			sb.name AS subjectName,
