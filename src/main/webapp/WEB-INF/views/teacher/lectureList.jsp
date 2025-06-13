@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<h2>📘 내가 담당한 수업 목록</h2>
+<h2>수업 목록</h2>
 
 <table border="1">
   <tr>

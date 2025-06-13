@@ -30,19 +30,22 @@ public class LoginController {
 		}
 		
 		session.setAttribute("loginUser", loginUser);
-		
+		/*
+		 * 여기 있는건 홈컨트롤러로 옮김 - 조서진
 		switch(loginUser.getRoleId()) {
+		// 
 			case 1:							// 관리자
-				return "/admin/test";
+				return "redirect:/admin/main";
 			case 2:							// 학생
-				return "/student/test";
+				return "redirect:/student/main";
 			case 3:							// 강사
-				return "/teacher/main";
+				return "redirect:/teacher/main";
 			case 4:							// 학부모
-				return "/parent/test";
+				return "redirect:/parent/main";
 			case 5:							// 운전기사
-				return "/driver/test";
+				return "redirect:/driver/main";
 		}
-		return "";
+		*/
+		return "redirect:/";
 	}
 }

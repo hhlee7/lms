@@ -219,7 +219,7 @@ import lombok.extern.slf4j.Slf4j;
 	    }
 
 	  
-	 // 출석체크
+	 // 출석체크 (오늘 기준)
 	    @GetMapping("/attendance/check")
 	    public String attendanceCheckForm(HttpSession session, Model model) {
 	        User loginUser = (User) session.getAttribute("loginUser");
@@ -230,16 +230,14 @@ import lombok.extern.slf4j.Slf4j;
 	        model.addAttribute("checkList", checkList);
 	        return "teacher/attendanceCheck";
 	    }
-	 // 출석 체크 처리
+	 // 출석 체크 처리 (기존 ID가 있으면 update, 없으면 insert)
 	    @PostMapping("/attendance/check")
 	    public String updateAttendanceStatus(@RequestParam(value = "attendanceId", required = false) String attendanceId,
 	                                         @RequestParam(value = "paymentId", required = false) String paymentId,
 	                                         @RequestParam("status") String status,
 	                                         RedirectAttributes redirectAttributes) {
-	    	 System.out.println("📝 받은 attendanceId: " + attendanceId);
-	    	    System.out.println("📝 받은 paymentId: " + paymentId);
-	    	    System.out.println("📝 받은 status: " + status);
-	    	
+	    	 	
+	    	 // 존재하면 수정, 없으면 새로 insert
 	        if (attendanceId != null && !attendanceId.isBlank()) {
 	            attendanceService.updateAttendanceStatus(Integer.parseInt(attendanceId), status);
 	        } else if (paymentId != null && !paymentId.isBlank()) {
