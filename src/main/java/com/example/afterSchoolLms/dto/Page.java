@@ -45,6 +45,7 @@ public class Page {
 		if (endPage > lastPage) {
 			endPage = lastPage;
 		}
+	}
 	public Page(int rowPerPage, int currentPage, int totalCount) {
 		this.rowPerPage = rowPerPage;
 		this.currentPage = currentPage;
