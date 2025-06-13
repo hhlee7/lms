@@ -4,13 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>lectureList</title>
+<title>lectureManagement</title>
 </head>
 <body>
 	<h1>수업 관리</h1>
 	
-	<a href="/admin/createLecture">수업 등록</a>
-	
+	<h2>수업 목록</h2>
 	<table border="1">
 		<tr>
 			<th>번호</th>
@@ -43,5 +42,7 @@
 		</tr>
 	</c:forEach>
 	</table>
+	
+	<a href="/admin/createLecture">수업 등록</a>
 </body>
 </html>

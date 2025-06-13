@@ -5,6 +5,76 @@
 <head>
 <meta charset="UTF-8">
 <title>modifyLecture</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#lectureForm').submit(function(e) {
+			const recruited = $('#recruited').val();
+			const amount = $('#amount').val();
+			const startTime = $('#startTime').val();
+			const endTime = $('#endTime').val();
+			const startDate = $('#startDate').val();
+			const endDate = $('#endDate').val();
+			
+			// 오늘 날짜 가져오기 (yyyy-mm-dd 형식)
+			const today = new Date().toISOString().split('T')[0];
+			
+			if(recruited == '' || isNaN(recruited) || recruited <= 4) {
+				alert("정원은 5명 이상이어야 합니다.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(amount == '' || isNaN(amount) || amount < 0) {
+				alert("금액은 0원 이상이어야 합니다.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(startTime == '') {
+				alert("시작 시간을 입력하세요.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(endTime == '') {
+				alert("종료 시간을 입력하세요.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(startTime > endTime) {
+				alert("시작 시간은 종료 시간보다 빨라야 합니다.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(startDate == '') {
+				alert("개강일 입력하세요.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(startDate < today) {
+				alert("개강일은 오늘 날짜 또는 이후여야 합니다.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(endDate == '') {
+				alert("종강일 입력하세요.");
+				e.preventDefault();
+				return;
+			}
+			
+			if(startDate > endDate) {
+				alert("개강일은 종강일보다 같거나 빠른 날짜여야 합니다.");
+				e.preventDefault();
+				return;
+			}
+		});
+	});
+</script>
 </head>
 <body>
 	<h1>수업 수정</h1>

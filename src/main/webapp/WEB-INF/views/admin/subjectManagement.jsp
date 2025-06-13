@@ -31,6 +31,6 @@
 	</c:forEach>
 	</table>
 	
-	<a href="/admin/createSubject">과목 추가</a>
+	<a href="/admin/createSubject">과목 등록</a>
 </body>
 </html>

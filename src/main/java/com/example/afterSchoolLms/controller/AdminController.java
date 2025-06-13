@@ -33,21 +33,21 @@ public class AdminController {
 	}
 	
 	// 과목 관리 페이지
-	// 과목 리스트 조회
 	@GetMapping("/admin/subjectManagement")
 	public String subjectManagement(Model model) {
+		// 과목 목록 조회
 		List<Subject> subjectList = adminService.getSubjectList();
 		model.addAttribute("subjectList", subjectList);
 		return "admin/subjectManagement";
 	}
 	
-	// 과목 추가 페이지
+	// 과목 등록 페이지
 	@GetMapping("/admin/createSubject")
 	public String createSubject() {
 		return "admin/createSubject";
 	}
 	
-	// 과목 추가
+	// 과목 등록
 	@PostMapping("/admin/createSubject")
 	public String createSubject(Subject subject) {
 		int row = adminService.createSubject(subject);
@@ -148,12 +148,13 @@ public class AdminController {
 		return "redirect:/admin/refundList";
 	}
 	
-	// 수업 리스트 조회
-	@GetMapping("/admin/lectureList")
-	public String lectureList(Model model) {
+	// 수업 관리 페이지
+	@GetMapping("/admin/lectureManagement")
+	public String lectureManagement(Model model) {
+		// 수업 리스트 조회
 		List<Map<String, Object>> list = adminService.getLectureList();
 		model.addAttribute("lectureList", list);
-		return "admin/lectureList";
+		return "admin/lectureManagement";
 	}
 	
 	// 수업 등록 페이지
@@ -185,7 +186,7 @@ public class AdminController {
 		
 		if(row != 1) {
 			log.info("insert error");
-			return "redirect:/admin/lectureList";
+			return "redirect:/admin/lectureManagement";
 		}
 		
 		// DB에서 생성된 PK값(lectureId) 확인용 출력
@@ -199,10 +200,10 @@ public class AdminController {
 		
 		if(row2 != 1) {
 			log.info("강사 배정 insert 실패");
-			return "redirect:/admin/lectureList";
+			return "redirect:/admin/lectureManagement";
 		}
 		
-		return "redirect:/admin/lectureList";
+		return "redirect:/admin/lectureManagement";
 	}
 	
 	// 수업 수정 페이지
@@ -239,7 +240,7 @@ public class AdminController {
 		
 		if(row != 1) {
 			log.info("수업 정보 update error");
-			return "redirect:/admin/lectureList";
+			return "redirect:/admin/lectureManagement";
 		}
 		
 		// 강사 배정 정보 수정
@@ -250,19 +251,25 @@ public class AdminController {
 		
 		if(row2 != 1) {
 			log.info("강사 배정 정보 update error");
-			return "redirect:/admin/lectureList";
+			return "redirect:/admin/lectureManagement";
 		}
 		
-		return "redirect:/admin/lectureList";
+		return "redirect:/admin/lectureManagement";
 	}
 	
 	// 강의실 관리 페이지
-	// 강의실 목록 조회
 	@GetMapping("/admin/classroomManagement")
 	public String classroomManagement(Model model) {
+		// 강의실 목록 조회
 		List<Map<String, Object>> list = adminService.getClassroom();
 		model.addAttribute("classroomList", list);
 		return "admin/classroomManagement";
+	}
+	
+	// 강의실 등록 페이지
+	@GetMapping("/admin/createClassroom")
+	public String createClassroom() {
+		return "admin/createClassroom";
 	}
 	
 	// 강의실 등록

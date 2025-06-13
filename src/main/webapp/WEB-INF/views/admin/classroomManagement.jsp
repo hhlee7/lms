@@ -9,14 +9,6 @@
 <body>
 	<h1>강의실 관리</h1>
 	
-	<h2>강의실 등록</h2>
-	<form method="post" name="classroomForm" id="classroomForm" action="/admin/createClassroom">
-		<div>이름 : <input type="text" name="classroomName" id="classroomName"></div>
-		<div>위치 : <input type="text" name="location" id="location"></div>
-		<div>수용 인원 : <input type="number" name="capacity" id="capacity"></div>
-		<button type="submit">등록</button>
-	</form>
-	
 	<h2>강의실 목록</h2>
 	<table border="1">
 		<tr>
@@ -44,5 +36,7 @@
 		</tr>
 	</c:forEach>
 	</table>
+	
+	<a href="/admin/createClassroom">강의실 등록</a>
 </body>
 </html>

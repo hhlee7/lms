@@ -5,6 +5,28 @@
 <head>
 <meta charset="UTF-8">
 <title>materialManagement</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#materialForm').submit(function(e) {
+			const materialTitle = $('#materialTitle').val().trim();
+			const totalCount = $('#totalCount').val();
+			const usedCount = $('#usedCount').val();
+			
+			if(materialTitle == '') {
+				alert("품목을 입력하세요.");
+				e.preventDefault();
+				return;
+			}
+		
+			if(totalCount == '' || isNaN(totalCount) || totalCount <= 0) {
+				alert("개수는 1개 이상이어야 합니다.");
+				e.preventDefault();
+				return;
+			}
+		});
+	});
+</script>
 </head>
 <body>
 	<h1>교보재 관리</h1>
@@ -34,7 +56,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>사용 횟수</th>
+			<th>사용중</th>
 			<td>
 				<input type="number" name="usedCount" id="totalCount">
 			</td>

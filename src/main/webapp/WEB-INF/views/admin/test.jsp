@@ -14,7 +14,7 @@
 	<div><a href="/admin/paymentList">수강료 납부 내역</a></div>
 	<div><a href="/admin/enrollmentCancelList">수강 신청 취소 내역</a></div>
 	<div><a href="/admin/refundList">환불 관리</a></div>
-	<div><a href="/admin/lectureList">수업 관리</a></div>
+	<div><a href="/admin/lectureManagement">수업 관리</a></div>
 	<div><a href="/admin/classroomManagement">강의실 관리</a></div>
 	<div><a href="/admin/materialManagement">교보재 관리</a></div>
 	<div><a href="/admin/materialRequestManagement">교보재 요청 관리</a></div>
