@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Classroom {
 	private int classroomId;
-	private String name;
+	private String classroomName;
 	private String location;
 	private int capacity;
 }

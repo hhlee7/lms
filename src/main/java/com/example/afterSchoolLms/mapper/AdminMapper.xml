@@ -161,6 +161,127 @@
 		       lt.start_date AS startDate,
 		       lt.end_date AS endDate
 		FROM (SELECT * FROM lecture WHERE end_date >= CURDATE() )lt
+	<!-- 과목 조회 -->
+	<select id="selectSubjectList" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			subject_id AS subjectId,
+			NAME AS subjectName,
+			description,
+			created_at AS createdAt
+		FROM subject
+	</select>
+	
+	<!-- 과목 추가 -->
+	<insert id="createSubject" parameterType="com.example.afterSchoolLms.dto.Subject">
+		INSERT INTO subject (name, description)
+		VALUES (#{subjectName}, #{description});
+	</insert>
+	
+	<!-- 과목 수정 페이지에 표기할 데이터를 subjectId를 통해 조회 -->
+	<select id="selectSubjectById" parameterType="int" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			subject_id AS subjectId,
+			NAME AS subjectName,
+			description,
+			created_at AS createdAt
+		FROM subject
+		WHERE subject_id = #{subjectId}
+	</select>
+	
+	<!-- 해당 과목의 데이터 수정 -->
+	<update id="modifySubject" parameterType="com.example.afterSchoolLms.dto.Subject">
+		UPDATE subject SET
+		name = #{subjectName}, description = #{description}
+		WHERE subject_id = #{subjectId};
+	</update>
+	
+	<!-- 과목 삭제 -->
+	<delete id="removeSubject" parameterType="int">
+		DELETE FROM subject
+		WHERE subject_id = #{subjectId};
+	</delete>
+	
+	<!-- 수강 신청 내역 조회 -->
+	<select id="selectStudentEnrollmentList" resultType="map">
+		SELECT 
+			se.enrollment_id AS enrollmentId,
+			se.student_id AS studentId,
+			u.name AS studentName,
+			sb.name AS subjectName,
+			se.enrolled_at AS enrolledAt,
+			se.status
+		FROM student_enrollment se
+		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+	</select>
+	
+	<!-- 수강료 납부 내역 조회 -->
+	<select id="selectPaymentList" resultType="map">
+		SELECT
+			p.payment_id AS paymentId,
+			sb.name AS subjectName,
+			st.name AS studentName,
+			p.amount,
+			p.paid_at AS paidAt
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+	</select>
+	
+	<!-- 수강 신청 취소 내역 조회 -->
+	<select id="selectEnrollmentCancelList">
+		SELECT
+			sb.name AS subjectName,
+			st.name AS studentName,
+			st.phone
+		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCLE') se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+	</select>
+	
+	<!-- 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회) -->
+	<select id="selectRefundList" resultType="map">
+		SELECT
+			se.enrollment_id AS enrollmentId,
+			u.name AS studentName,
+			sb.name AS subjectName,
+			se.status
+		FROM (SELECT * FROM student_enrollment WHERE STATUS IN ('REFUNDWAIT', 'REFUND')) se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+	</select>
+	
+	<!-- 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리 -->
+	<update id="changeRefund" parameterType="int">
+		UPDATE student_enrollment SET status = 'REFUND'
+		WHERE status = 'REFUNDWAIT' AND enrollment_id = #{enrollmentId}
+	</update>
+	
+	<!-- 환불 처리 후 payment 테이블의 결제 데이터 삭제 -->
+	<delete id="removePayment" parameterType="int">
+		DELETE FROM payment
+		WHERE enrollment_id = #{enrollmentId}
+	</delete>
+	
+	<!-- 수업 리스트 조회 -->
+	<select id="selectLectureList" resultType="map">
+		SELECT
+			lt.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			u.name AS teacherName,
+			cr.name AS classroomName,
+			cr.location AS location,
+			lt.start_time AS startTime,
+			lt.end_time AS endTime,
+			lt.day_of_week AS 'dayOfWeek',
+			lt.start_date AS startDate,
+			lt.end_date AS endDate
+		FROM lecture lt
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
@@ -449,4 +570,292 @@
 	
 	<!-- ======= DELETE ======= -->
 	
+	<!-- 수업 등록 -->
+	<insert id="createLecture" useGeneratedKeys="true" keyProperty="lectureId" parameterType="com.example.afterSchoolLms.dto.Lecture">
+		INSERT INTO lecture (
+			subject_id, classroom_id, recruited, amount, start_time, end_time, day_of_week, start_date, end_date)
+		VALUES (#{subjectId}, #{classroomId}, #{recruited}, #{amount}, #{startTime}, #{endTime}, #{dayOfWeek}, #{startDate}, #{endDate})
+	</insert>
+	
+	<!-- 강의실 리스트 조회 -->
+	<select id="selectClassroomList" resultType="com.example.afterSchoolLms.dto.Classroom">
+		SELECT
+			classroom_id AS classroomId,
+			NAME AS classroomName,
+			location,
+			capacity
+		FROM classroom
+	</select>
+	
+	<!-- 강사 리스트 조회 -->
+	<select id="selectTeacherList" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName
+		FROM user
+		WHERE role_id = 3
+	</select>
+	
+	<!-- 해당 수업의 강사 배정 등록 -->
+	<insert id="createTeacherAssignment" parameterType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		INSERT INTO teacher_assignment (lecture_id, teacher_id)
+		VALUES (#{lectureId}, #{teacherId})
+	</insert>
+	
+	<!-- 해당 lectureId를 가지는 lecture 데이터 조회 -->
+	<select id="selectLectureById" resultType="com.example.afterSchoolLms.dto.Lecture">
+		SELECT
+			lecture_id AS lectureId,
+			subject_id AS subjectId,
+			classroom_id AS classroomId,
+			recruited,
+			amount,
+			start_time AS startTime,
+			end_time AS endTime,
+			day_of_week AS 'dayOfWeek',
+			start_date AS startDate,
+			end_date AS endDate
+		FROM lecture
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
+	<!-- 해당 lectureId를 가지는 teacherAssignment 데이터 조회 -->
+	<select id="selectTeacherById" resultType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		SELECT
+			lecture_id AS lectureId,
+			teacher_id AS teacherId
+		FROM teacher_assignment
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
+	<!-- 수업 정보 수정 -->
+	<update id="modifyLecture" parameterType="com.example.afterSchoolLms.dto.Lecture">
+		UPDATE lecture SET
+			subject_id = #{subjectId}, classroom_id = #{classroomId},
+			recruited = #{recruited}, amount = #{amount},
+			start_time = #{startTime}, end_time = #{endTime}, day_of_week = #{dayOfWeek},
+			start_date = #{startDate}, end_date = #{endDate}
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 해당 수업의 강사 배정 정보 수정 -->
+	<update id="modifyTeacherAssignment" parameterType="com.example.afterSchoolLms.dto.TeacherAssignment">
+		UPDATE teacher_assignment SET
+			teacher_id = #{teacherId}
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 강의실 관리 페이지에서 강의실 목록 조회 -->
+	<select id="selectClassroom" resultType="map">
+		SELECT
+			cr.classroom_id AS classroomId,
+			cr.name AS classroomName,
+			cr.location AS location,
+			cr.capacity,
+			IFNULL(sb.name, '미배정') AS subjectName,
+			IFNULL(t.name, '미배정') AS teacherName,
+			lt.start_time AS startTime,
+			lt.end_time AS endTime
+		FROM classroom cr
+		LEFT OUTER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON cr.classroom_id = lt.classroom_id
+		LEFT OUTER JOIN subject sb ON lt.subject_id = sb.subject_id
+		LEFT OUTER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		LEFT OUTER JOIN user t ON ta.teacher_id = t.user_id
+	</select>
+	
+	<!-- 강의실 등록 -->
+	<insert id="createClassroom" parameterType="com.example.afterSchoolLms.dto.Classroom">
+		INSERT INTO classroom (name, location, capacity)
+		VALUES (#{classroomName}, #{location}, #{capacity})
+	</insert>	
+	
+	<!-- 해당 classroomId를 가지는 classroom 데이터 조회 -->
+	<select id="selectClassroomById" resultType="com.example.afterSchoolLms.dto.Classroom">
+		SELECT
+			classroom_id AS classroomId,
+			NAME AS classroomName,
+			location,
+			capacity
+		FROM classroom
+		WHERE classroom_id = #{classroomId}
+	</select>
+	
+	<!-- 강의실 정보 수정 -->
+	<update id="modifyClassroom" parameterType="com.example.afterSchoolLms.dto.Classroom">
+		UPDATE classroom SET
+			name = #{classroomName}, location = #{location}, capacity = #{capacity}
+		WHERE classroom_id = #{classroomId}
+	</update>
+	
+	<!-- 교보재 목록 조회 -->
+	<select id="selectMaterialList" resultType="map">
+		SELECT
+			m.material_id AS materialId,
+			s.name AS subjectName,
+			m.material_title AS materialTitle,
+			m.total_count AS totalCount,
+			m.used_count AS usedCount,
+			l.day_of_week AS dayOfWeek,
+			l.start_time AS startTime
+		FROM material m
+		INNER JOIN lecture l ON m.lecture_id = l.lecture_id
+		INNER JOIN subject s ON l.subject_id = s.subject_id
+	</select>
+	
+	<!-- 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회 -->
+	<select id="selectLecture" resultType="map">
+		SELECT
+			lt.lecture_id AS lectureId,
+			sb.name AS subjectName
+		FROM lecture lt
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+	</select>
+	
+	<!-- 교보재 등록 -->
+	<insert id="createMaterial" parameterType="com.example.afterSchoolLms.dto.Material">
+		INSERT INTO material (lecture_id, material_title, total_count, used_count)
+		VALUES (#{lectureId}, #{materialTitle}, #{totalCount}, #{usedCount})
+	</insert>
+	
+	<!-- 해당 materialId 값을 가지는 material 정보 조회 -->
+	<select id="selectMaterialById" parameterType="int" resultType="com.example.afterSchoolLms.dto.Material">
+		SELECT
+			material_id AS materialId,
+			lecture_id AS lectureId,
+			material_title AS materialTitle,
+			total_count AS totalCount,
+			used_count AS usedCount
+		FROM material
+		WHERE material_id = #{materialId}
+	</select>
+	
+	<!-- 교보재 수정 -->
+	<update id="modifyMaterial" parameterType="com.example.afterSchoolLms.dto.Material">
+		UPDATE material SET
+			lecture_id = #{lectureId}, material_title = #{materialTitle}, total_count = #{totalCount}, used_count = #{usedCount}
+		WHERE material_id = #{materialId}
+	</update>
+	
+	<!-- 교보재 삭제 -->
+	<delete id="removeMaterial" parameterType="int">
+		DELETE FROM material
+		WHERE material_id = #{materialId}
+	</delete>
+	
+	<!-- 교보재 요청 목록 조회 -->
+	<select id="selectMaterialRequestList" resultType="map">
+		SELECT
+			mr.request_id AS requestId,
+			mr.content,
+			mr.requested_at AS requestedAt,
+			u.name teacherName,
+			s.name AS subjectName,
+			l.start_time AS startTime,
+			l.day_of_week AS dayOfWeek,
+			mr.status
+		FROM material_request mr
+		INNER JOIN lecture l ON mr.lecture_id = l.lecture_id
+		INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+		INNER JOIN subject s ON s.subject_id = l.subject_id
+	</select>
+	
+	<!-- 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료') -->
+	<update id="changeMaterialRequestStatus" parameterType="int">
+		UPDATE material_request SET
+			status = '처리완료'
+		WHERE request_id = #{requestId}
+	</update>
+	
+	<!-- 출결 목록 조회 -->
+	<select id="selectAttendanceList" resultType="map">
+		SELECT
+			a.attendance_id AS attendanceId,
+			u.name AS studentName,
+			a.attend_date AS attendDate,
+			a.status,
+			s.name AS subjectName,
+			l.start_time AS startTime,
+			l.day_of_week AS dayOfWeek,
+			c.name AS classroomName,
+			t1.teacherName
+		FROM attendance a INNER JOIN payment p ON a.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN user u ON u.user_id = se.student_id
+		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
+		INNER JOIN subject s ON s.subject_id = l.subject_id
+		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
+		INNER JOIN (SELECT l.lecture_id, u.name teacherName FROM user u
+					INNER JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
+					INNER JOIN lecture l ON l.lecture_id = ta.lecture_id) t1 ON l.lecture_id = t1.lecture_id
+	</select>
+	
+	<!-- 해당 attendanceId를 가지는 attendance 데이터 값 조회 -->
+	<select id="selectAttendanceById" parameterType="int" resultType="map">
+		SELECT
+			a.attendance_id AS attendanceId,
+			u.name AS studentName,
+			a.attend_date AS attendDate,
+			a.status,
+			s.name AS subjectName,
+			l.start_time AS startTime,
+			l.day_of_week AS dayOfWeek,
+			c.name AS classroomName,
+			t1.teacherName
+		FROM attendance a INNER JOIN payment p ON a.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN user u ON u.user_id = se.student_id
+		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
+		INNER JOIN subject s ON s.subject_id = l.subject_id
+		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
+		INNER JOIN (SELECT l.lecture_id, u.name teacherName FROM user u
+					INNER JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
+					INNER JOIN lecture l ON l.lecture_id = ta.lecture_id) t1 ON l.lecture_id = t1.lecture_id
+		WHERE a.attendance_id = #{attendanceId}
+	</select>
+	
+	<!-- 출결 수정 -->
+	<update id="changeAttendanceStatus" parameterType="com.example.afterSchoolLms.dto.Attendance">
+		UPDATE attendance SET
+			status = #{status}
+		WHERE attendance_id = #{attendanceId}
+	</update>
+	
+	<!-- 강좌 평가 및 리뷰 목록 조회 -->
+	<select id="selectSatisfactionList" resultType="map">
+		SELECT
+			sf.satisfaction_id AS satisfactionId,
+			sb.name AS subjectName,
+			u.name AS studentName,
+			sf.rating_lecture AS ratingLecture,
+			sf.created_at AS createAt,
+			ifnull(r.content, '리뷰 작성 전') AS content,
+			ifnull(r.created_at, '리뷰 작성 전') AS reivewCreateAt
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		LEFT OUTER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+	</select>
+	
+	<!-- 강사 평가 목록 조회 -->
+	<select id="selectTeacherSatisfactionList" resultType="map">
+		SELECT
+			sf.satisfaction_id AS satisfactionId,
+			sb.name AS subjectName,
+			u.name AS studentName,
+			t.name AS teacherName,
+			sf.rating_teacher AS ratingTeacher,
+			sf.created_at AS createAt
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+	</select>
 </mapper>
