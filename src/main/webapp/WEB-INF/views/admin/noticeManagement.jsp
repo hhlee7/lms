@@ -1,10 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원 관리</title>
+<title>공지사항 관리</title>
 <!-- jQuery CDN (페이지에 없으면 추가) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -34,11 +36,14 @@
 </script>
 </head>
 <body>
-	<h1>회원 관리 페이지 입니다.</h1>
-	${loginUser.userName} 님 환영합니다.
-	<br>
+	<h1>공지사항 관리 페이지 입니다.</h1>
 	<a href="adminMain">[메인 페이지]</a>
-	<div><a href="userInsert">회원 추가</a></div>
+	
+	<c:if test="${noticeList == null}">
+		공지사항이 없습니다.
+	</c:if>
+	
+	<div><a href="noticeInsert">공지사항 등록</a></div>
 	역할 선택 : <select name="targetRole" id="targetRole">
 		<option id="targetRole" value="all">전체</option>
 		<c:if test="${roleList != null}">
@@ -53,46 +58,35 @@
 	
 	<br>
 	
-	<!-- 회원 리스트 출력 -->
-	<div>회원 리스트</div>
-	<c:if test="${userList != null}">
+	<!-- 공지사항 리스트 출력 -->
+	<c:if test="${noticeList != null}">
 		<table border="1">
 			<tr>
-				<th>아이디</th>
-				<th>역할</th>
-				<th>이름</th>
-				<th>생년월일</th>
-				<th>이메일</th>
-				<th>전화번호</th>
-				<th>주소</th>
-				<th>아이디 생성일</th>
-				<th>자세히</th>
+				<th>#</th>
+				<th>제목</th>
+				<th>대상</th>
+				<th>작성일</th>
 			</tr>
-			<c:forEach var="user" items="${userList}">
+			<c:forEach var="nt" items="${noticeList}">
 			<tr>
-				<td>${user.userId}</td>
-				<td>${user.roleId}</td>
-				<td>${user.userName}</td>
-				<td>${user.birth}</td>
-				<td>${user.email}</td>
-				<td>${user.phone}</td>
-				<td>${user.address}</td>
-				<td>${user.createdAt}</td>
-				<td><a href="userOne?userId=${user.userId}">자세히</a></td>
+				<td>${nt.noticeId}</td>
+				<td><a href="noticeOne?noticeId=${nt.noticeId}">${nt.title}</a></td>
+				<td>${nt.roleName}</td>
+				<td>${nt.createdAt}</td>
 			</tr>
 			</c:forEach>
 		</table>
 	</c:if>
 	
-	<!-- 이름 검색 -->
-	이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord}">
+	<!-- 제목 검색 -->
+	제목 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord}">
 	<button type="button" name="searchBtn" id="searchBtn">검색</button>
 	
 	<!-- 페이지 그룹 이동 및 번호 출력 -->
 	<div>
 		<!-- 이전 그룹 이동 -->
 		<c:if test="${page.prevGroup}">
-			<a href="/userManagement?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
+			<a href="/noticeManagement?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
 		</c:if>
 	
 		<!-- 페이지 번호 리스트 -->
@@ -102,14 +96,14 @@
 					<strong>[${i}]</strong>
 				</c:when>
 				<c:otherwise>
-					<a href="/userManagement?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
+					<a href="/noticeManagement?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
 	
 		<!-- 다음 그룹 이동 -->
 		<c:if test="${page.nextGroup}">
-			<a href="/userManagement?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
+			<a href="/noticeManagement?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
 		</c:if>
 	</div>
 </body>
