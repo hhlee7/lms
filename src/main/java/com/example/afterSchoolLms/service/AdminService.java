@@ -26,6 +26,11 @@ public class AdminService {
 		return adminMapper.getTotalCount(page);
 	}
 	
+	/** 앨범 전체 리스트 조회 **/
+	public List<Map<String,Object>> selectAlbumList(Page page){
+		return adminMapper.selectAlbumList(page);
+	}
+	
 	/** 공지사항 전체 카운트 가져오기 **/
 	public int noticeTotalCount(Page page) {
 		return adminMapper.noticeTotalCount(page);
@@ -55,6 +60,11 @@ public class AdminService {
 	/** 공지사항 상세 조회 **/
 	public Map<String,Object> selectNoticeOne(int noticeId){
 		return adminMapper.selectNoticeOne(noticeId);
+	}
+	
+	/** 공지사항 수정 **/
+	public int modifyNotice(Notice notice) {
+		return adminMapper.modifyNotice(notice);
 	}
 	
 	/** 역할 리스트를 가져옴 **/

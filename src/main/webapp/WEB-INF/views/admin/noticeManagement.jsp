@@ -86,7 +86,7 @@
 	<div>
 		<!-- 이전 그룹 이동 -->
 		<c:if test="${page.prevGroup}">
-			<a href="/userManagement?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
+			<a href="/noticeManagement?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
 		</c:if>
 	
 		<!-- 페이지 번호 리스트 -->
@@ -96,14 +96,14 @@
 					<strong>[${i}]</strong>
 				</c:when>
 				<c:otherwise>
-					<a href="/userManagement?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
+					<a href="/noticeManagement?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
 	
 		<!-- 다음 그룹 이동 -->
 		<c:if test="${page.nextGroup}">
-			<a href="/userManagement?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
+			<a href="/noticeManagement?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
 		</c:if>
 	</div>
 </body>

@@ -14,8 +14,8 @@
 	<h1>공지사항 수정 페이지</h1>
 	<a href="noticeOne?noticeId=${notice.noticeId}">취소</a>
 	
-	<form action="noticeInsert" method="post">
-	<input type="hidden" name="adminId" id="adminId" value="${notice.adminId}">
+	<form action="noticeModify" method="post">
+	<input type="hidden" name="noticeId" id="noticeId" value="${notice.noticeId}">
 		<table border="1">
 			<tr>
 				<th>작성자</th>

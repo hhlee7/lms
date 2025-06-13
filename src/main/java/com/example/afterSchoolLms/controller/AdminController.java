@@ -48,6 +48,53 @@ public class AdminController {
 		return "admin/adminMain";
 	}
 	
+	/** 앨범 등록 페이지 **/
+	@GetMapping("albumInsert")
+	public String albumInsert() {
+		return "admin/albumInsert";
+	}
+	
+	/** 앨범 관리 페이지 **/
+	@GetMapping("albumManagement")
+	public String albumManagement(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "10") int size
+			,@RequestParam(defaultValue = "") String searchWord
+			,@RequestParam(defaultValue = "all") String searchType) {
+		
+		int roleType = 0;
+		switch(searchType) {
+		case "관리자":			// 관리자	
+			roleType = 1; break;
+		case "학생":				// 학생
+			roleType = 2; break;
+		case "강사":				// 강사
+			roleType = 3; break;
+		case "학부모":			// 학부모
+			roleType = 4; break;
+		case "운전기사":			// 운전기사
+			roleType = 5; break;
+		}
+		
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType, roleType);
+		
+		// 전체 데이터 수 구하기
+		// int totalCount = adminService.noticeTotalCount(paging);
+		// paging.setTotalCount(totalCount);
+		
+		List<Map<String,Object>> albumList = adminService.selectAlbumList(paging);
+		
+		// 역할 리스트
+		List<Role> roleList = adminService.selectRoleList();
+
+		model.addAttribute("roleList",roleList);
+		model.addAttribute("page",paging);
+		model.addAttribute("albumList",albumList);
+		
+		return "admin/albumManagement";
+	}
+	
 	/** 공지사항 관리 페이지 **/
 	@GetMapping("noticeManagement")
 	public String noticeManagement(Model model
@@ -105,7 +152,7 @@ public class AdminController {
 			
 		}
 
-		return "admin/noticeOne?noticeId="+notice.getNoticeId();
+		return "redirect:/noticeManagement";
 	}
 	
 	/** 공지사항 상세 페이지 **/
@@ -126,6 +173,17 @@ public class AdminController {
 		return "admin/noticeModify";
 	}
 	
+	/** 공지사항 수정 기능 **/
+	@PostMapping("noticeModify")
+	public String noticeModify(Notice notice) {
+		int row = adminService.modifyNotice(notice);
+		
+		if(row != 1) {	// 갱신 이상
+			
+		}
+
+		return "redirect:/noticeOne?noticeId="+notice.getNoticeId();
+	}
 	
 	/** 차량 관리 페이지 **/
 	@GetMapping("vehicleManagement")

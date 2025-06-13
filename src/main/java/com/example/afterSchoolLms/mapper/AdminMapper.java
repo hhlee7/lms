@@ -31,6 +31,7 @@ public interface AdminMapper {
 	List<Map<String,Object>> selectVehicleList();			// 차량 조회
 	List<Map<String,Object>> selectLectureList();			// 수업 조회
 	List<User> selectDrvierlist();							// 운전기사 리스트 조회
+	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
