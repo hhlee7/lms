@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.StudentMapper;
 
 @Service
@@ -63,7 +64,7 @@ public class StudentService {
 	}
 	
 	// 과목 상세 - 평균 평점 조회
-	public double subjectOneRating(String subjectName) {
+	public Double subjectOneRating(String subjectName) {
 		return studentMapper.selectSubjectOneRating(subjectName);
 	}
 	
@@ -92,5 +93,28 @@ public class StudentService {
 		return studentMapper.selectHistory(paymentId);
 	}
 	
-
+	// 학생 본인 출결 조회
+	public List<Map<String, Object>> selectAttendance(String studentId) {
+		return studentMapper.selectAttendance(studentId);
+	}
+	
+	// 강사 전체 검색
+	public List<User> teacher() {
+		return studentMapper.selectTeacher();
+	}
+	
+	// 강사 상세 검색
+	public Map<String, Object> teacherOne(String teacherId) {
+		return studentMapper.selectTeacherOne(teacherId);
+	}
+	
+	// 강사 상세 - 평균 평점 조회
+	public Double teacherOneRating(String teacherId) {
+		return studentMapper.selectTeacherOneRating(teacherId);
+	}
+	
+	// 강사 상세 - 리뷰 조회
+	public List<Map<String, Object>> teacherOneReview(String teacherId) {
+		return studentMapper.selectTeacherOneReview(teacherId);
+	}
 }

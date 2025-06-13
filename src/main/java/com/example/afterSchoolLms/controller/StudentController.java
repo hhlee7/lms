@@ -1,5 +1,8 @@
 package com.example.afterSchoolLms.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +126,7 @@ public class StudentController {
 		//log.info("subjecName: " + subjectName);
 		Subject subject = studentService.subjectOne(subjectName);
 		// 과목 평균평점 넣기
-		double rating = studentService.subjectOneRating(subjectName);
+		Double rating = studentService.subjectOneRating(subjectName);
 		// 과목 리뷰 최신 3개 넣기
 		List<Map<String, Object>> reviewList = studentService.subjectOneReview(subjectName);
 		//log.info("reviewList: " + reviewList);
@@ -198,5 +201,84 @@ public class StudentController {
 		List<Map<String, Object>> historyList = studentService.selectHistory(paymentId);
 		model.addAttribute("historyList", historyList);
 		return "/student/history";
+	}
+	
+	// 학생 본인 출결 조회
+	@GetMapping("/student/attendance")
+	public String attendance(HttpSession session, Model model
+			, @RequestParam(required = false) Integer targetYear
+            , @RequestParam(required = false) Integer targetMonth) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		List<Map<String, Object>> attendanceList = studentService.selectAttendance(loginUser.getUserId());
+		//log.info("attendanceList: " + attendanceList);
+		
+		// 날짜별 출결 정보를 Map<String, Map<String, String>> 으로 저장
+		Map<String, Map<String, String>> attendanceMap = new HashMap<>();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    for (Map<String, Object> record : attendanceList) {
+	    	String date = sdf.format(record.get("attendDate"));
+	        String status = (String) record.get("status");
+	        String teacherName = (String) record.get("teacherName");
+	        String subjectName = (String) record.get("subjectName");
+
+	        Map<String, String> info = new HashMap<>();
+	        info.put("status", status);
+	        info.put("teacherName", teacherName);
+	        info.put("subjectName", subjectName);
+
+	        attendanceMap.put(date, info);
+	    }
+	    
+		// 달력
+		Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 1);
+		
+        if (targetYear != null && targetMonth != null) {
+            calendar.set(Calendar.YEAR, targetYear);
+            calendar.set(Calendar.MONTH, targetMonth);
+        }
+        
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH); // 0~11
+        int lastDate = calendar.getActualMaximum(Calendar.DATE);
+        int startBlank = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        int totalCell = startBlank + lastDate;
+        int endBlank = (totalCell % 7 != 0) ? 7 - (totalCell % 7) : 0;
+        totalCell += endBlank;
+        
+        model.addAttribute("attendanceMap", attendanceMap);
+		model.addAttribute("year", year);
+        model.addAttribute("month", month);
+        model.addAttribute("startBlank", startBlank);
+        model.addAttribute("lastDate", lastDate);
+        model.addAttribute("totalCell", totalCell);
+		return "/student/attendance";
+	}
+	
+	// 강사 소개 전체
+	@GetMapping("/student/teacher")
+	public String teacher(Model model) {
+		List<User> teacherList = studentService.teacher();
+		//log.info(teacherList.toString());
+		model.addAttribute("teacherList", teacherList);
+		return "/student/teacher";
+	}
+	
+	// 강사소개 상세 페이지
+	@GetMapping("/student/teacherOne")
+	public String teacherOne(Model model
+			, @RequestParam String teacherId) {
+		//log.info(teacherId);
+		Map<String, Object> teacher = studentService.teacherOne(teacherId);
+		//log.info(teacher.toString());
+		// 강사 평균평점 넣기
+		Double rating = studentService.teacherOneRating(teacherId);
+		// 강사 리뷰 최신 3개 넣기
+		List<Map<String, Object>> reviewList = studentService.teacherOneReview(teacherId);
+		//log.info("reviewList: " + reviewList);
+		model.addAttribute("teacher", teacher);
+		model.addAttribute("rating", rating);
+		model.addAttribute("reviewList", reviewList);
+		return "/student/teacherOne";
 	}
 }

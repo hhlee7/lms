@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.User;
 
 @Mapper
 public interface StudentMapper {
@@ -39,7 +40,7 @@ public interface StudentMapper {
 	Subject selectSubjectOne(String subjectName);
 	
 	// 과목 상세 - 평균 평점 조회
-	double selectSubjectOneRating(String subjectName);
+	Double selectSubjectOneRating(String subjectName);
 	
 	// 과목 상세 - 리뷰 조회
 	List<Map<String, Object>> selectSubjectOneReview(String subjectName);
@@ -55,4 +56,20 @@ public interface StudentMapper {
 	
 	// 학생이 작성한 만족도평가, 리뷰 보기
 	List<Map<String, Object>> selectHistory(String paymentId);
+	
+	// 학생 본인 출결 조회
+	List<Map<String, Object>> selectAttendance(String studentId);
+	
+	// 강사 전체
+	List<User> selectTeacher();
+	
+	// 강사 상세
+	Map<String, Object> selectTeacherOne(String teacherId);
+	
+	// 강사 상세 - 평균 평점 조회
+	Double selectTeacherOneRating(String teacherId);
+	
+	// 강사 상세 - 리뷰 조회
+	List<Map<String, Object>> selectTeacherOneReview(String teacherId);
+	
 }

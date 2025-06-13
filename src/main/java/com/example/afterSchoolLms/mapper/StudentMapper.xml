@@ -32,14 +32,24 @@
 	<select id="selectDisptach" parameterType="String" resultType="map">
 		SELECT 
 			concat(va.vehicle_id,'호차') AS vehicleId,
+			sb.name AS subjectName,
+			t1.name AS teacherName,
+			lt.start_time AS startTime,
+			lt.end_time AS endTime,
+			lt.day_of_week AS dayOfWeek,
 			d.name AS driverName,
 			d.phone AS driverPhone,
 	        va.driver_id AS driverId,
 	        v.vehicle_no AS vehicleNo,
 	        va.location
-		FROM (SELECT * FROM user WHERE user_id = 'stu002') u
+		FROM (SELECT * FROM user WHERE user_id = #{id}) u
 		INNER JOIN student_enrollment se ON u.user_id = se.student_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.lecture_id = sb.subject_id
+		INNER JOIN (SELECT u.name, ta.lecture_id
+						FROM teacher_assignment ta
+						INNER JOIN user u ON ta.teacher_id = u.user_id) t1
+				ON lt.lecture_id = t1.lecture_id
 		INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
 		INNER JOIN vehicle_assignment va ON se.lecture_id = va.lecture_id
 		INNER JOIN vehicle v ON v.vehicle_id = va.vehicle_id
@@ -88,7 +98,7 @@
 		WHERE name = #{subjectName}
 	</select>
 	
-	<select id="selectSubjectOneRating" parameterType="String" resultType="double">
+	<select id="selectSubjectOneRating" parameterType="String" resultType="Double">
 		SELECT ROUND(AVG(sf.rating_lecture), 1) AS avgRating
 		FROM satisfaction sf
 		INNER JOIN payment p ON sf.payment_id = p.payment_id
@@ -106,7 +116,6 @@
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
-		INNER JOIN user u ON se.student_id = u.user_id
 		INNER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
 		WHERE sb.name = #{subjectName}
 		ORDER BY r.review_id DESC
@@ -141,22 +150,80 @@
 	</select>
 	
 	<select id="selectHistory" parameterType="String" resultType="map">
-	SELECT 
-		p.payment_id AS paymentId, 
-		s.rating_lecture AS ratingLecture, 
-		s.rating_teacher AS ratingTeacher, 
-		r.content, 
-		sb.name AS subjectName, 
-		u.name AS teacherName
-	FROM satisfaction s
-	LEFT JOIN review r ON s.satisfaction_id = r.satisfaction_id
-	INNER JOIN payment p ON s.payment_id = p.payment_id 
-	INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
-	INNER JOIN lecture l ON se.lecture_id = l.lecture_id
-	INNER JOIN subject sb ON l.subject_id = sb.subject_id
-	INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
-	INNER JOIN user u ON ta.teacher_id = u.user_id
-	WHERE p.payment_id = #{paymentId}
+		SELECT 
+			p.payment_id AS paymentId, 
+			s.rating_lecture AS ratingLecture, 
+			s.rating_teacher AS ratingTeacher, 
+			r.content, 
+			sb.name AS subjectName, 
+			u.name AS teacherName
+		FROM satisfaction s
+		LEFT JOIN review r ON s.satisfaction_id = r.satisfaction_id
+		INNER JOIN payment p ON s.payment_id = p.payment_id 
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+		INNER JOIN subject sb ON l.subject_id = sb.subject_id
+		INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+		WHERE p.payment_id = #{paymentId}
+	</select>
+	
+	<select id="selectAttendance" parameterType="String" resultType="map">
+		SELECT
+		   ad.attend_date AS attendDate,
+		   ad.status AS status,
+		   sb.name AS subjectName,
+   		   t.name AS teacherName
+		FROM (SELECT * FROM user WHERE user_id = #{studentId}) u
+		INNER JOIN student_enrollment se ON se.student_id = u.user_id
+		INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
+		INNER JOIN attendance ad ON p.payment_id = ad.payment_id
+		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+		INNER JOIN subject sb ON l.subject_id = sb.subject_id
+		INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+	</select>
+	
+	<select id="selectTeacher" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT name AS userName, user_id AS userId
+		FROM user
+		WHERE role_id = 3
+	</select>
+	
+	<select id="selectTeacherOne" parameterType="String" resultType="map">
+		SELECT 
+			u.name AS teacherName,
+			th.last_education AS lastEducation,
+			th.personal_history AS personalHistory
+		FROM user u
+		INNER JOIN teacher_history th ON u.user_id = th.teacher_id
+		WHERE u.user_id = #{teacherId}
+	</select>
+	
+	<select id="selectTeacherOneRating" parameterType="String" resultType="Double">
+		SELECT ROUND(AVG(sf.rating_teacher), 1) AS ratingTeacher
+		FROM satisfaction sf 
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+		WHERE ta.teacher_id = #{teacherId}
+	</select>
+	
+	<select id="selectTeacherOneReview" parameterType="String" resultType="map">
+		SELECT 
+			sf.rating_teacher AS ratingTeacher,
+			r.content AS content
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+		WHERE ta.teacher_id = #{teacherId}
+		ORDER BY r.review_id DESC
+		LIMIT 0, 3
 	</select>
 	
 	<insert id="insertEvaluation" parameterType="String">
