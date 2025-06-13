@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.afterSchoolLms.dto.Album;
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
@@ -50,8 +53,33 @@ public class AdminController {
 	
 	/** 앨범 등록 페이지 **/
 	@GetMapping("albumInsert")
-	public String albumInsert() {
+	public String albumInsert(Model model) {
+		List<Map<String, Object>> lectureList = adminService.selectLectureList();
+		model.addAttribute("lectureList",lectureList);
 		return "admin/albumInsert";
+	}
+	
+	/** 앨범 등록 기능 **/
+	@PostMapping("albumInsert")
+	public String albumInsert(Album album, @RequestParam("photoFiles") List<MultipartFile> photoFiles) {
+	    adminService.insertAlbum(album, photoFiles);
+	    return "redirect:/albumManagement";
+	}
+	
+	/** 앨범 상세 페이지 **/
+	@GetMapping("albumOne")
+	public String albumOne(Model model, @RequestParam String albumId) {
+		List<AlbumPhoto> photoList = adminService.selectAlbumPhotoList(Integer.parseInt(albumId));
+		Map<String,Object> album = adminService.selectAlbumOne(Integer.parseInt(albumId));
+		
+		// 웹에 노출 가능한 경로로 변환
+	    for (AlbumPhoto photo : photoList) {
+	        photo.setFilePath("/upload/" + photo.getFilePath());
+	    }
+		
+		model.addAttribute("photoList",photoList);
+		model.addAttribute("album",album);
+		return "admin/albumOne";
 	}
 	
 	/** 앨범 관리 페이지 **/

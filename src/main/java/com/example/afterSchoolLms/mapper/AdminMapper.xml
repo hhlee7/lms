@@ -87,6 +87,30 @@
 		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
 	</select>
 	
+	<!-- 앨범 상세 조회 -->
+	<select id="selectAlbumOne" resultType="map">
+		SELECT
+			ab.album_id AS albumId,
+			ab.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			ab.title AS title,
+			ab.description,
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
+		FROM (SELECT * FROM album WHERE album_id = #{albumId}) ab
+		INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	</select>
+	
+	<!-- 앨범 포토 조회 -->
+	<select id="selectAlbumPhotoList" resultType="com.example.afterSchoolLms.dto.AlbumPhoto">
+		SELECT
+			photo_id AS photoId,
+			album_id AS albumId,
+			file_path AS filePath
+		FROM album_photo
+		WHERE album_id = #{albumId};
+	</select>
+	
 	<!-- 역할 리스트 조회 -->
 	<select id="selectRoleList" parameterType="com.example.afterSchoolLms.dto.Role">
 		SELECT
@@ -102,8 +126,9 @@
 		       u.name AS teacherName,
 		       cr.name AS classroomName,
 		       cr.location AS location,
-		       lt.start_time AS startTime,
-		       lt.end_time AS endTime,
+		       lt.lecture_id AS lectureId,
+		       DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+		       DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
 		       lt.day_of_week AS 'dayOfWeek',
 		       lt.start_date AS startDate,
 		       lt.end_date AS endDate
@@ -369,6 +394,18 @@
 		) VALUES(
 			#{adminId}, #{title}, #{content}, #{targetRoleId}
 		)
+	</insert>
+	
+	<!-- 앨범 등록 -->
+	<insert id="insertAlbum" parameterType="com.example.afterSchoolLms.dto.Album" useGeneratedKeys="true" keyProperty="albumId">
+	    INSERT INTO album (lecture_id, title, description, created_at)
+	    VALUES (#{lectureId}, #{title}, #{description}, NOW())
+	</insert>
+	
+	<!-- 앨범 사진 등록 -->
+	<insert id="insertAlbumPhoto" parameterType="com.example.afterSchoolLms.dto.AlbumPhoto">
+	    INSERT INTO album_photo (album_id, file_path)
+	    VALUES (#{albumId}, #{filePath})
 	</insert>
 	
 	<!-- ======= DELETE ======= -->

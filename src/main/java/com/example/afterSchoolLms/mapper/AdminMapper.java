@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.Album;
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
@@ -28,10 +30,14 @@ public interface AdminMapper {
 	List<Map<String,Object>> selectNoticeList(Page page);	// 공지사항 검색 조회
 	Map<String,Object> selectNoticeOne(int noticeId);		// 공지사항 상세 조회
 	int noticeTotalCount(Page page);						// 전체 공지사항 데이터 수 조회
+	
 	List<Map<String,Object>> selectVehicleList();			// 차량 조회
 	List<Map<String,Object>> selectLectureList();			// 수업 조회
 	List<User> selectDrvierlist();							// 운전기사 리스트 조회
+	
 	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
+	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
+	Map<String,Object> selectAlbumOne(int albumId);		// 앨범 상세 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
@@ -56,4 +62,7 @@ public interface AdminMapper {
 	int insertStudentParent(StudentParent studentParet);	// 학부모,자녀 관계 등록
 	int insertVehicle(Vehicle vehicle);						// 차량 등록
 	int insertVehicleAssignment(VehicleAssignment vehicleAssignment);	// 차량 배정 등록
+
+	int insertAlbum(Album album);							// 앨범 등록
+	int insertAlbumPhoto(AlbumPhoto albumPhoto);			// 앨범 사진 등록
 }

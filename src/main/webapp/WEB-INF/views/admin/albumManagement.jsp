@@ -27,7 +27,7 @@
 		<tr>
 			<td>${ab.albumId}</td>
 			<td>${ab.subjectName}</td>
-			<td>${ab.title}</td>
+			<td><a href="albumOne?albumId=${ab.albumId}">${ab.title}</a></td>
 			<td>${ab.createdAt}</td>
 		</tr>
 		</c:forEach>

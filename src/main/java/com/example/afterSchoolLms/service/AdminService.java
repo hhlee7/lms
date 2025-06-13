@@ -1,11 +1,16 @@
 package com.example.afterSchoolLms.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.afterSchoolLms.dto.Album;
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Role;
@@ -29,6 +34,16 @@ public class AdminService {
 	/** 앨범 전체 리스트 조회 **/
 	public List<Map<String,Object>> selectAlbumList(Page page){
 		return adminMapper.selectAlbumList(page);
+	}
+	
+	/** 앨범 상세 조회 **/
+	public Map<String,Object> selectAlbumOne(int albumId){
+		return adminMapper.selectAlbumOne(albumId);
+	}
+	
+	/** 앨범 사진 조회 **/
+	public List<AlbumPhoto> selectAlbumPhotoList(int albumId){
+		return adminMapper.selectAlbumPhotoList(albumId);
 	}
 	
 	/** 공지사항 전체 카운트 가져오기 **/
@@ -171,5 +186,44 @@ public class AdminService {
 	/** 공지사항 등록 **/
 	public int insertNotice(Notice notice) {
 		return adminMapper.insertNotice(notice);
+	}
+	
+	// ------ 파일 등록 ------
+	public void insertAlbum(Album album, List<MultipartFile> photoFiles) {
+	    // 1. 앨범 등록
+	    int result = adminMapper.insertAlbum(album); // 이 시점에 album.getAlbumId()가 세팅돼야 함 (useGeneratedKeys=true)
+	    if (result != 1) {
+	        throw new RuntimeException("앨범 등록 실패");
+	    }
+
+	    // 2. 사진 등록
+	    if (photoFiles != null && !photoFiles.isEmpty()) {
+	        for (MultipartFile file : photoFiles) {
+	            if (file.isEmpty()) continue;
+
+	            // 파일명 생성
+	            String uuidName = UUID.randomUUID().toString().replace("-", "");
+	            String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+	            String fullName = uuidName + ext;
+
+	            // DB 저장용 DTO
+	            AlbumPhoto photo = new AlbumPhoto();
+	            photo.setAlbumId(album.getAlbumId());
+	            photo.setFilePath(fullName);
+
+	            int insertRow = adminMapper.insertAlbumPhoto(photo);
+	            if (insertRow != 1) {
+	                throw new RuntimeException("앨범 사진 DB 저장 실패");
+	            }
+
+	            // 파일 실제 저장
+	            File targetFile = new File("c:/project/albumUpload/" + fullName);
+	            try {
+	                file.transferTo(targetFile);
+	            } catch (Exception e) {
+	                throw new RuntimeException("앨범 사진 파일 저장 실패", e);
+	            }
+	        }
+	    }
 	}
 }

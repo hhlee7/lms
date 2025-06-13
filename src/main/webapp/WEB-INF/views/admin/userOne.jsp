@@ -166,7 +166,7 @@
 	<!-- 기사 정보이면서, 차량 데이터를 출력 -->
 	<c:if test="${vehicleList != null}">
 	<h3>수업 정보</h3>
-	<a href="vehicleInsert?userId=${selectedUser.userId}">차량 등록</a>
+	<a href="vehicleManagement">차량 관리</a>
 		<c:forEach var="vec" items="${vehicleList}">
 			<table border="1">
 				<tr>
@@ -174,8 +174,7 @@
 					<th>운전자</th>
 					<th>요일</th>
 					<th>탑승 시간</th>
-					<th>인원</th>
-					<th>정정</th>					
+					<th>인원</th>			
 				</tr>
 				<tr>
 					<td>${vec.vehicleNo}</td>
@@ -183,7 +182,6 @@
 					<td>${vec.dayOfWeek}</td>
 					<td>${vec.endTime}</td>
 					<td>${vec.capacity}</td>
-					<td><a href="">수정</a></td>
 				</tr>
 			</table>
 			<br>
