@@ -3,7 +3,6 @@ package com.example.afterSchoolLms.schedule;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.afterSchoolLms.dto.attendance;
 import com.example.afterSchoolLms.mapper.AttendanceMapper;
 
 import lombok.RequiredArgsConstructor;
