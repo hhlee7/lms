@@ -324,4 +324,96 @@
 			status = '처리완료'
 		WHERE request_id = #{requestId}
 	</update>
+	
+	<!-- 출결 목록 조회 -->
+	<select id="selectAttendanceList" resultType="map">
+		SELECT
+			a.attendance_id AS attendanceId,
+			u.name AS studentName,
+			a.attend_date AS attendDate,
+			a.status,
+			s.name AS subjectName,
+			l.start_time AS startTime,
+			l.day_of_week AS dayOfWeek,
+			c.name AS classroomName,
+			t1.teacherName
+		FROM attendance a INNER JOIN payment p ON a.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN user u ON u.user_id = se.student_id
+		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
+		INNER JOIN subject s ON s.subject_id = l.subject_id
+		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
+		INNER JOIN (SELECT l.lecture_id, u.name teacherName FROM user u
+					INNER JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
+					INNER JOIN lecture l ON l.lecture_id = ta.lecture_id) t1 ON l.lecture_id = t1.lecture_id
+	</select>
+	
+	<!-- 해당 attendanceId를 가지는 attendance 데이터 값 조회 -->
+	<select id="selectAttendanceById" parameterType="int" resultType="map">
+		SELECT
+			a.attendance_id AS attendanceId,
+			u.name AS studentName,
+			a.attend_date AS attendDate,
+			a.status,
+			s.name AS subjectName,
+			l.start_time AS startTime,
+			l.day_of_week AS dayOfWeek,
+			c.name AS classroomName,
+			t1.teacherName
+		FROM attendance a INNER JOIN payment p ON a.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN user u ON u.user_id = se.student_id
+		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
+		INNER JOIN subject s ON s.subject_id = l.subject_id
+		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
+		INNER JOIN (SELECT l.lecture_id, u.name teacherName FROM user u
+					INNER JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
+					INNER JOIN lecture l ON l.lecture_id = ta.lecture_id) t1 ON l.lecture_id = t1.lecture_id
+		WHERE a.attendance_id = #{attendanceId}
+	</select>
+	
+	<!-- 출결 수정 -->
+	<update id="changeAttendanceStatus" parameterType="com.example.afterSchoolLms.dto.Attendance">
+		UPDATE attendance SET
+			status = #{status}
+		WHERE attendance_id = #{attendanceId}
+	</update>
+	
+	<!-- 강좌 평가 및 리뷰 목록 조회 -->
+	<select id="selectSatisfactionList" resultType="map">
+		SELECT
+			sf.satisfaction_id AS satisfactionId,
+			sb.name AS subjectName,
+			u.name AS studentName,
+			sf.rating_lecture AS ratingLecture,
+			sf.created_at AS createAt,
+			ifnull(r.content, '리뷰 작성 전') AS content,
+			ifnull(r.created_at, '리뷰 작성 전') AS reivewCreateAt
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		LEFT OUTER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+	</select>
+	
+	<!-- 강사 평가 목록 조회 -->
+	<select id="selectTeacherSatisfactionList" resultType="map">
+		SELECT
+			sf.satisfaction_id AS satisfactionId,
+			sb.name AS subjectName,
+			u.name AS studentName,
+			t.name AS teacherName,
+			sf.rating_teacher AS ratingTeacher,
+			sf.created_at AS createAt
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+	</select>
 </mapper>

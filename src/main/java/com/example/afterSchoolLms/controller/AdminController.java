@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Material;
@@ -386,5 +387,49 @@ public class AdminController {
 		}
 		
 		return "redirect:/admin/materialRequestManagement";
+	}
+	
+	// 출결 관리 페이지
+	@GetMapping("/admin/attendanceManagement")
+	public String attendanceManagement(Model model) {
+		// 출결 목록 조회
+		List<Map<String, Object>> list = adminService.getAttendanceList();
+		model.addAttribute("attendanceList", list);
+		return "admin/attendanceManagement";
+	}
+	
+	// 출결 수정 페이지
+	@GetMapping("/admin/modifyAttendance")
+	public String modifyAttendance(@RequestParam int attendanceId, Model model) {
+		// 해당 attendanceId를 가지는 attendance 데이터 값 조회
+		Map<String, Object> attendance = adminService.getAttendanceById(attendanceId);
+		model.addAttribute("attendance", attendance);
+		return "admin/modifyAttendance";
+	}
+	
+	// 출결 수정
+	@PostMapping("/admin/changeAttendanceStatus")
+	public String changeAttendanceStatus(Attendance attendance) {
+		int row = adminService.changeAttendanceStatus(attendance);
+		
+		if(row != 1) {
+			log.info("출결 상태 변경 실패");
+			return "redirect:/admin/attendanceManagement";
+		}
+		
+		return "redirect:/admin/attendanceManagement";
+	}
+	
+	// 평과 결과 조회 페이지
+	@GetMapping("/admin/satisfactionList")
+	public String satisfactionList(Model model) {
+		// 강좌 평가 및 리뷰 목록 조회
+		List<Map<String, Object>> list = adminService.getLectureSatisfactionList();
+		model.addAttribute("LectureSatisfactionList", list);
+		
+		// 강사 평가 목록 조회
+		List<Map<String, Object>> list2 = adminService.getTeacherSatisfactionList();
+		model.addAttribute("TeacherSatisfactionList", list2);
+		return "admin/satisfactionList";
 	}
 }

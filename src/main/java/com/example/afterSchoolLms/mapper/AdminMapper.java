@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Material;
@@ -109,6 +110,21 @@ public interface AdminMapper {
 
 	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
 	int changeMaterialRequestStatus(int requestId);
+
+	// 출결 목록 조회
+	List<Map<String, Object>> selectAttendanceList();
+
+	// 해당 attendanceId를 가지는 attendance 데이터 값 조회
+	Map<String, Object> selectAttendanceById(int attendanceId);
+
+	// 출결 수정
+	int changeAttendanceStatus(Attendance attendance);
+
+	// 강좌 평가 및 리뷰 목록 조회
+	List<Map<String, Object>> selectSatisfactionList();
+
+	// 강사 평가 목록 조회
+	List<Map<String, Object>> selectTeacherSatisfactionList();
 
 
 }

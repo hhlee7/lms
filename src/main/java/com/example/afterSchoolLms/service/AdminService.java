@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Classroom;
 import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Material;
@@ -176,6 +177,31 @@ public class AdminService {
 	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
 	public int changeMaterialRequestStatus(int requestId) {
 		return adminMapper.changeMaterialRequestStatus(requestId);
+	}
+
+	// 출결 목록 조회
+	public List<Map<String, Object>> getAttendanceList() {
+		return adminMapper.selectAttendanceList();
+	}
+
+	// 해당 attendanceId를 가지는 attendance 데이터 값 조회
+	public Map<String, Object> getAttendanceById(int attendanceId) {
+		return adminMapper.selectAttendanceById(attendanceId);
+	}
+
+	// 출결 수정
+	public int changeAttendanceStatus(Attendance attendance) {
+		return adminMapper.changeAttendanceStatus(attendance);
+	}
+
+	// 강좌 평가 및 리뷰 목록 조회
+	public List<Map<String, Object>> getLectureSatisfactionList() {
+		return adminMapper.selectSatisfactionList();
+	}
+
+	// 강사 평가 목록 조회
+	public List<Map<String, Object>> getTeacherSatisfactionList() {
+		return adminMapper.selectTeacherSatisfactionList();
 	}
 
 
