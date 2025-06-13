@@ -1,5 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,6 @@ import com.example.afterSchoolLms.service.ParentService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j
@@ -149,6 +150,7 @@ public class ParentController {
 		String userId = loginUser.getUserId();
 		Map<String, Object> subject = parentService.getSubjectInfo(userId);
 		model.addAttribute("subject", subject);
+		model.addAttribute("userId", userId);
 		
 		return "/parent/subject";
 	}
@@ -193,20 +195,71 @@ public class ParentController {
 	// 수강신청 접수(결제x)
 	@PostMapping("/parent/lectureApply")
 	public String lectureApply(HttpSession session, Model model
-							, @RequestParam("userId") String userId
-							, @RequestParam("lectureId") String lectureId
-							, @RequestParam("studentId") String studentId) {
+							, @RequestParam("lectureId") int lectureId
+							, @RequestParam("studentId") String studentId
+							, @RequestParam("amount") int amount) {
 		User loginUser = (User) session.getAttribute("loginUser");
 
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		}
 		
-		parentService.lectureApply(userId, lectureId, studentId);
-		 
-		
-		return "redirect:/parent/lectureList";
+		String userId = loginUser.getUserId();
+		try {
+	        // 중복 확인 포함한 수강신청
+	        parentService.lectureApply(userId, lectureId, studentId);
+	    } catch (IllegalStateException e) {
+	        // 이미 신청된 경우: 메시지와 함께 목록 페이지로 리다이렉트
+	        model.addAttribute("error", e.getMessage());
+	        String errorMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+	        return "redirect:/parent/lectureList?error=" + errorMessage;
+	    }
+
+	    return "redirect:/parent/payment?userId=" + userId 
+	            + "&lectureId=" + lectureId
+	            + "&studentId=" + studentId
+	            + "&amount=" + amount;
 	}
+	
+	// 수강료 결제
+	@GetMapping("/parent/payment")
+	public String payment(HttpSession session, Model model
+						, @RequestParam("lectureId") int lectureId
+						, @RequestParam("studentId") String studentId
+						, @RequestParam("amount") int amount)	{
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		
+		model.addAttribute("lectureId",lectureId);
+		model.addAttribute("studentId",studentId);
+		model.addAttribute("amount",amount);
+		model.addAttribute("userId", userId);
+		return "/parent/payment";
+
+	}
+	
+	@PostMapping("/parent/payment")
+	public String insertpayment(HttpSession session, Model model
+						, @RequestParam("lectureId") int lectureId
+						, @RequestParam("studentId") String studentId
+						, @RequestParam("amount") int amount) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		String userId = loginUser.getUserId();
+		
+		parentService.payment(lectureId, studentId,amount);
+		
+		return "redirect:/parent/lectureLegistrationList";
+	}
+	
 	
 	// qna
 	@GetMapping("/parent/qnaList")
@@ -236,22 +289,26 @@ public class ParentController {
 	
 	// qna작성
 	@GetMapping("/parent/insertQna")
-	public String insertQna(HttpSession session, Model model
-						, @RequestParam("userId") String userId) {
+	public String insertQna(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        return "redirect:/login";
+	    }
+	    
+	    String userId = loginUser.getUserId();
 		model.addAttribute("userId", userId);
 		return "/parent/insertQna";
 	}
 	
 	@PostMapping("/parent/insertQna")
 	public String insertQna(HttpSession session
-				, @RequestParam("userId") String userId
 				, @RequestParam("question") String question) {
 		User loginUser = (User) session.getAttribute("loginUser");
 
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		}
-		
+		String userId = loginUser.getUserId();
 		parentService.insertQna(userId, question);
 		return "redirect:/parent/qnaList";
 	}
@@ -259,14 +316,13 @@ public class ParentController {
 	// qna 수정
 	@GetMapping("/parent/modifyQna")
 	public String modifyQna(HttpSession session, Model model
-						, @RequestParam("qnaId") int qnaId
-						, @RequestParam("userId") String userId) {
+						, @RequestParam("qnaId") int qnaId) {
 		User loginUser = (User) session.getAttribute("loginUser");
 		log.info("qnaId: {}", qnaId);
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		} 
-		
+		String userId = loginUser.getUserId();
 		model.addAttribute("qnaId", qnaId);
 		return "parent/modifyQna";
 	}
@@ -335,6 +391,7 @@ public class ParentController {
 		return "/parent/cancelVehicle";
     }
     
+    // 차량 배차 취소
     @PostMapping("/parent/cancelVehicle")
     public String cancelVehicle(HttpSession session
     						, @RequestParam("reason") String reason) {
@@ -347,6 +404,22 @@ public class ParentController {
     	parentService.insertVehicleCancel(loginUser.getUserId(), reason);
     	
 		return "redirect:/parent/vehicleInfo";
+    }
+    
+    @GetMapping("/parent/lectureLegistrationList")
+    public String lectureLegistrationList(HttpSession session, Model model) {
+    	
+    	User loginUser = (User) session.getAttribute("loginUser");
+    	if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+    	
+    	String userId = loginUser.getUserId();
+    	List<Map<String, Object>> lectureLegistrationList = parentService.getLectureLegistrationList(userId);
+    	
+    	model.addAttribute("lectureLegistrationList", lectureLegistrationList);
+    	
+    	return "/parent/lectureLegistrationList";
     }
 	
 	

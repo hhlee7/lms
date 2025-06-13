@@ -73,8 +73,14 @@ public class ParentService {
 	}
 	
 	// 수강신청(결제x)
-	public int lectureApply(String userId, String lectureId, String studentId) {
-		return parentMapper.lectureApply(userId, lectureId, studentId);
+	public void lectureApply(String userId, int lectureId, String studentId) {
+		int count = parentMapper.isEnrolled(studentId, lectureId);
+		if (count == 0) {
+	        parentMapper.lectureApply(studentId, lectureId);  // 정상 신청
+	    } else {
+	        // 이미 신청된 경우 예외 발생 (또는 사용자에게 알림)
+	        throw new IllegalStateException("수강신청한 강의가 있습니다.");
+	    }
 	}
 	
 	// qna게시판
@@ -94,7 +100,8 @@ public class ParentService {
 	public int qnaDelete(int qnaId) {
 		return parentMapper.qnaDelete(qnaId);
 	}
-
+	
+	// 배차 취소 신청
 	public void insertVehicleCancel(String parentId, String reason) {
 		Map<String, Object> map = parentMapper.findPaymentAndAssignmentByParentId(parentId);
 		if (map != null) {
@@ -110,7 +117,22 @@ public class ParentService {
 			}
 		
 	}
+	
+	// 수강신청 내역
+	public List<Map<String, Object>> getLectureLegistrationList(String userId) {
+		return parentMapper.lectureLegistrationList(userId);
+	}
 
-
+	// 수강료 결제
+	public void payment(int lectureId, String studentId, int amount) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("lectureId", lectureId);
+		param.put("studentId", studentId);
+		param.put("amount", amount);
+		
+		int row = parentMapper.updateEnrollmentStatus(param);
+		
+		parentMapper.insertPayment(param);
+	}
 
 }

@@ -67,26 +67,28 @@
 	
 	<!-- 자녀 탑승 차량 조회 -->
 	<select id="vehicleInfo" parameterType="String" resultType="map">
-		SELECT v.vehicle_no AS vehicleNo, u.name studentName, t1.name driverName, t1.phone
-		FROM vehicle_passenger vp INNER JOIN payment p
-			ON vp.payment_id = p.payment_id
-										INNER JOIN student_enrollment se
-			ON se.enrollment_id = p.enrollment_id
-										INNER JOIN vehicle_assignment va
-			ON vp.assignment_id = va.assignment_id
-										INNER JOIN vehicle v
-			ON va.vehicle_id = v.vehicle_id
-										INNER JOIN user u
-			ON se.student_id = u.user_id
-										INNER JOIN student_parent sp
-			ON u.user_id = sp.student_id
-										INNER JOIN (SELECT u.name, va.driver_id, va.assignment_id, u.phone
-														FROM user u INNER JOIN vehicle_assignment va
-															ON u.user_id = va.driver_id) t1
-			ON t1.driver_id = va.driver_id AND va.assignment_id = t1.assignment_id
-										LEFT JOIN vehicle_cancel vc 
-			ON vc.payment_id = p.payment_id AND vc.assignment_id = va.assignment_id
-		WHERE sp.parent_id = #{userId} AND vc.decision_id IS NULL
+		SELECT 
+		v.vehicle_no AS vehicleNo, 
+			u.name AS studentName, 
+			t1.name AS driverName, 
+			t1.phone,
+			l.end_time AS endTime
+		FROM vehicle_passenger vp
+		INNER JOIN payment p ON vp.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON se.enrollment_id = p.enrollment_id
+		INNER JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
+		INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		INNER JOIN student_parent sp ON u.user_id = sp.student_id
+		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
+		LEFT JOIN (
+			SELECT u.name, va.driver_id, va.assignment_id, u.phone
+			FROM user u 
+			INNER JOIN vehicle_assignment va ON u.user_id = va.driver_id
+		) AS t1 ON t1.driver_id = va.driver_id AND t1.assignment_id = va.assignment_id
+		LEFT JOIN vehicle_cancel vc ON vc.payment_id = p.payment_id AND vc.assignment_id = va.assignment_id
+		WHERE sp.parent_id = #{userId}
+		AND vc.decision_id IS NULL;
 	</select>
 	
 	<!-- 자녀 수업 조회 -->
@@ -160,6 +162,25 @@
 		WHERE CURDATE() &lt;= DATE_SUB(l.start_date, INTERVAL 3 DAY)
 	</select>
 	
+	<!-- 1) student_enrollment 상태 PENDING → PAID 변경 -->
+	<update id="updateEnrollmentStatus">
+		UPDATE student_enrollment
+		SET status = 'PAID'
+		WHERE lecture_id = #{lectureId}
+			AND student_id = #{studentId}
+			AND status = 'PENDING'
+		</update>
+		
+		<!-- 2) payment 삽입 -->
+		<insert id="insertPayment" parameterType="map">
+		INSERT INTO payment (enrollment_id, amount, paid_at)
+		VALUES (
+			(SELECT enrollment_id FROM student_enrollment
+			WHERE lecture_id = #{lectureId} AND student_id = #{studentId}),
+			#{amount}, NOW()
+		)
+	</insert>
+	
 	<!-- 전체 사진첩 목록 조회 (검색+페이징) -->
 	<select id="selectAlbumList" resultType="map" parameterType="map">
 	  SELECT album_id, lecture_id, title, description, created_at
@@ -185,6 +206,12 @@
 		INSERT INTO student_enrollment(student_id, lecture_id, STATUS, enrolled_at)
 		VALUES(#{studentId}, #{lectureId}, 'PENDING', NOW())
 	</insert>
+	<!-- 수강신청시 신청내역이 있는지 검사(1계정 1과목 수강) -->
+	<select id="isEnrolled" parameterType="map" resultType="int">
+		SELECT COUNT(*) 
+		FROM student_enrollment
+		WHERE student_id = #{studentId} AND lecture_id = #{lectureId}
+	</select>
 	
 	<!-- qna목록 -->
 	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">
@@ -231,4 +258,22 @@
 	    VALUES (#{paymentId}, #{assignmentId}, #{reason})
 	</insert>
 	
+	<!-- 수강신청 내역 -->
+	<select id="lectureLegistrationList" parameterType="map">
+		SELECT u.name AS studentName,
+			sb.name AS subjectName,
+			lt.start_date AS startDate,
+			lt.end_date AS endDate,
+			lt.start_time AS startTime,
+			lt.end_time AS endTime,
+			lt.day_of_week AS dayOfWeek,
+			se.enrolled_at AS enrollmentAt,
+			lt.amount
+		FROM (SELECT * FROM user WHERE user_id = #{userId}) p
+		INNER JOIN student_parent sp ON p.user_id = sp.parent_id
+		INNER JOIN user u ON sp.student_id = u.user_id
+		INNER JOIN student_enrollment se ON sp.student_id = se.student_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+	</select>
 </mapper>

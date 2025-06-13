@@ -11,6 +11,12 @@
 <body>
 	<h1>수업 목록</h1>
 	
+	<c:if test="${not empty param.error}">
+	    <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+	       ${param.error}
+	    </div>
+	</c:if>
+	
 	<table border="1">
 		<tr>
 			<th>과목명</th>
@@ -28,7 +34,7 @@
 		<c:forEach var="lec" items="${lectureList}">
 		  <tr>
 		    <td>${lec.subjectName}</td>
-		    <td>${lec.teacherName}</td>
+		    <td>${lec.teacherName != null ? lec.teacherName : '미정'}</td>
 		    <td>${lec.startTime} ~ ${lec.endTime}</td>
 		    <td>${lec.dayOfWeek}</td>
 		    <td>${lec.startDate}</td>
@@ -40,14 +46,14 @@
 		    	<c:choose>
 			        <c:when test="${lec.currentCount lt lec.recruited}">
 			          <form action="/parent/lectureApply" method="post" style="margin:0;">
-			            <input type="hidden" name="lectureId" value="${lec.lectureId}"/>
-			            <input type="hidden" name="userId" value="${userId}">
+			            <input type="hidden" name="lectureId" value="${lec.lectureId}">
 			            <input type="hidden" name="studentId" value="${studentId}">
+			            <input type="hidden" name="amount" value="${lec.amount}">
 			            <button type="submit">수강신청하기</button>
 			          </form>
 			        </c:when>
 			        <c:otherwise>
-			          신청불가
+			          마감
 			        </c:otherwise>
 			      </c:choose>
 		    </td>

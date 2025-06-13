@@ -52,8 +52,9 @@ public interface ParentMapper {
     // 전체 사진첩 총 개수 조회
     int countAlbumList(Map<String, Object> param);
 
-	// 수강신청(결제x)
-	int lectureApply(String userId, String lectureId, String studentId);
+	// 수강신청
+    int isEnrolled(String studentId, int lectureId);
+    void lectureApply(String studentId, int lectureId);
 	
 	// qna게시판
 	List<Qna> qnaList(int beginRow, int size);
@@ -71,6 +72,14 @@ public interface ParentMapper {
 	Map<String, Object> findPaymentAndAssignmentByParentId(String parentId);
 	// 자녀 탑승 취소신청
 	void insertVehicleCancel(Map<String, Object> param);
+
+	// 수강신청 조회
+	List<Map<String, Object>> lectureLegistrationList(String userId);
+
+	// 수강료 결제
+	int updateEnrollmentStatus(Map<String, Object> param);
+	void insertPayment(Map<String, Object> param);
+
 
 
 }
