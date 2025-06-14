@@ -9,10 +9,10 @@
     if (isLoggedIn) {
         buttonText = loginUser.getUserName() + "님 반갑습니다.";
         switch (loginUser.getRoleId()) {
-            case 1: buttonLink = "/admin/main"; break;
+            case 1: buttonLink = "/adminMain"; break;
             case 2: buttonLink = "/student/main"; break;
             case 3: buttonLink = "/teacher/main"; break;
-            case 4: buttonLink = "/parent/main"; break;
+            case 4: buttonLink = "/parent/index"; break;
             case 5: buttonLink = "/driver/main"; break;
         }
     }
