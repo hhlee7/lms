@@ -59,17 +59,59 @@ public class AdminController {
         this.loginService = loginService;
     }
 	
+    /** 학생 배차 관리 페이지 **/
+    @GetMapping("studentDispatchManagement")
+    public String studentDispatchManagement(Model model) {
+    	
+    	// 수업 리스트
+    	List<Map<String,Object>> lectureList = adminService.selectLectureList();
+    	model.addAttribute("lectureList",lectureList);
+    	
+    	// 
+    	
+    	return "admin/studentDispatchManagement";
+    }
+    
 	/** 관리자 메인 페이지 **/
 	@GetMapping("adminMain")
-	public String adminMain() {
+	public String adminMain(Model model) {
+		
+		// 미응답 Q&A 수
+		int qnaCount = adminService.qnaCount();
+		if(qnaCount != 0) {
+			model.addAttribute("qnaCount",qnaCount);			
+		}
+		
 		return "admin/adminMain";
 	}
 	
 	/** Q&A 리스트 페이지 **/
 	@GetMapping("qnaManagement")
-	public String qnaManagement(Model model) {
-		List<Qna> qnaList = adminService.selectQnaList();
+	public String qnaManagement(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "10") int size
+			,@RequestParam(defaultValue = "") String searchWord
+			,@RequestParam(defaultValue = "") String searchType) {
+		
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType, null);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.qnaTotalCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		model.addAttribute("page",paging);
+		
+		// 전체 리스트
+		List<Qna> qnaList = adminService.selectQnaList(paging);
 		model.addAttribute("qnaList",qnaList);
+		
+		// 미응답 Q&A 수
+		int qnaCount = adminService.qnaCount();
+		if(qnaCount != 0) {
+			model.addAttribute("qnaCount",qnaCount);			
+		}
+		
 		return "admin/qnaManagement";
 	}
 	
@@ -323,21 +365,20 @@ public class AdminController {
 	/** 차량 배정 등록 **/
 	@PostMapping("vehicleAssignmentInsert")
 	public String vehicleAssignmentInsert(@RequestParam(defaultValue = "") String driverId, VehicleAssignment va) {
-		
 		if (driverId == null || driverId.isEmpty()) {	// 기사를 선택 안 함
 		    va.setDriverId(null);
 		}
 		
-		if(va != null) {	// 배정이 있을때는 UPDATE
+		if(va.getAssignmentId() != null) {	// 배정이 있을때는 UPDATE
 			int row = adminService.modifyVehicleAssignment(va);
-			
+			log.info("차량 배정 업데이트");
 			if(row != 1) {	// 갱신 이상
 				
 			}
 		}
 		else {	// 배정이 없을때는 INSERT
 			int row = adminService.insertVehicleAssignment(va);
-			
+			log.info("차량 배정 등록");
 			if(row != 1) {	// 삽입 이상
 				
 			}

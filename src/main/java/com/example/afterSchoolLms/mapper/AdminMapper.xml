@@ -53,6 +53,17 @@
 		</where>
 	</select>
 	
+	<!-- Q&A 전체 데이터 수 조회 -->
+	<select id="qnaTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+			FROM qna
+		<where>
+		    <if test="searchWord != ''">
+		        AND question LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
 	<!-- 공지사항 하나 조회 -->
 	<select id="selectNoticeOne" parameterType="map">
 		SELECT 
@@ -111,8 +122,16 @@
 		WHERE album_id = #{albumId};
 	</select>
 	
-	<!-- Q&A 조회 (검색 페이징 해야함)-->
-	<select id="selectQnaList" resultType="com.example.afterSchoolLms.dto.Qna">
+	<!-- 미응답 Q&A 수 -->
+	<select id="qnaCount">
+		SELECT
+			COUNT(*)
+		FROM qna
+		WHERE answer IS NULL;
+	</select>
+	
+	<!-- Q&A 조회 (검색, 페이징)-->
+	<select id="selectQnaList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.Qna">
 		SELECT
 			qna_id AS qnaId,
 			parent_id AS parentId,
@@ -121,7 +140,23 @@
 			answer,
 			created_at AS createdAt,
 			answered_at AS answeredAt
-		FROM qna;
+		FROM qna
+		<where>
+		    <if test="searchWord != ''">
+		        AND question LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY 
+		    answered_at IS NOT NULL,
+		    CASE 
+		        WHEN answered_at IS NULL THEN created_at
+		        ELSE NULL
+		    END ASC,
+		    CASE 
+		        WHEN answered_at IS NOT NULL THEN created_at
+		        ELSE NULL
+		    END DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
 	<!-- Q&A 상세 조회 -->

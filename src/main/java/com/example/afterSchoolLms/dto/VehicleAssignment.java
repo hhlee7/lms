@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleAssignment {
-	private int assignmentId;
+	private Integer assignmentId;	// [윤성권] null 값을 허용 시키려고 수정함
 	private Integer lectureId;	// [윤성권] null 값을 허용 시키려고 수정함
 	private int vehicleId;
 	private String driverId;

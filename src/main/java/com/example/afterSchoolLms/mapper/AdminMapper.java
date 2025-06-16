@@ -47,7 +47,9 @@ public interface AdminMapper {
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
 	Map<String,Object> selectAlbumOne(int albumId);			// 앨범 상세 조회
 	
-	List<Qna> selectQnaList();								// Qna 리스트 조회
+	List<Qna> selectQnaList(Page page);						// Qna 리스트 조회
+	int qnaTotalCount(Page page);							// Qna 전체 데이터 수 조회
+	int qnaCount();											// 미응답 Qna 수
 	Qna selectQnaOne(int qnaId);							// Qna 상세 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회

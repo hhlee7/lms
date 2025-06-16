@@ -13,9 +13,9 @@
 		<a href="userManagement">[회원 관리]</a>
 		<a href="vehicleManagement">[차량 관리]</a>
 		<a href="noticeManagement">[공지사항 관리]</a>
-		<a href="userManagement">[학생 배차 조회]</a>
+		<a href="studentDispatchManagement">[학생 배차 조회]</a>
 		<a href="albumManagement">[수업 사진첩]</a>
-		<a href="qnaManagement">[학부모 Q&A]</a>
+		<a href="qnaManagement">[학부모 Q&A] <span style="color:red">!${qnaCount}</span></a>
 	</div>
 	<div><a href="/admin/subjectManagement">과목 관리</a></div>
 	<div><a href="/admin/studentEnrollmentList">수강 신청 현황</a></div>

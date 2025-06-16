@@ -46,8 +46,13 @@ public class AdminService {
 	}
 	
 	/** Q&A 리스트 조회 **/
-	public List<Qna> selectQnaList() {
-		return adminMapper.selectQnaList();
+	public List<Qna> selectQnaList(Page page) {
+		return adminMapper.selectQnaList(page);
+	}
+	
+	/** 미응답 Q&A 수 **/
+	public int qnaCount() {
+		return adminMapper.qnaCount();
 	}
 	
 	/** Q&A 상세 조회 **/
@@ -73,6 +78,11 @@ public class AdminService {
 	/** 공지사항 전체 카운트 가져오기 **/
 	public int noticeTotalCount(Page page) {
 		return adminMapper.noticeTotalCount(page);
+	}
+	
+	/** Q&A 전체 카운트 가져오기 **/
+	public int qnaTotalCount(Page page) {
+		return adminMapper.qnaTotalCount(page);
 	}
 	
 	/** 관리자가 유저 리스트를 가져옴 **/
