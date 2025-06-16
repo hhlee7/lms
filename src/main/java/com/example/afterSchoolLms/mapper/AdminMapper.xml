@@ -165,6 +165,7 @@
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user u ON ta.teacher_id = u.user_id
 	</select>
+	
 	<!-- 과목 조회 -->
 	<select id="selectSubjectList" resultType="com.example.afterSchoolLms.dto.Subject">
 		SELECT 
@@ -173,6 +174,7 @@
 			description,
 			created_at AS createdAt
 		FROM subject
+		ORDER BY createdAT DESC
 	</select>
 	
 	<!-- 과목 추가 -->
@@ -213,7 +215,13 @@
 			u.name AS studentName,
 			sb.name AS subjectName,
 			DATE_FORMAT(se.enrolled_at, '%Y-%m-%d %H:%i') AS enrolledAt,
-			se.status
+			CASE se.status
+				WHEN 'PENDING' THEN '결제 대기'
+				WHEN 'PAID' THEN '결제 완료'
+				WHEN 'CANCEL' THEN '신청 취소'
+				WHEN 'REFUNDWAIT' THEN '환불 대기'
+				WHEN 'REFUND' THEN '환불 완료'
+			END AS status
 		FROM student_enrollment se
 		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
@@ -226,7 +234,7 @@
 		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
-		ORDER BY enrolledAt DESC
+		ORDER BY enrolledAt DESC, enrollmentId DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
@@ -254,7 +262,7 @@
 			sb.name AS subjectName,
 			st.name AS studentName,
 			p.amount,
-			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt,
+			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
@@ -265,10 +273,10 @@
 		        sb.name = #{searchType}
 		    </if>
 		    <if test="searchWord != ''">
-		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
-		ORDER BY paidAt DESC
+		ORDER BY paidAt DESC, paymentId DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
@@ -285,7 +293,7 @@
 		        sb.name = #{searchType}
 		    </if>
 		    <if test="searchWord != ''">
-		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
 	</select>

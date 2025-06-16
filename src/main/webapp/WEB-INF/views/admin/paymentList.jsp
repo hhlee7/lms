@@ -59,23 +59,61 @@
 	<br>
 	
 	<!-- 수강료 납부 목록 조회 -->
-	<table border="1">
-		<tr>
-			<th>번호</th>
-			<th>과목</th>
-			<th>이름</th>
-			<th>금액</th>
-			<th>납부 시간</th>
-		</tr>
-	<c:forEach var="list" items="${paymentList}">
-		<tr>
-			<td>${list.paymentId}</td>
-			<td>${list.subjectName}</td>
-			<td>${list.studentName}</td>
-			<td>${list.amount}</td>
-			<td>${list.paidAt}</td>
-		</tr>
-	</c:forEach>
-	</table>
+	<c:choose>
+		<c:when test="${empty paymentList}">
+			<p>조회된 수강료 납부 내역이 없습니다.</p>
+		</c:when>
+		<c:otherwise>
+			<table border="1">
+				<tr>
+					<th>번호</th>
+					<th>과목</th>
+					<th>이름</th>
+					<th>금액</th>
+					<th>납부 시간</th>
+				</tr>
+				<c:forEach var="list" items="${paymentList}">
+					<tr>
+						<td>${list.paymentId}</td>
+						<td>${list.subjectName}</td>
+						<td>${list.studentName}</td>
+						<td>${list.amount}</td>
+						<td>${list.paidAt}</td>
+					</tr>
+				</c:forEach>
+			</table>
+			</c:otherwise>
+	</c:choose>
+	
+	<!-- 이름 검색 -->
+	<div>
+		이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord != null ? page.searchWord : ''}">
+		<button type="button" name="searchBtn" id="searchBtn">검색</button>
+	</div>
+	
+	<!-- 페이지 그룹 이동 및 번호 출력 -->
+	<div>
+		<!-- 이전 그룹 이동 -->
+		<c:if test="${page.prevGroup}">
+			<a href="/admin/paymentList?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
+		</c:if>
+	
+		<!-- 페이지 번호 리스트 -->
+		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+			<c:choose>
+				<c:when test="${i == page.currentPage}">
+					<strong>[${i}]</strong>
+				</c:when>
+				<c:otherwise>
+					<a href="/admin/paymentList?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	
+		<!-- 다음 그룹 이동 -->
+		<c:if test="${page.nextGroup}">
+			<a href="/admin/paymentList?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
+		</c:if>
+	</div>
 </body>
 </html>

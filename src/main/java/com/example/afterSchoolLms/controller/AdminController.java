@@ -643,7 +643,7 @@ public class AdminController {
 		// 과목 리스트
 		List<Subject> subjectList = adminService.getSubjectList();
 		
-		// 모델 값 넘기기
+		// 모델에 값 전달
 		model.addAttribute("studentEnrollmentList", list);
 		model.addAttribute("subjectList", subjectList);
 		model.addAttribute("page", paging);
@@ -668,7 +668,14 @@ public class AdminController {
 		
 		// 수강료 납부 내역 목록
 		List<Map<String, Object>> list = adminService.getPaymentList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("paymentList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/paymentList";
 	}
 	

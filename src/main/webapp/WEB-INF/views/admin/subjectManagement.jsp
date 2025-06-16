@@ -16,7 +16,7 @@
 	<table border="1">
 		<tr>
 			<th>번호</th>
-			<th>이름</th>
+			<th>과목</th>
 			<th>수정</th>
 			<th>삭제</th>
 		</tr>
