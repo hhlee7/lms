@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.afterSchoolLms.mapper.StudentMapper">
 	
+	<select id="selectInformation" parameterType="String" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName,
+			birth,
+			email,
+			address,
+			phone
+		FROM user
+		WHERE user_id=#{id} AND PASSWORD=#{password}
+	</select>
+	
 	<select id="checkPw" parameterType="String" resultType="String">
 		SELECT user_id AS userId
 		FROM user

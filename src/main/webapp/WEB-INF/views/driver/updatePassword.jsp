@@ -26,6 +26,7 @@
 			
 			if ($('#updatePw').val() !== $('#updatePw2').val()) {
 				alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+				$('#updatePw').val('');
 				$('#updatePw2').val('');
 				return;
 			}
@@ -60,7 +61,7 @@
 	<hr>
 	
 	<form id="updateForm" method="post" action="/driver/updatePassword">
-		<input type="hidden" value="${loginUser.userId}" id="userId" name="userId"> 
+		<input type="hidden" value="${user.userId}" id="userId" name="userId"> 
 		비밀번호: <input type="password" id="currentPw" name="currentPw"><br>
 		새 비밀번호: <input type="password" id="updatePw" name="updatePw"><br>
 		새 비밀번호 확인: <input type="password" id="updatePw2"><br>	

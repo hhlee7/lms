@@ -38,11 +38,19 @@ public class StudentController {
 		return "/student/main";
 	}
 	
+	// 로그아웃
+	@GetMapping("/student/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate();
+	    return "redirect:/";
+	}
+	
 	// 학생 개인정보 페이지
 	@GetMapping("/student/personalInformation")
 	public String personalInformation(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		model.addAttribute("loginUser", loginUser);
+		User user = studentService.selectInformation(loginUser.getUserId(), loginUser.getPassword());
+		model.addAttribute(user);
 		return "/student/personalInformation";
 	}
 	
@@ -50,7 +58,8 @@ public class StudentController {
 	@GetMapping("/student/updateInformation")
 	public String updateInformation(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		model.addAttribute("loginUser", loginUser);
+		User user = studentService.selectInformation(loginUser.getUserId(), loginUser.getPassword());
+		model.addAttribute(user);
 		return "/student/updateInformation";
 	}
 	
@@ -60,7 +69,7 @@ public class StudentController {
 			, @RequestParam String currentPw
 			, @RequestParam String updatePw) {
 		studentService.updatePw(userId, currentPw, updatePw);
-		return "redirect:/student/main";
+		return "redirect:/student/logout";
 	}
 
 	// 학생 본인 수업조회

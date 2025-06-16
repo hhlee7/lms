@@ -20,5 +20,6 @@
 	<span><a href="/student/satisfaction">만족도평가</a></span>
 	<span><a href="/student/album">사진첩</a></span>
 	<span><a href="/student/personalInformation">개인정보</a></span>
+	<span><a href="/student/logout">로그아웃</a></span>
 </body>
 </html>

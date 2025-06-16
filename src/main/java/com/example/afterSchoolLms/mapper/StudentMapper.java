@@ -13,6 +13,9 @@ import com.example.afterSchoolLms.dto.User;
 @Mapper
 public interface StudentMapper {
 	
+	// 학생 개인정보 검색
+	User selectInformation(String id, String password);
+	
 	// 비밀번호 변경시 원래 비밀번호 맞는지 확인
 	String checkPw(String id, String pw);
 	

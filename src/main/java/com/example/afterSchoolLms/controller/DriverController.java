@@ -32,6 +32,13 @@ public class DriverController {
 		return "/driver/main";
 	}
 	
+	// 로그아웃
+	@GetMapping("/driver/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate();
+	    return "redirect:/";
+	}
+	
 	// 기사 개인정보 페이지
 	@GetMapping("/driver/personalInformation")
 	public String personalInformation(HttpSession session, Model model) {
@@ -82,7 +89,7 @@ public class DriverController {
 			, @RequestParam String currentPw
 			, @RequestParam String updatePw) {
 		driverService.updatePw(userId, currentPw, updatePw);
-		return "redirect:/";
+		return "redirect:/driver/logout";
 	}
 
 	// 기사 배차 조회

@@ -19,6 +19,11 @@ public class StudentService {
 	
 	@Autowired StudentMapper studentMapper;
 	
+	// 개인정보 검색
+	public User selectInformation(String userId, String password) {
+		return studentMapper.selectInformation(userId, password);
+	}
+	
 	// 비밀번호 변경시 원래 비밀번호 맞는지 확인
 	public String checkPw(String id, String pw) {
 		return studentMapper.checkPw(id, pw);

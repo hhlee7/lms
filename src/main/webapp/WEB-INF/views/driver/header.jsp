@@ -14,5 +14,6 @@
 	<span><a href="/driver/dispatch">배차조회</a></span>
 	<span><a href="/driver/dispatchStudent">배차 학생 조회</a></span>
 	<span><a href="/driver/personalInformation">개인정보</a></span>
+	<span><a href="/driver/logout">로그아웃</a></span>
 </body>
 </html>

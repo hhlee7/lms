@@ -15,7 +15,19 @@
 			}
 			
 			if ($('#updatePw').val() == '') {
-				alert('바꿀 비밀번호를 입력해주세요');
+				alert('새 비밀번호를 입력해주세요');
+				return;
+			}
+			
+			if ($('#updatePw2').val() == '') {
+				alert('새 비밀번호 확인을 입력해주세요');
+				return;
+			}
+			
+			if ($('#updatePw').val() !== $('#updatePw2').val()) {
+				alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+				$('#updatePw').val('');
+				$('#updatePw2').val('');
 				return;
 			}
 			
@@ -34,6 +46,7 @@
 						alert('현재 비밀번호가 틀렸습니다.');
 						$('#currentPw').val('');
 						$('#updatePw').val('');
+						$('#updatePw2').val('');
 					}
 				}
 			});
@@ -48,15 +61,10 @@
 	<hr>
 	
 	<form id="updateForm" method="post" action="/student/updateInformation">
-		<input type="hidden" value="${loginUser.userId}" id="userId" name="userId"> 
-		이름 : <input type="text" value="${loginUser.userName}" readonly="readonly"><br>
-		생년월일 : <input type="text" value="${loginUser.birth}" readonly="readonly"><br>
-		이메일 : <input type="text" value="${loginUser.email}" readonly="readonly"><br>
-		주소 : <input type="text" value="${loginUser.address}" readonly="readonly"><br>
-		전화번호 : <input type="text" value="${loginUser.phone}" readonly="readonly"><br>
+		<input type="hidden" value="${user.userId}" id="userId" name="userId"> 
 		비밀번호: <input type="password" id="currentPw" name="currentPw"><br>
-		비밀번호 수정: <input type="password" id="updatePw" name="updatePw"><br>
-		
+		새 비밀번호: <input type="password" id="updatePw" name="updatePw"><br>
+		새 비밀번호 확인: <input type="password" id="updatePw2"><br>	
 		<button type="button" id="updateBtn">비밀번호 수정</button>
 	</form>
 </body>
