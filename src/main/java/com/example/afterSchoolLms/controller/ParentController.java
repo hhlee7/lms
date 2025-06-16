@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
@@ -148,7 +149,7 @@ public class ParentController {
 		}
 		
 		String userId = loginUser.getUserId();
-		Map<String, Object> subject = parentService.getSubjectInfo(userId);
+		List<Map<String, Object>> subject = parentService.getSubjectInfo(userId);
 		model.addAttribute("subject", subject);
 		model.addAttribute("userId", userId);
 		
@@ -224,7 +225,9 @@ public class ParentController {
 						, @RequestParam("lectureId") int lectureId
 						, @RequestParam("studentId") String studentId
 						, @RequestParam("amount") int amount)	{
-		
+	    System.out.println("lectureId = " + lectureId);
+	    System.out.println("studentId = " + studentId);
+	    System.out.println("amount = " + amount);
 		User loginUser = (User) session.getAttribute("loginUser");
 
 		if (loginUser == null) {
@@ -267,6 +270,8 @@ public class ParentController {
 		
 		String userId = loginUser.getUserId();
 		List<Map<String, Object>> lecturePayOrCancelList = parentService.lecturePayOrCancel(userId);
+		
+		
 		// 자녀정보 가져오기
 	    Map<String, Object> studentInfo = parentService.getStudentInfo(loginUser.getUserId());
 	    String studentId = (String) studentInfo.get("studentId");
@@ -277,7 +282,7 @@ public class ParentController {
 		return "/parent/lecturePayOrCancel";
 	}
 	
-	// 수강 취소 및 환불신청
+	// 수강 취소(결제 전, 환불x 단순 취소)
 	@PostMapping("/parent/cancelLecture")
 	public String cancelLecture(HttpSession session
 							, @RequestParam("lectureId") int lectureId
@@ -291,6 +296,30 @@ public class ParentController {
 		parentService.cancelLecture(lectureId,studentId,status);
 		
 		return "redirect:/parent/lectureLegistrationList";
+	}
+	
+	// 환불
+	@PostMapping("/parent/refundLeture")
+	public String refundLeture(HttpSession session, Model model
+							, @RequestParam("lectureId") int lectureId
+							, @RequestParam("studentId") String studentId
+							, @RequestParam("status") String status
+							, @RequestParam("startDate") String startDate
+							, RedirectAttributes redirectAttr) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		try {
+	        parentService.refundLeture(lectureId, studentId, status, startDate);
+	    } catch (IllegalArgumentException e) {
+	        // 예외 발생 시 에러 메시지 담아서 redirect
+	        redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+	        return "redirect:/parent/lecturePayOrCancel";
+	    }
+		
+		return "redirect:/parent/lecturePayOrCancel";
 	}
 	
 	

@@ -9,7 +9,7 @@
 		ORDER BY notice_id DESC
 		LIMIT #{beginRow}, #{size}
 	</select>
-	
+
 	<!-- 공지사항 토탈카운트 -->
 	 <select id="totalCount" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
         SELECT COUNT(*) 
@@ -88,12 +88,13 @@
 		) AS t1 ON t1.driver_id = va.driver_id AND t1.assignment_id = va.assignment_id
 		LEFT JOIN vehicle_cancel vc ON vc.payment_id = p.payment_id AND vc.assignment_id = va.assignment_id
 		WHERE sp.parent_id = #{userId}
+		AND vp.checked_at = CURDATE()
 		AND vc.decision_id IS NULL;
 	</select>
 	
 	<!-- 자녀 수업 조회 -->
 	<select id="subjectInfo" parameterType="String" resultType="map">
-		SELECT
+		SELECT DISTINCT
 		   st.name AS studentName,
 		   sb.name AS subjectName,
 		   cl.name AS classroomName,
@@ -114,6 +115,7 @@
 		INNER JOIN classroom cl ON lt.classroom_id = cl.classroom_id
 		INNER JOIN teacher_assignment ta ON ta.lecture_id = lt.lecture_id
 		INNER JOIN user t ON ta.teacher_id = t.user_id
+		WHERE CURDATE() BETWEEN lt.start_date AND lt.end_date
 	</select>
 	
 	<!-- 자녀 출결 조회 -->
@@ -208,15 +210,27 @@
 	</insert>
 	<!-- 수강신청시 신청내역이 있는지 검사(1계정 1과목 수강) -->
 	<select id="isEnrolled" parameterType="map" resultType="int">
-		SELECT COUNT(*) 
+		SELECT COUNT(*)
 		FROM student_enrollment
-		WHERE student_id = #{studentId} AND lecture_id = #{lectureId}
+		WHERE student_id = #{studentId} 
+		AND lecture_id = #{lectureId}
+		AND status != 'CANCEL'
 	</select>
+	
+	<!-- 취소한 강좌가 있다가 -->
+	<update id="modifyCancelToPending">
+		UPDATE student_enrollment
+		SET status = 'PENDING'
+		WHERE student_id = #{studentId}
+			AND lecture_id = #{lectureId}
+			AND status = 'CANCEL'
+	</update>
 	
 	<!-- qna목록 -->
 	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">
 		SELECT qna_id AS qnaId, parent_id AS parentId, question, answer, created_at AS createdAt
 		FROM qna
+		ORDER BY created_at DESC
 	</select>
 	
 	<!-- qna 등록 -->
@@ -281,6 +295,7 @@
 		WHERE se.status = 'PAID'
 	</select>
 	
+	<!-- 수강신청 후 결제페이지에 리스트 -->
 	<select id="getLecturePayOrCancel" parameterType="string" resultType="map">
 	    SELECT 
 	        l.lecture_id AS lectureId,
@@ -297,7 +312,7 @@
 	        c.name AS classroomName,
 	        stu.name AS studentName,
 	        se.enrolled_at AS enrollmentAt,
-	        'PENDING' AS status
+	        se.status AS status
 	    FROM student_enrollment se
 	    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
 	    INNER JOIN subject s ON l.subject_id = s.subject_id
@@ -306,7 +321,27 @@
 	    LEFT JOIN user u ON ta.teacher_id = u.user_id
 	    INNER JOIN student_parent sp ON se.student_id = sp.student_id
 	    INNER JOIN user stu ON se.student_id = stu.user_id
-	    WHERE se.status = 'PENDING'
-	      AND sp.parent_id = #{userId}
+	    WHERE se.status IN ('PENDING', 'CANCEL', 'REFUND', 'PAID', 'REFUNDWAIT')
+	    	AND sp.parent_id = #{userId}
 	</select>
+	
+	<!-- 수강신청 결제 전 취소 -->
+	<update  id="updateToCancel" parameterType="map">
+		UPDATE student_enrollment
+        SET status = 'CANCEL'
+        WHERE lecture_id = #{lectureId}
+        	AND student_id = #{studentId}
+        	AND status = #{status}
+	</update >
+	
+	<!-- 수강신청 환불 -->
+	<update id="refundLeture" parameterType="map">
+		UPDATE student_enrollment se
+		JOIN lecture l ON se.lecture_id = l.lecture_id
+        SET se.status = 'REFUNDWAIT'
+        WHERE se.lecture_id = #{lectureId}
+        	AND se.student_id = #{studentId}
+        	AND se.status = #{status}
+        	AND l.start_date >= DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+	</update>
 </mapper>

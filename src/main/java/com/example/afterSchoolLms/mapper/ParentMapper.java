@@ -38,7 +38,7 @@ public interface ParentMapper {
 	Map<String, Object> vehicleInfo(String userId);
 
 	// 자녀 수업 조회
-	Map<String, Object> subjectInfo(String userId);
+	List<Map<String, Object>> subjectInfo(String userId);
 
 	// 자녀 출결 조회
 	List<Attendance> attendance(String userId);
@@ -52,10 +52,13 @@ public interface ParentMapper {
     // 전체 사진첩 총 개수 조회
     int countAlbumList(Map<String, Object> param);
 
-	// 수강신청
+	// 수강신청(기존 신청여부 확인)
     int isEnrolled(String studentId, int lectureId);
+    // 신규 등록
     void lectureApply(String studentId, int lectureId);
-	
+    // 취소한 강의면 'cancel' -> 'PENDING'으로 수정
+    int modifyCancelToPending(String studentId, int lectureId);
+    
 	// qna게시판
 	List<Qna> qnaList(int beginRow, int size);
 
@@ -80,13 +83,17 @@ public interface ParentMapper {
 	int updateEnrollmentStatus(int lectureId, String studentId);
 	void insertPayment(Map<String, Object> map);
 
-	// 1) 결제전 수강 취소
-	int updateToCancel(int lectureId, String studentId, String status);
-	// 2) 결제 후 수강 취소 
-	void updateToRefund(int lectureId, String studentId, String status);
+	// 결제전 수강 취소
+	void updateToCancel(int lectureId, String studentId, String status);
+	
+	// 환불처리 
+	void refundLeture(int lectureId, String studentId, String status, String startDate);
 
 	// 수강 신청 리스트 -> 결제 및 취소 진행
 	List<Map<String, Object>> getLecturePayOrCancel(String userId);
+
+
+
 
 
 

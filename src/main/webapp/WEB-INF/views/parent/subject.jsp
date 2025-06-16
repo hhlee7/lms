@@ -10,15 +10,17 @@
 </head>
 <body>
 	<c:if test="${not empty subject}">
-		<h1>${subject.studentName}의 수강 정보</h1>
-		<div>과목 : ${subject.subjectName}</div>
-		<div>요일 : ${subject.dayOfWeeK}요일</div>
-		<div>수업 기간 : ${subject.startDate} ~ ${subject.endDate}</div>
-		<div>수업 시간 : <fmt:formatDate value="${subject.startTime}" pattern="HH:mm" /> 
-					~ <fmt:formatDate value="${subject.endTime}" pattern="HH:mm" />
-        </div>
-		<div>강의실 : ${subject.classroomLocation} ${subject.classroomName}</div>
-		<div>강사 : ${subject.teacherName}</div>
+		<c:forEach var="s" items="${subject}">
+			<h1>${s.studentName}의 수강 정보</h1>
+			<div>과목 : ${s.subjectName}</div>
+			<div>요일 : ${s.dayOfWeek}요일</div>
+			<div>수업 기간 : ${s.startDate} ~ ${s.endDate}</div>
+			<div>수업 시간 : <fmt:formatDate value="${s.startTime}" pattern="HH:mm" /> 
+						~ <fmt:formatDate value="${s.endTime}" pattern="HH:mm" />
+	        </div>
+			<div>강의실 : ${s.classroomLocation} ${s.classroomName}</div>
+			<div>강사 : ${s.teacherName}</div>
+		</c:forEach>
 	</c:if>
 
 	<c:if test="${empty subject}">

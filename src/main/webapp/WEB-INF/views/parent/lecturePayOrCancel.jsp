@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file ="/WEB-INF/views/layout/header.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +11,10 @@
 </head>
 <body>
 	<h1>결제</h1>
+	<c:if test="${not empty errorMessage}">
+  		<div style="color: red; font-weight: bold;">${errorMessage}</div>
+	</c:if>
 
-	
-	<form>
 		<table border="1">
 			<tr>
 				<th>수강생 이름</th>
@@ -28,8 +30,7 @@
 			</tr>
 			
 			<c:forEach var="lec" items="${lecturePayOrCancelList}">
-				${lec.studentName}
-				${lec.studentId}
+
 				<tr>
 					<td>${lec.studentName}</td>
 					<td>${lec.subjectName}</td>
@@ -52,15 +53,26 @@
 							</c:when>
 							
 							<c:when test="${lec.status == 'PAID'}">
-								<form method="post" action="/parent/refund">
+								<form method="post" action="/parent/refundLeture">
 									<input type="hidden" name="studentId" value="${lec.studentId}">
 									<input type="hidden" name="lectureId" value="${lec.lectureId}">
-									<button type="submit">환불하기</button>
+									<input type="hidden" name="amount" value="${lec.amount}">
+									<input type="hidden" name="startDate" value="${lec.startDate}">
+									<input type="hidden" name="status" value="${lec.status}">
+									<button type="submit">환불신청</button>
 								</form>
 							</c:when>
 							
+							<c:when test="${lec.status == 'REFUNDWAIT'}">
+								환불진행중
+							</c:when>
+							
+							<c:when test="${lec.status == 'REFUND'}">
+								환불완료
+							</c:when>
+							
 							<c:otherwise>
-								<div><a href="/parent/lectureLegistrationList">수강 신청내역</a></div>
+								-
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -75,16 +87,18 @@
 									<button type="submit">수강취소</button>
 								</form>
 							</c:when>
-							
-							<c:otherwise>
+							<c:when test="${lec.status == 'CANCEL'}">
 								취소된 강좌
+							</c:when>
+							<c:otherwise>
+								-
 							</c:otherwise>
 						</c:choose>
+						
 					</td>
 				</tr>
 			</c:forEach>
 		</table>
-	</form>
 </body>
 
 </html>

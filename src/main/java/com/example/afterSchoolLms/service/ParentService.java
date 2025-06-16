@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class ParentService {
 	}
 
 	// 자녀 수업 조회
-	public Map<String, Object> getSubjectInfo(String userId) {
+	public List<Map<String, Object>> getSubjectInfo(String userId) {
 		return parentMapper.subjectInfo(userId);
 	}
 
@@ -81,11 +82,17 @@ public class ParentService {
 	// 수강신청(결제x)
 	public void lectureApply(String userId, int lectureId, String studentId) {
 		int count = parentMapper.isEnrolled(studentId, lectureId);
-		if (count == 0) {
-	        parentMapper.lectureApply(studentId, lectureId);  // 정상 신청
-	    } else {
-	        // 이미 신청된 경우 예외 발생 (또는 사용자에게 알림)
-	        throw new IllegalStateException("수강신청한 강의가 있습니다.");
+		
+		if (count > 0) {
+	        throw new IllegalStateException("이미 신청된 강의입니다.");
+	    }
+
+	    // 먼저 기존 신청이 취소된 건지 확인하여 다시 'PENDING'으로 변경
+	    int modified = parentMapper.modifyCancelToPending(studentId, lectureId);
+
+	    // 기존 취소건이 없었다면 신규 신청
+	    if (modified == 0) {
+	        parentMapper.lectureApply(studentId, lectureId);
 	    }
 	}
 	
@@ -148,19 +155,30 @@ public class ParentService {
 		parentMapper.insertPayment(map);
 	}
 
-	// 수강 취소
-	public void cancelLecture(int lectureId, String studentId, String status) {
-		
-		int count = parentMapper.updateToCancel(lectureId, studentId, status);   // 결제 전 상태(status = PENDING) 상태면 단순히 cancel로 변경
-		
-		if(count == 0) {
-			parentMapper.updateToRefund(lectureId, studentId, status);
-		}
-	}
-	
 	// 수강신청 리스트 -> 결제 or 취소 진행
 	public List<Map<String, Object>> lecturePayOrCancel(String userId) {
 		return parentMapper.getLecturePayOrCancel(userId);
+	}
+	
+	// 수강 취소 (결제 전) PENDING -> CENCEL
+	public void cancelLecture(int lectureId, String studentId, String status) {
+		parentMapper.updateToCancel(lectureId, studentId, status);   // 결제 전 상태(status = PENDING) 상태면 단순히 cancel로 변경
+	}
+	
+	// 환불요청 처리 PENDING -> REFUNDWAIT
+	public void refundLeture(int lectureId, String studentId, String status, String startDate) {
+		
+		// 개강일 전 전까지 환불 가능을 위해 날짜 구해오기
+		LocalDate start = LocalDate.parse(startDate);  // "yyyy-MM-dd" 형식
+	    LocalDate today = LocalDate.now();
+	    
+	    LocalDate limitDate = today.plusDays(3); // 오늘 기준 일 전 날짜 계산
+	    
+	    if (start.isBefore(limitDate)) {
+	        throw new IllegalArgumentException("개강일 3일 전까지만 환불 신청이 가능합니다.");
+	    }
+	    
+		parentMapper.refundLeture(lectureId, studentId, status, startDate);	
 	}
 
 }
