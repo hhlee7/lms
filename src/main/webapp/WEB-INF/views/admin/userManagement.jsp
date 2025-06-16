@@ -68,16 +68,16 @@
 				<th>아이디 생성일</th>
 				<th>자세히</th>
 			</tr>
-			<c:forEach var="user" items="${userList}">
+			<c:forEach var="us" items="${userList}">
 			<tr>
-				<td>${user.userId}</td>
-				<td>${user.roleId}</td>
-				<td>${user.userName}</td>
-				<td>${user.birth}</td>
-				<td>${user.email}</td>
-				<td>${user.phone}</td>
-				<td>${user.address}</td>
-				<td>${user.createdAt}</td>
+				<td>${us.userId}</td>
+				<td>${us.roleName}</td>
+				<td>${us.userName}</td>
+				<td>${us.birth}</td>
+				<td>${us.email}</td>
+				<td>${us.phone}</td>
+				<td>${us.address}</td>
+				<td>${us.createdAt}</td>
 				<td><a href="userOne?userId=${user.userId}">자세히</a></td>
 			</tr>
 			</c:forEach>

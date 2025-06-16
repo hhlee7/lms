@@ -48,10 +48,24 @@
 		<input type="hidden" id="userId" name="userId" value="${selectedUser.userId}"/>
 		<table border="1">
 			<tr>
+				<td>역할</td>
+				<td>
+					${selectedUser.roleName}
+				</td>
+			</tr>
+			<tr>
+				<td>이메일</td>
+				<td>
+					<form:input path="email" value="${selectedUser.email}"/>
+					<button type="button" id="checkEmailBtn">중복 검사</button>
+			        <span id="checkResult" style="color:red; margin-left:10px;"></span>
+					<form:errors path="email" cssClass="error" />
+				</td>
+			</tr>
+			<tr>
 				<td>이름</td>
 				<td>
-					<form:input path="userName" value="${selectedUser.userName}"/>
-					<form:errors path="userName" cssClass="error" />
+					${selectedUser.userName}
 				</td>
 			</tr>
 			<tr>
@@ -77,6 +91,10 @@
 					<input type="hidden" name="address" id="fullAddress">
 					<form:errors path="address" cssClass="error" />
 				</td>
+			</tr>
+			<tr>
+				<td>생년월일</td>
+				<td>${selectedUser.birth}</td>
 			</tr>
 		</table>
 		<button type="submit" id="modifyBtn" name="modifyBtn">수정</button>

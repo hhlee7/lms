@@ -23,12 +23,13 @@ import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
+import com.example.afterSchoolLms.dto.VehiclePassenger;
 
 @Mapper
 public interface AdminMapper {
 	
 	// SELECT
-	List<User> selectUserList(Page page);	// 전체 회원 조회
+	List<Map<String,Object>> selectUserList(Page page);	// 전체 회원 조회
 	int getTotalCount(Page page);			// 전체 회원 데이터 수 조회
 	List<Role> selectRoleList();			// 역할 리스트 조회
 	Map<String,Object> selectUserByUserId(String userId);				// 회원 아이디로 유저 한 명 조회
@@ -58,8 +59,11 @@ public interface AdminMapper {
 	
 	Vehicle selectVehicleByVehicleId(int vehicleId);							// 차량 아이디로 차량 조회
 	VehicleAssignment selectVehicleAssignmentByVehicleId(int vehicleId);		// 차량 아이디로 배정 조회
+	List<Map<String,Object>> selectPassengerList(Map<String,Object> map);		// 타겟 수업 아이디, 이름으로 학생 배차 조회
 	
 	User selectUserEmail(String email);											// 유저 이메일 중복 검사를 위해 조회
+	
+	List<Map<String,Object>> getPassengerList(Map<String,Object> map);			// 승객 추가를 위한 paymentId 와 탑승 시간, 요일 가져오기 (타겟은 시간, 요일)	
 	
 	// UPDATE
 	int modifyUser(User user);											// 회원 데이터 수정
@@ -80,6 +84,8 @@ public interface AdminMapper {
 	int insertAlbum(Album album);							// 앨범 등록
 	int insertAlbumPhoto(AlbumPhoto albumPhoto);			// 앨범 사진 등록
 
+	int insertPassenger(VehiclePassenger vehiclePassenger);	// 오늘 배차 정보 등록
+	
 	// 과목 조회
 	List<Subject> selectSubjectList();
 	

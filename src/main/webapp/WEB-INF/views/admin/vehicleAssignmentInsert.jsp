@@ -31,7 +31,7 @@
 		</tr>
 		
 		<tr>
-			<th>수업 선택</th>
+			<th>운전기사 선택</th>
 			<td>
 				<select name="driverId" id="driverId">
 				    <option value="">기사 없음</option>

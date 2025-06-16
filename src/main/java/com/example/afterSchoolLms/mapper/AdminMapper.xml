@@ -4,27 +4,92 @@
 
 	<!-- ======= SELECT ======= -->
 	<!-- 회원 리스트 조회 (페이징, 검색 가능) -->
-	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.User">
+	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
 		SELECT
-			user_id AS userId,
-			role_id AS roleId,
-			NAME AS userName,
-			email, phone, address,
-			created_at AS createdAt,
-			birth
-		FROM user
-		<where>
-		    <if test="searchType != 'all'">
-		        role_id = #{roleType}
-		    </if>
-		    <if test="searchWord != ''">
-		        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
-		    </if>
-		</where>
-		ORDER BY roleId
+			u.user_id AS userId,
+			u.role_id AS roleId,
+			r.role_name AS roleName,
+			u.NAME AS userName,
+			u.email, phone, address,
+			u.created_at AS createdAt,
+			u.birth
+		FROM (SELECT * FROM user
+			<where>
+			    <if test="searchType != 'all'">
+			        role_id = #{roleType}
+			    </if>
+			    <if test="searchWord != ''">
+			        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+			    </if>
+			</where>
+		) u
+		INNER JOIN role r ON u.role_id = r.role_id
+		ORDER BY u.role_Id
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
+	<!-- 오늘 배차할 학생 데이터 가져오기 (취소 데이터가 있는 것은 제외) -->
+	<select id="getPassengerList" parameterType="map" resultType="map">
+		SELECT
+		    va.assignment_id AS assignmentId,
+		    p.payment_id AS paymentId,
+		    lt.day_of_week AS dayOfWeek,
+		    DATE_SUB(lt.end_time, INTERVAL 10 MINUTE) AS endTime
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
+		LEFT JOIN vehicle_cancel vc 
+		       ON vc.assignment_id = va.assignment_id 
+		      AND DATE(vc.decided_at) = CURDATE()
+		WHERE lt.end_date >= CURDATE()
+		  AND vc.assignment_id IS NULL
+		  
+		  <if test="dayOfWeek != null and dayOfWeek != ''">
+		  	AND lt.day_of_week = #{dayOfWeek}
+		  </if>
+		  
+		  <if test="targetTime != null and targetTime != ''">
+		  	AND DATE_FORMAT(DATE_SUB(lt.end_time, INTERVAL 10 MINUTE), '%H:%i') = #{targetTime}
+		  </if>
+	</select>
+
+	<!-- 수업 아이디로 학생 배차 조회 -->
+	<select id="selectPassengerList" parameterType="map">
+		SELECT
+			st.user_id AS studentId,
+			st.name AS studentName,
+			vc.vehicle_no AS vehicleNo,
+			dr.user_id AS driverId,
+			dr.name AS driverName,
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			lt.end_time AS endTime
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN (
+			SELECT * FROM lecture 
+			<where>
+				end_date >= CURDATE()
+				<if test="lectureId != null and lectureId != ''">
+					AND lecture_id = #{lectureId}
+				</if>
+			</where>
+		) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
+		INNER JOIN vehicle vc ON va.vehicle_id = vc.vehicle_id
+		INNER JOIN user dr ON va.driver_id = dr.user_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN (
+			SELECT * FROM user
+			<where>
+				<if test="searchName != null and searchName != ''">
+					AND name LIKE CONCAT('%', #{searchName}, '%')
+				</if>
+			</where>
+		) st ON se.student_id = st.user_id
+	</select>
+
 	<!-- 유저 리스트 전체 데이터 가져오기 -->
 	<select id="getTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
 		SELECT COUNT(*) 
@@ -547,6 +612,16 @@
 	</update>
 	
 	<!-- ======= INSERT ======= -->
+	
+	<!-- 배차 정보 등록(스케쥴러) -->
+	<insert id="insertPassenger" parameterType="com.example.afterSchoolLms.dto.VehiclePassenger">
+		INSERT INTO vehicle_passenger(
+			assignment_id, payment_id
+		) VALUES(
+			#{assignmentId}, #{paymentId}
+		)
+	</insert>
+	
 	<!-- 회원 등록 -->
 	<insert id="insertUser" parameterType="com.example.afterSchoolLms.dto.User">
 		INSERT INTO user(

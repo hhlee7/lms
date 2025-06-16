@@ -1,6 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -61,13 +62,25 @@ public class AdminController {
 	
     /** 학생 배차 관리 페이지 **/
     @GetMapping("studentDispatchManagement")
-    public String studentDispatchManagement(Model model) {
+    public String studentDispatchManagement(Model model
+    		, @RequestParam(defaultValue="") String lectureId
+    		, @RequestParam(defaultValue="") String searchName) {
     	
     	// 수업 리스트
     	List<Map<String,Object>> lectureList = adminService.selectLectureList();
     	model.addAttribute("lectureList",lectureList);
     	
-    	// 
+    	// 선택된 수업이 없다면 -> 전체 배차 조회
+    	Map<String, Object> target = new HashMap<>();
+    	target.put("lectureId", lectureId);
+    	target.put("searchName", searchName);
+    	List<Map<String,Object>> dispatchList = adminService.selectPassengerList(target);
+    	model.addAttribute("dispatchList",dispatchList);
+    	
+    	// 수업 아이디, 검색 이름 저장
+    	model.addAttribute("lectureId",lectureId); 		
+    	model.addAttribute("searchName",searchName);
+    	
     	
     	return "admin/studentDispatchManagement";
     }
@@ -595,7 +608,8 @@ public class AdminController {
 		paging.setTotalCount(totalCount);
 		
 		// 유저 리스트
-		List<User> userList = adminService.selectUserList(paging);
+		List<Map<String,Object>> userList = adminService.selectUserList(paging);
+		
 		// 역할 리스트
 		List<Role> roleList = adminService.selectRoleList();
 		

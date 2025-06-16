@@ -11,28 +11,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
+import com.example.afterSchoolLms.dto.Attendance;
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.StudentParent;
+import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.afterSchoolLms.dto.Attendance;
-import com.example.afterSchoolLms.dto.Classroom;
-import com.example.afterSchoolLms.dto.Lecture;
-import com.example.afterSchoolLms.dto.Material;
-import com.example.afterSchoolLms.dto.Subject;
-import com.example.afterSchoolLms.dto.TeacherAssignment;
-import com.example.afterSchoolLms.dto.User;
+import com.example.afterSchoolLms.dto.VehiclePassenger;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -43,6 +37,16 @@ public class AdminService {
 	/** 리스트 전체 카운트 가져오기 **/
 	public int getTotalCount(Page page) {
 		return adminMapper.getTotalCount(page);
+	}
+	
+	/** 타겟 수업 아이디, 이름으로 배차 조회 **/
+	public List<Map<String,Object>> selectPassengerList(Map<String,Object> target){
+		return adminMapper.selectPassengerList(target);
+	}
+	
+	/** 오늘 배차할 학생 리스트 가져오기 **/
+	public List<Map<String,Object>> getPassengerList(Map<String,Object> target){
+		return adminMapper.getPassengerList(target);
 	}
 	
 	/** Q&A 리스트 조회 **/
@@ -86,7 +90,7 @@ public class AdminService {
 	}
 	
 	/** 관리자가 유저 리스트를 가져옴 **/
-	public List<User> selectUserList(Page page){
+	public List<Map<String,Object>> selectUserList(Page page){
 		return adminMapper.selectUserList(page);
 	}
 	
@@ -196,6 +200,11 @@ public class AdminService {
 	// ------ DELETE ------
 	
 	// ------ INSERT ------
+	
+	/** 오늘 배차 리스트 등록 **/
+	public int insertPassenger(VehiclePassenger vehiclePassenger) {
+		return adminMapper.insertPassenger(vehiclePassenger);
+	}
 	
 	/** 회원 등록 **/
 	public int insertUser(User user) {
