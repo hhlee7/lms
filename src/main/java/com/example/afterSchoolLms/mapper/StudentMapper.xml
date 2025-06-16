@@ -253,13 +253,11 @@
 			sb.name AS subjectName,
 			ab.title AS title,
 			ab.description,
-			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt,
-			ap.photo_id AS photoId,
-			ap.file_path AS filePath
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
 		FROM album ab
-		LEFT OUTER JOIN album_photo ap ON ab.album_id = ap.album_id
 		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
 		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
+		WHERE ab.title LIKE CONCAT('%', #{searchWord}, '%')
 	</select>
 	
 	<select id="selectAlbumOne" resultType="map">
