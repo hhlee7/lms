@@ -16,6 +16,7 @@
             <p>강사명: ${dispatch.teacherName}</p>
             <p>요일: ${dispatch.dayOfWeek}</p>
             <p>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
+            <p>수업기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
 			<p>기사님: ${dispatch.driverName}</p>
 			<p>주차장소: ${dispatch.location}</p>
 			<p>차량번호: ${dispatch.vehicleNo}</p>

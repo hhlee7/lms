@@ -14,7 +14,8 @@
 		<div>
 			<p>차량번호: ${dispatch.vehicleNo}</p>
             <p>요일: ${dispatch.dayOfWeek}</p>
-            <p>차량 운행시작시간 : ${dispatch.endTime}</p>
+            <p>차량 운행 시작시간 : ${dispatch.endTime}</p>
+            <p>차량 운행기간 : ${dispatch.startDate} ~ ${dispatch.endDate}
 			<hr>
 		</div>
 	</c:forEach>
