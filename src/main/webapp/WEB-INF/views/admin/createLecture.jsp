@@ -162,6 +162,7 @@
 				<th>배차</th>
 				<td>
 					<select name="assignmentId" id="assignmentId">
+						<option value="">없음</option>
 						<c:forEach var="va" items="${vehicleAssignmentList}">
 							<option value="${va.assignmentId}">
 								${va.assignmentId}(${va.vehicleNo}/${va.driverName}/${va.location})

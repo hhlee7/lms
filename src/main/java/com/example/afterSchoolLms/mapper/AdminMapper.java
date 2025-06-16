@@ -106,10 +106,16 @@ public interface AdminMapper {
 	int getTotalPaymentListCount(Page page);
 
 	// 수강 신청 취소 내역 조회
-	List<Map<String, Object>> selectEnrollmentCancelList();
+	List<Map<String, Object>> selectEnrollmentCancelList(Page page);
+	
+	// 수강 신청 취소 내역 전체 카운트 가져오기
+	int getTotalenrollmentCancelList(Page page);
 
 	// 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회)
-	List<Map<String, Object>> selectRefundList();
+	List<Map<String, Object>> selectRefundList(Page page);
+	
+	// 환불 내역 전체 카운트 가져오기
+	int getTotalRefundList(Page page);
 
 	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
 	int changeRefund(int enrollmentId);
@@ -117,8 +123,11 @@ public interface AdminMapper {
 	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
 	int removePayment(int enrollmentId);
 
-	// 수업 리스트 조회(전체 수업 조회 (종강 수업 포함))
-	List<Map<String, Object>> selectAllLectureList();
+	// 수업 목록 조회(전체 수업 조회 (종강 수업 포함))
+	List<Map<String, Object>> selectAllLectureList(Page page);
+	
+	// 수업 목록 전체 카운트 가져오기
+	int getTotalLectureList(Page page);
 	
 	// 수업 등록
 	int createLecture(Lecture lecture);
@@ -133,7 +142,7 @@ public interface AdminMapper {
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);
 	
 	// 등록된 배차 정보 조회
-	List<Map<String, Object>> selectVehicleAssignmentList();
+	List<Map<String, Object>> selectVehicleAssignmentList(Integer lectureId);
 
 	// 해당 수업의 배차 배정
 	int updateVehicleAssignmentByLectureId(VehicleAssignment vehicleAssignment);
@@ -206,4 +215,5 @@ public interface AdminMapper {
 
 	// 강사 평가 목록 조회
 	List<Map<String, Object>> selectTeacherSatisfactionList();
+
 }

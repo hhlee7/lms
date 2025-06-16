@@ -213,6 +213,7 @@
 				<th>배차</th>
 				<td>
 					<select name="assignmentId" id="assignmentId">
+						<option value="">없음</option>
 						<c:forEach var="va" items="${vehicleAssignmentList}">
 							<c:choose>
 								<c:when test="${va.assignmentId == vehicleAssignment.assignmentId}">

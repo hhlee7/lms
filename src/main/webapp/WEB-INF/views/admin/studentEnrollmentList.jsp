@@ -67,16 +67,16 @@
 			<table border="1">
 				<tr>
 					<th>번호</th>
+					<th>과목</th>
 					<th>이름</th>
-					<th>신청 과목</th>
-					<th>신청일</th>
-					<th>수강료 납부 현황</th>
+					<th>수강 신청 일시</th>
+					<th>납부 상태</th>
 				</tr>
 				<c:forEach var="list" items="${studentEnrollmentList}">
 					<tr>
 						<td>${list.enrollmentId}</td>
-						<td>${list.studentName}</td>
 						<td>${list.subjectName}</td>
+						<td>${list.studentName}</td>
 						<td>${list.enrolledAt}</td>
 						<td>${list.status}</td>
 					</tr>

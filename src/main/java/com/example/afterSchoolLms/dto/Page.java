@@ -81,12 +81,12 @@ public class Page {
 	    return endPage + 1;
 	}
 	
-	// [이현호] 페이징 설정
+	// [이현호] 페이징 처리 및 검색 조건 초기화 생성자
 	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType) {
 		this.rowPerPage = rowPerPage;
 		this.currentPage = currentPage;
 		this.totalCount = totalCount;
-		this.searchWord= searchWord;
+		this.searchWord = searchWord;
 		this.searchType = searchType;
 		this.beginRow = (currentPage - 1) * rowPerPage;
 	}

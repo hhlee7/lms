@@ -70,7 +70,7 @@
 					<th>과목</th>
 					<th>이름</th>
 					<th>금액</th>
-					<th>납부 시간</th>
+					<th>납부 일시</th>
 				</tr>
 				<c:forEach var="list" items="${paymentList}">
 					<tr>
