@@ -12,7 +12,7 @@
 </head>
 <body>
 	<h1>차량 관리 페이지 입니다.</h1>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	<c:if test="${vehicleList == null}">
 		차량이 없습니다.
 	</c:if>

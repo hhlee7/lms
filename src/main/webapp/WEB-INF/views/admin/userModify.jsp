@@ -39,13 +39,48 @@
 		        $('#phoneError').text("");
 		    }
 		});
+		
+		// 이메일 정규표현식
+		const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,20}$/;
+		
+		// 이메일 중복 검사 로직
+		function emailCheck(){
+			const email = $('#email').val().trim();
+
+			if (!emailRegex.test(email)) {
+		        $('#checkResult').css('color', 'red').text('이메일 형식을 다시 확인해주세요.');
+		        $('#userId').val('');
+		        return;
+		    }
+
+	        $.ajax({
+	            url: '/user/checkUserEmail',
+	            type: 'GET',
+	            data: { email: email },
+	            success: function(data) {
+	                if (data.exists) {
+	                    $('#checkResult').css('color', 'red').text('이미 사용 중인 이메일입니다.');
+	                    $('#userId').val('');
+	                } else {
+	                    $('#checkResult').css('color', 'green').text('사용 가능한 이메일입니다.');
+	                }
+	            },
+	            error: function() {
+	                $('#checkResult').css('color', 'red').text('서버 오류가 발생했습니다.');
+	            }
+	        });
+		}
+		
+		
+		// 이메일 중복 검사 버튼 클릭
+		$('#checkEmailBtn').click(emailCheck);
 	});
 </script>
 </head>
 <body>
 	<h1>관리자 회원 수정 페이지</h1>
 	<form:form action="userModify" method="post" modelAttribute="user">
-		<input type="hidden" id="userId" name="userId" value="${selectedUser.userId}"/>
+		<input type="text" id="userId" name="userId" value="${selectedUser.userId}"/>
 		<table border="1">
 			<tr>
 				<td>역할</td>

@@ -61,6 +61,6 @@
 		</table>
 		<button type="submit">배정</button>
 	</form>
-	<a href="vehicleManagement">뒤로</a>
+	<a href="/admin/vehicleManagement">뒤로</a>
 </body>
 </html>

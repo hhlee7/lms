@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1>앨범 등록 페이지</h1>
-	<a href="albumManagement">뒤로</a>
+	<a href="/admin/albumManagement">뒤로</a>
 
 	<form action="albumInsert" method="post" name="album" id="album" enctype="multipart/form-data">
 		<table border="1">

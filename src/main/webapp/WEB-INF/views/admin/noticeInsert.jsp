@@ -12,7 +12,7 @@
 </head>
 <body>
 	<h1>공지사항 등록 페이지</h1>
-	<a href="noticeManagement">뒤로</a>
+	<a href="/admin/noticeManagement">뒤로</a>
 	
 	<form action="noticeInsert" method="post">
 	<input type="hidden" name="adminId" id="adminId" value="${loginUser.userId}">

@@ -35,7 +35,7 @@
 </head>
 <body>
 	<h1>Q&A 관리 페이지</h1>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	<span style="color:red">미응답 Q&A : ${qnaCount} 개</span>
 	<table border="1">
 		<tr>

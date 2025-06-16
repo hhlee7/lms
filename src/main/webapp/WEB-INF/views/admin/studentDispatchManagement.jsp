@@ -39,7 +39,7 @@
 </head>
 <body>
 	<h1>학생 배차 관리 페이지.</h1>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	
 	<div>
 		수업 선택

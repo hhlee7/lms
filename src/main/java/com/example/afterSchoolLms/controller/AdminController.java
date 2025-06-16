@@ -61,7 +61,7 @@ public class AdminController {
     }
 	
     /** 학생 배차 관리 페이지 **/
-    @GetMapping("studentDispatchManagement")
+    @GetMapping("/admin/studentDispatchManagement")
     public String studentDispatchManagement(Model model
     		, @RequestParam(defaultValue="") String lectureId
     		, @RequestParam(defaultValue="") String searchName) {
@@ -86,7 +86,7 @@ public class AdminController {
     }
     
 	/** 관리자 메인 페이지 **/
-	@GetMapping("adminMain")
+	@GetMapping("/admin/main")
 	public String adminMain(Model model) {
 		
 		// 미응답 Q&A 수
@@ -95,11 +95,11 @@ public class AdminController {
 			model.addAttribute("qnaCount",qnaCount);			
 		}
 		
-		return "admin/adminMain";
+		return "admin/main";
 	}
 	
 	/** Q&A 리스트 페이지 **/
-	@GetMapping("qnaManagement")
+	@GetMapping("/admin/qnaManagement")
 	public String qnaManagement(Model model
 			,@RequestParam(defaultValue = "1") int page
 			,@RequestParam(defaultValue = "10") int size
@@ -129,7 +129,7 @@ public class AdminController {
 	}
 	
 	/** Q&A 상세 페이지 **/
-	@GetMapping("qnaOne")
+	@GetMapping("/admin/qnaOne")
 	public String qnaOne(Model model, @RequestParam String qnaId) {
 		Qna qna = adminService.selectQnaOne(Integer.parseInt(qnaId));
 		model.addAttribute(qna);
@@ -137,7 +137,7 @@ public class AdminController {
 	}
 	
 	/** Q&A 관리자 응답 **/
-	@PostMapping("qnaAnswer")
+	@PostMapping("/admin/qnaAnswer")
 	public String qnaAnswer(Qna qna) {
 		int row = adminService.modifyQna(qna);
 		
@@ -145,11 +145,11 @@ public class AdminController {
 			
 		}
 		
-		return "redirect:/qnaOne?qnaId="+qna.getQnaId();
+		return "redirect:/admin/qnaOne?qnaId="+qna.getQnaId();
 	}
 	
 	/** 앨범 등록 페이지 **/
-	@GetMapping("albumInsert")
+	@GetMapping("/admin/albumInsert")
 	public String albumInsert(Model model) {
 		List<Map<String, Object>> lectureList = adminService.selectLectureList();
 		
@@ -162,14 +162,14 @@ public class AdminController {
 	}
 	
 	/** 앨범 등록 기능 **/
-	@PostMapping("albumInsert")
+	@PostMapping("/admin/albumInsert")
 	public String albumInsert(Album album, @RequestParam("photoFiles") List<MultipartFile> photoFiles) {
 	    adminService.insertAlbum(album, photoFiles);
-	    return "redirect:/albumManagement";
+	    return "redirect:/admin/albumManagement";
 	}
 	
 	/** 앨범 상세 페이지 **/
-	@GetMapping("albumOne")
+	@GetMapping("/admin/albumOne")
 	public String albumOne(Model model, @RequestParam String albumId) {
 		List<AlbumPhoto> photoList = adminService.selectAlbumPhotoList(Integer.parseInt(albumId));
 		Map<String,Object> album = adminService.selectAlbumOne(Integer.parseInt(albumId));
@@ -185,7 +185,7 @@ public class AdminController {
 	}
 	
 	/** 앨범 관리 페이지 **/
-	@GetMapping("albumManagement")
+	@GetMapping("/admin/albumManagement")
 	public String albumManagement(Model model
 			,@RequestParam(defaultValue = "1") int page
 			,@RequestParam(defaultValue = "10") int size
@@ -226,7 +226,7 @@ public class AdminController {
 	}
 	
 	/** 공지사항 관리 페이지 **/
-	@GetMapping("noticeManagement")
+	@GetMapping("/admin/noticeManagement")
 	public String noticeManagement(Model model
 			,@RequestParam(defaultValue = "1") int page
 			,@RequestParam(defaultValue = "10") int size
@@ -266,7 +266,7 @@ public class AdminController {
 	}
 	
 	/** 공지사항 등록 페이지 **/
-	@GetMapping("noticeInsert")
+	@GetMapping("/admin/noticeInsert")
 	public String noticeInsert(Model model) {
 		List<Role> roleList = adminService.selectRoleList();
         model.addAttribute("roleList", roleList);
@@ -274,7 +274,7 @@ public class AdminController {
 	}
 	
 	/** 공지사항 등록 기능 **/
-	@PostMapping("noticeInsert")
+	@PostMapping("/admin/noticeInsert")
 	public String noticeInsert(Notice notice) {
 		int row =adminService.insertNotice(notice);
 		
@@ -282,11 +282,11 @@ public class AdminController {
 			
 		}
 
-		return "redirect:/noticeManagement";
+		return "redirect:/admin/noticeManagement";
 	}
 	
 	/** 공지사항 상세 페이지 **/
-	@GetMapping("noticeOne")
+	@GetMapping("/admin/noticeOne")
 	public String noticeOne(Model model, @RequestParam String noticeId) {
 		Map<String,Object> notice = adminService.selectNoticeOne(Integer.parseInt(noticeId));
 		model.addAttribute("notice",notice);
@@ -294,7 +294,7 @@ public class AdminController {
 	}
 	
 	/** 공지사항 수정 페이지 **/
-	@GetMapping("noticeModify")
+	@GetMapping("/admin/noticeModify")
 	public String noticeModify(Model model, @RequestParam String noticeId) {
 		List<Role> roleList = adminService.selectRoleList();
 		Map<String,Object> notice = adminService.selectNoticeOne(Integer.parseInt(noticeId));
@@ -304,7 +304,7 @@ public class AdminController {
 	}
 	
 	/** 공지사항 수정 기능 **/
-	@PostMapping("noticeModify")
+	@PostMapping("/admin/noticeModify")
 	public String noticeModify(Notice notice) {
 		int row = adminService.modifyNotice(notice);
 		
@@ -312,11 +312,11 @@ public class AdminController {
 			
 		}
 
-		return "redirect:/noticeOne?noticeId="+notice.getNoticeId();
+		return "redirect:/admin/noticeOne?noticeId="+notice.getNoticeId();
 	}
 	
 	/** 차량 관리 페이지 **/
-	@GetMapping("vehicleManagement")
+	@GetMapping("/admin/vehicleManagement")
 	public String vehicleManagement(Model model) {
 		List<Map<String,Object>> vehicleList = adminService.selectVehicleList();
 		model.addAttribute("vehicleList",vehicleList);
@@ -324,13 +324,13 @@ public class AdminController {
 	}
 	
 	/** 차량 등록 페이지 **/
-	@GetMapping("vehicleInsert")
+	@GetMapping("/admin/vehicleInsert")
 	public String vehicleInsert(Model model) {
 		return "admin/vehicleInsert";
 	}
 	
 	/** 차량 등록 기능 **/
-	@PostMapping("vehicleInsert")
+	@PostMapping("/admin/vehicleInsert")
 	public String vehicleInsert(Vehicle vc) {
 		int row = adminService.insertVehicle(vc);
 		
@@ -338,11 +338,11 @@ public class AdminController {
 			
 		}
 		
-		return "redirect:/vehicleManagement";
+		return "redirect:/admin/vehicleManagement";
 	}
 	
 	/** 차량 수정 페이지 **/
-	@GetMapping("vehicleModify")
+	@GetMapping("/admin/vehicleModify")
 	public String vehicleModify(@RequestParam String vehicleId, Model model) {
 		Vehicle vc = adminService.selectVehicleByVehicleId(Integer.parseInt(vehicleId));
 		model.addAttribute(vc);
@@ -350,7 +350,7 @@ public class AdminController {
 	}
 	
 	/** 차량 수정 기능 **/
-	@PostMapping("vehicleModify")
+	@PostMapping("/admin/vehicleModify")
 	public String vehicleModify(Vehicle vc) {
 		int row = adminService.modifyVehicle(vc);
 		
@@ -358,11 +358,11 @@ public class AdminController {
 			
 		}
 		
-		return "redirect:/vehicleManagement";
+		return "redirect:/admin/vehicleManagement";
 	}
 	
 	/** 차량 배정 페이지 **/
-	@GetMapping("vehicleAssignmentInsert")
+	@GetMapping("/admin/vehicleAssignmentInsert")
 	public String vehicleAssignmentInsert(@RequestParam String vehicleId, Model model) {
 		// 차량 정보
 		Vehicle vehicle = adminService.selectVehicleByVehicleId(Integer.parseInt(vehicleId));
@@ -381,7 +381,7 @@ public class AdminController {
 	}
 	
 	/** 차량 배정 등록 **/
-	@PostMapping("vehicleAssignmentInsert")
+	@PostMapping("/admin/vehicleAssignmentInsert")
 	public String vehicleAssignmentInsert(@RequestParam(defaultValue = "") String driverId, VehicleAssignment va) {
 		if (driverId == null || driverId.isEmpty()) {	// 기사를 선택 안 함
 		    va.setDriverId(null);
@@ -402,11 +402,11 @@ public class AdminController {
 			}
 		}
 		
-		return "redirect:/vehicleManagement";
+		return "redirect:/admin/vehicleManagement";
 	}
 	
 	/** 강사 경력 입력/수정 **/
-	@PostMapping("modifyHistory")
+	@PostMapping("/admin/modifyHistory")
 	public String modifyHistory(TeacherHistory th) {
 		TeacherHistory teacherHistory = adminService.selectTeacherHistoryListByTeacherId(th.getTeacherId());
 		
@@ -414,23 +414,23 @@ public class AdminController {
 			int row = adminService.insertHistory(th);
 			if(row != 1) {	// 삽입 이상
 				
-				return "redirect:/userOne?userId="+th.getTeacherId();
+				return "redirect:/admin/userOne?userId="+th.getTeacherId();
 			}
 		}
 		else {
 			int row = adminService.modifyHistory(th);
 			if(row != 1) {	// 갱신 이상
 				
-				return "redirect:/userOne?userId="+th.getTeacherId();
+				return "redirect:/admin/userOne?userId="+th.getTeacherId();
 			}
 		}
 		
-		return "redirect:/userOne?userId="+th.getTeacherId();
+		return "redirect:/admin/userOne?userId="+th.getTeacherId();
 	}
 	
 
     /** 회원 등록 페이지 **/
-    @GetMapping("userInsert")
+    @GetMapping("/admin/userInsert")
     public String userInsert(Model model) {
     	// 랜덤 임시 비밀번호
         String uuid = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 16);
@@ -445,7 +445,7 @@ public class AdminController {
     }
 
     /** 회원 등록 기능 **/
-    @PostMapping("userInsert")
+    @PostMapping("/admin/userInsert")
     public String userInsert(@Valid @ModelAttribute("user") User user,
                              BindingResult result,
                              @ModelAttribute StudentParent studentParent,
@@ -494,11 +494,11 @@ public class AdminController {
             // 예: model.addAttribute("emailError", "이메일 발송에 실패했습니다.");
         }
 
-        return "redirect:/userOne?userId=" + user.getUserId();
+        return "redirect:/admin/userOne?userId=" + user.getUserId();
     }
 	
 	/** 회원 한명의 정보를 수정 하는 페이지 **/
-	@GetMapping("userOne")
+	@GetMapping("/admin/userOne")
 	public String userOne(Model model, @RequestParam String userId) {
 		// 회원 한 명 조회
 		Map<String,Object> selectedUser = adminService.selectUserByUserId(userId);
@@ -519,7 +519,6 @@ public class AdminController {
 				TeacherHistory historyList = new TeacherHistory();
 				lectureList = teacherMapper.selectLectureListByTeacher((String)selectedUser.get("userId"));
 				historyList = adminService.selectTeacherHistoryListByTeacherId((String)selectedUser.get("userId"));
-				log.info(historyList.toString());
 				model.addAttribute("lectureList",lectureList);
 				model.addAttribute("historyList", historyList);
 				break;
@@ -546,7 +545,7 @@ public class AdminController {
 	}
 	
 	/** 회원 정보 수정 페이지 **/
-	@GetMapping("userModify")
+	@GetMapping("/admin/userModify")
 	public String userModify(@Valid @ModelAttribute("user") User user,
 					            BindingResult result,
 					            @ModelAttribute StudentParent studentParent,
@@ -566,19 +565,19 @@ public class AdminController {
 	}
 	
 	/** 회원 정보 수정 기능 **/
-	@PostMapping("userModify")
+	@PostMapping("/admin/userModify")
 	public String userModify(User user) {
 		int row = adminService.modifyUser(user);
-				
+		log.info(user.toString());
 		if(row != 1) {	// 실패 했을 때
 			
 		}
 		
-		return "redirect:/userOne?userId="+user.getUserId();
+		return "redirect:/admin/userOne?userId="+user.getUserId();
 	}
 	
 	/** 회원 관리 페이지로 **/
-	@GetMapping("userManagement")
+	@GetMapping("/admin/userManagement")
 	public String userManagement(Model model
 			,@RequestParam(defaultValue = "1") int page
 			,@RequestParam(defaultValue = "10") int size

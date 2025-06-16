@@ -12,9 +12,9 @@
 </head>
 <body>
 	<h1>앨범 관리 페이지</h1>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	
-	<a href="albumInsert">앨범 등록</a>
+	<a href="/admin/albumInsert">앨범 등록</a>
 	
 	<table border="1">
 		<tr>

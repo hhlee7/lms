@@ -37,7 +37,7 @@
 	<h1>회원 관리 페이지 입니다.</h1>
 	${loginUser.userName} 님 환영합니다.
 	<br>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	<div><a href="userInsert">회원 추가</a></div>
 	역할 선택 : <select name="targetRole" id="targetRole">
 		<option id="targetRole" value="all">전체</option>
@@ -78,7 +78,7 @@
 				<td>${us.phone}</td>
 				<td>${us.address}</td>
 				<td>${us.createdAt}</td>
-				<td><a href="userOne?userId=${user.userId}">자세히</a></td>
+				<td><a href="userOne?userId=${us.userId}">자세히</a></td>
 			</tr>
 			</c:forEach>
 		</table>
