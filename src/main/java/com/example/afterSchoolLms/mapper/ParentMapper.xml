@@ -293,6 +293,7 @@
 	        l.end_date AS endDate,
 	        c.location,
 	        l.amount,
+	        se.student_id AS studentId,
 	        c.name AS classroomName,
 	        stu.name AS studentName,
 	        se.enrolled_at AS enrollmentAt,

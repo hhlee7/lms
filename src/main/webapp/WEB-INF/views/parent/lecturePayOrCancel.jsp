@@ -10,6 +10,7 @@
 </head>
 <body>
 	<h1>결제</h1>
+
 	
 	<form>
 		<table border="1">
@@ -27,6 +28,8 @@
 			</tr>
 			
 			<c:forEach var="lec" items="${lecturePayOrCancelList}">
+				${lec.studentName}
+				${lec.studentId}
 				<tr>
 					<td>${lec.studentName}</td>
 					<td>${lec.subjectName}</td>
