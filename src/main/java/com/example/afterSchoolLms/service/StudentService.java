@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
@@ -116,5 +117,25 @@ public class StudentService {
 	// 강사 상세 - 리뷰 조회
 	public List<Map<String, Object>> teacherOneReview(String teacherId) {
 		return studentMapper.selectTeacherOneReview(teacherId);
+	}
+	
+	// 사진첩 총개수(검색기능)
+	public int albumTotalCount(String searchWord) {
+		return studentMapper.selectAlbumTotalCount(searchWord);
+	}
+	
+	// 사진첩(검색기능)
+	public List<Map<String, Object>> albumList(Map<String, Object> paramMap) {
+		return studentMapper.selectAlbumtList(paramMap);
+	}
+	
+	// 앨범 상세보기
+	public Map<String,Object> albumOne(int albumId){
+		return studentMapper.selectAlbumOne(albumId);
+	}
+	
+	// 앨범 사진조회
+	public List<AlbumPhoto> albumPhotoList(int albumId){
+		return studentMapper.selectAlbumPhotoList(albumId);
 	}
 }

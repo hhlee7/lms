@@ -18,7 +18,7 @@
 	<span><a href="/student/attendance">출결확인</a></span>
 	<span><a href="/student/dispatch">배차조회</a></span>
 	<span><a href="/student/satisfaction">만족도평가</a></span>
-	<span>사진첩</span>
+	<span><a href="/student/album">사진첩</a></span>
 	<span><a href="/student/personalInformation">개인정보</a></span>
 </body>
 </html>

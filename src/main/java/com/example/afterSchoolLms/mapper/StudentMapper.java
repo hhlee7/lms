@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
@@ -72,4 +73,15 @@ public interface StudentMapper {
 	// 강사 상세 - 리뷰 조회
 	List<Map<String, Object>> selectTeacherOneReview(String teacherId);
 	
+	// 사진첩 총개수(검색기능)
+	int selectAlbumTotalCount(String searchWord);
+	
+	// 사진첩(검색기능)
+	List<Map<String, Object>> selectAlbumtList(Map<String, Object> paramMap);
+	
+	// 앨범 상세 보기
+	Map<String,Object> selectAlbumOne(int albumId);
+	
+	// 앨범 사진조회
+	List<AlbumPhoto> selectAlbumPhotoList(int albumId);
 }
