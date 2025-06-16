@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -122,11 +123,13 @@
     <c:forEach var="n" items="${noticeList}">
       <tr>
         <td>${n.notice_id}</td>
-        <td>${n.title}</td>
-        <td>${n.admin_id}</td>
         <td>
-          <fmt:formatDate value="${n.created_at}" pattern="yyyy-MM-dd HH:mm:ss" />
-        </td>
+		  <a href="/teacher/noticeOne?noticeId=${n.notice_id}">
+		    ${n.title}
+		  </a>
+		</td>
+        <td>${n.admin_id}</td>
+         <td>${fn:substring(n.created_at, 0, 10)}</td>
       </tr>
     </c:forEach>
   </table>
