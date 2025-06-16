@@ -135,6 +135,7 @@ public class ParentController {
 		}
 		String userId = loginUser.getUserId();
 		Map<String, Object> vehicleInfo = parentService.getVehicleInfo(userId);
+		
 		model.addAttribute("vehicleInfo", vehicleInfo);
 		return "/parent/vehicleInfo";
 	}
@@ -225,9 +226,6 @@ public class ParentController {
 						, @RequestParam("lectureId") int lectureId
 						, @RequestParam("studentId") String studentId
 						, @RequestParam("amount") int amount)	{
-	    System.out.println("lectureId = " + lectureId);
-	    System.out.println("studentId = " + studentId);
-	    System.out.println("amount = " + amount);
 		User loginUser = (User) session.getAttribute("loginUser");
 
 		if (loginUser == null) {

@@ -67,29 +67,35 @@
 	
 	<!-- 자녀 탑승 차량 조회 -->
 	<select id="vehicleInfo" parameterType="String" resultType="map">
-		SELECT 
-		v.vehicle_no AS vehicleNo, 
-			u.name AS studentName, 
-			t1.name AS driverName, 
+		SELECT DISTINCT
+			v.vehicle_no AS vehicleNo,
+			u.name AS studentName,
+			t1.name AS driverName,
 			t1.phone,
+			va.assignment_id,
+			p.payment_id,
+			vc.decided_at,
+			DATE(vc.decided_at) = CURDATE() AS isCancelledToday,
 			l.end_time AS endTime
 		FROM vehicle_passenger vp
 		INNER JOIN payment p ON vp.payment_id = p.payment_id
 		INNER JOIN student_enrollment se ON se.enrollment_id = p.enrollment_id
+		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
 		INNER JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
 		INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
 		INNER JOIN user u ON se.student_id = u.user_id
 		INNER JOIN student_parent sp ON u.user_id = sp.student_id
-		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
-		LEFT JOIN (
-			SELECT u.name, va.driver_id, va.assignment_id, u.phone
-			FROM user u 
-			INNER JOIN vehicle_assignment va ON u.user_id = va.driver_id
-		) AS t1 ON t1.driver_id = va.driver_id AND t1.assignment_id = va.assignment_id
-		LEFT JOIN vehicle_cancel vc ON vc.payment_id = p.payment_id AND vc.assignment_id = va.assignment_id
+		INNER JOIN (
+			SELECT va.assignment_id, va.driver_id, u.name, u.phone
+			FROM vehicle_assignment va
+			INNER JOIN user u ON va.driver_id = u.user_id
+			) t1 ON t1.assignment_id = va.assignment_id
+		LEFT JOIN vehicle_cancel vc 
+			ON vc.payment_id = p.payment_id 
+			AND vc.assignment_id = va.assignment_id 
+			AND DATE(vc.decided_at) = CURDATE()
 		WHERE sp.parent_id = #{userId}
-		AND vp.checked_at = CURDATE()
-		AND vc.decision_id IS NULL;
+  			AND se.status = 'PAID'
 	</select>
 	
 	<!-- 자녀 수업 조회 -->
@@ -225,6 +231,27 @@
 			AND lecture_id = #{lectureId}
 			AND status = 'CANCEL'
 	</update>
+	
+	<!-- student_id로 이미 신청한 강의 중 개강일~종강일이 겹치는지 확인 -->
+	<select id="hasOverlappingLecture" resultType="int">
+		SELECT COUNT(*)
+		FROM student_enrollment se
+		JOIN lecture l ON se.lecture_id = l.lecture_id
+		WHERE se.student_id = #{studentId}
+			AND se.status != 'CANCEL'
+			AND (l.start_date &lt;= #{newEndDate} AND l.end_date &gt;= #{newStartDate})
+	</select>
+	
+	<!-- 강좌의 개강일 종강일 조회 -->
+	<select id="getLectureDates" resultType="map">
+		SELECT 
+			DATE_FORMAT(start_date, '%Y-%m-%d') AS startDate, 
+			DATE_FORMAT(end_date, '%Y-%m-%d') AS endDate
+		FROM lecture
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
+	
 	
 	<!-- qna목록 -->
 	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.afterSchoolLms.controller.ParentController;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
@@ -81,10 +80,22 @@ public class ParentService {
 	
 	// 수강신청(결제x)
 	public void lectureApply(String userId, int lectureId, String studentId) {
+		// 수강 강좌가 있는지 조회
 		int count = parentMapper.isEnrolled(studentId, lectureId);
 		
 		if (count > 0) {
 	        throw new IllegalStateException("이미 신청된 강의입니다.");
+	    }
+		
+		// 해당 강의의 startDate, endDate 조회
+	    Map<String, Object> dateMap = parentMapper.getLectureDates(lectureId); // 쿼리 필요
+	    String newStartDate = (String) dateMap.get("startDate");
+	    String newEndDate = (String) dateMap.get("endDate");
+	    
+	    // 날짜 겹치는지 확인
+	    int overlap = parentMapper.hasOverlappingLecture(studentId, newStartDate, newEndDate);
+	    if (overlap > 0) {
+	        throw new IllegalStateException("기존 수강 강의와 일정이 겹칩니다.");
 	    }
 
 	    // 먼저 기존 신청이 취소된 건지 확인하여 다시 'PENDING'으로 변경

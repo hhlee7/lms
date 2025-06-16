@@ -92,6 +92,10 @@ public interface ParentMapper {
 	// 수강 신청 리스트 -> 결제 및 취소 진행
 	List<Map<String, Object>> getLecturePayOrCancel(String userId);
 
+	Map<String, Object> getLectureDates(int lectureId);
+
+	int hasOverlappingLecture(String studentId, String newStartDate, String newEndDate);
+
 
 
 
