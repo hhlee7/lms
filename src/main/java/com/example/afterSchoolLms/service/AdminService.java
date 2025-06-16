@@ -255,8 +255,11 @@ public class AdminService {
 	                throw new RuntimeException("앨범 사진 DB 저장 실패");
 	            }
 
-	            // 파일 실제 저장
-	            File targetFile = new File("c:/project/albumUpload/" + fullName);
+	            // 프로젝트 루트 경로 동적으로 구하기 (실제 파일 저장)
+	            String projectPath = new File("").getAbsolutePath();
+	            String uploadPath = projectPath + "/src/main/resources/static/images/";
+	            File targetFile = new File(uploadPath + fullName);
+	            
 	            try {
 	                file.transferTo(targetFile);
 	            } catch (Exception e) {

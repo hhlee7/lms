@@ -114,8 +114,8 @@
 			<tr>
 				<td>역할</td>
 				<td>
-					<form:select path="roleId">
-						<form:options items="${roleList}" itemValue="roleId" itemLabel="roleName" />
+					<form:select path="roleId" id="roleId" cssClass="role-select">
+					    <form:options items="${roleList}" itemValue="roleId" itemLabel="roleName" />
 					</form:select>
 					<form:errors path="roleId" cssClass="error" />
 				</td>
@@ -179,6 +179,7 @@
 					<form:errors path="birth" cssClass="error" />
 				</td>
 			</tr>
+			<tbody id="roleFieldsArea"></tbody>
 		</table>
 		<button type="submit" id="insertBtn" name="insertBtn">추가</button>
 	</form:form>

@@ -139,6 +139,11 @@ public class AdminController {
 	@GetMapping("albumInsert")
 	public String albumInsert(Model model) {
 		List<Map<String, Object>> lectureList = adminService.selectLectureList();
+		
+		for(Map<String, Object> m : lectureList) {
+			log.info(m.toString());
+		}
+		
 		model.addAttribute("lectureList",lectureList);
 		return "admin/albumInsert";
 	}
@@ -158,7 +163,7 @@ public class AdminController {
 		
 		// 웹에 노출 가능한 경로로 변환
 	    for (AlbumPhoto photo : photoList) {
-	        photo.setFilePath("/upload/" + photo.getFilePath());
+	    	photo.setFilePath("/images/" + photo.getFilePath()); // static/images 폴더 기준
 	    }
 		
 		model.addAttribute("photoList",photoList);
