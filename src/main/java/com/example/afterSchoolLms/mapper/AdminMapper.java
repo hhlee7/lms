@@ -94,7 +94,10 @@ public interface AdminMapper {
 	int removeSubject(int subjectId);
 
 	// 수강 신청 내역 조회
-	List<Map<String, Object>> selectStudentEnrollmentList();
+	List<Map<String, Object>> selectStudentEnrollmentList(Page page);
+	
+	// 수강 신청 전체 데이터 수 조회
+	int getTotalStudentEnrollmentList(Page page);
 
 	// 수강료 납부 내역 조회
 	List<Map<String, Object>> selectPaymentList();

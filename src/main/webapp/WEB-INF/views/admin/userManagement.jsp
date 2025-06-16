@@ -20,7 +20,7 @@
 
 			// 검색 조건도 유지하고 싶다면 다음도 함께 포함
 			const searchWord = $('#searchWord').val();
-			const searchType = url.searchParams.get("searchType") || "title";
+			const searchType = url.searchParams.get("searchType") || "all";
 			url.searchParams.set("searchWord", searchWord);
 			url.searchParams.set("searchType", searchType);
 

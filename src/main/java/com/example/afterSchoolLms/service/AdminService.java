@@ -255,6 +255,7 @@ public class AdminService {
 	        }
 	    }
 	}
+	
 	// 과목 조회
 	public List<Subject> getSubjectList() {
 		return adminMapper.selectSubjectList();
@@ -281,8 +282,13 @@ public class AdminService {
 	}
 	
 	// 수강 신청 내역 조회
-	public List<Map<String, Object>> getStudentEnrollmentList() {
-		return adminMapper.selectStudentEnrollmentList();
+	public List<Map<String, Object>> getStudentEnrollmentList(Page page) {
+		return adminMapper.selectStudentEnrollmentList(page);
+	}
+	
+	// 수강 신청 리스트 전체 카운트 가져오기
+	public int getTotalStudentEnrollmentCount(Page page) {
+		return adminMapper.getTotalStudentEnrollmentList(page);
 	}
 
 	// 수강료 납부 내역 조회
@@ -439,6 +445,5 @@ public class AdminService {
 	public List<Map<String, Object>> getTeacherSatisfactionList() {
 		return adminMapper.selectTeacherSatisfactionList();
 	}
-
 
 }

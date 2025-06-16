@@ -624,9 +624,30 @@ public class AdminController {
 	
 	// 수강 신청 현황 조회 페이지
 	@GetMapping("/admin/studentEnrollmentList")
-	public String studentEnrollmentList(Model model) {
-		List<Map<String, Object>> list = adminService.getStudentEnrollmentList();
+	public String studentEnrollmentList(Model model
+										,@RequestParam(defaultValue = "1") int page
+										,@RequestParam(defaultValue = "10") int size
+										,@RequestParam(defaultValue = "") String searchWord
+										,@RequestParam(defaultValue = "all") String searchType) {
+		
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalStudentEnrollmentCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		
+		// 수강 신청 리스트
+		List<Map<String, Object>> list = adminService.getStudentEnrollmentList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델 값 넘기기
 		model.addAttribute("studentEnrollmentList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/studentEnrollmentList";
 	}
 	

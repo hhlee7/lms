@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>subjectManagement</title>
+<title>과목 관리</title>
 </head>
 <body>
 	<h1>과목 관리</h1>
+
+	<div>
+		<a href="/admin/createSubject">과목 등록</a>
+	</div>
 	
 	<table border="1">
 		<tr>
@@ -30,7 +34,5 @@
 		</tr>
 	</c:forEach>
 	</table>
-	
-	<a href="/admin/createSubject">과목 등록</a>
 </body>
 </html>

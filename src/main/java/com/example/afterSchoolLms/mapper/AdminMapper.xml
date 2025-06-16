@@ -205,8 +205,8 @@
 		WHERE subject_id = #{subjectId};
 	</delete>
 	
-	<!-- 수강 신청 내역 조회 -->
-	<select id="selectStudentEnrollmentList" resultType="map">
+	<!-- 수강 신청 내역 조회 (페이징, 검색) -->
+	<select id="selectStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
 		SELECT 
 			se.enrollment_id AS enrollmentId,
 			se.student_id AS studentId,
@@ -218,6 +218,33 @@
 		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
 		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY enrollmentId
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 수강 신청 내역 전체 리스트 수 가져오기 -->
+	<select id="getTotalStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT count(*)
+		FROM student_enrollment se
+		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
 	</select>
 	
 	<!-- 수강료 납부 내역 조회 -->

@@ -80,4 +80,14 @@ public class Page {
 	public int getNextGroupPage() {
 	    return endPage + 1;
 	}
+	
+	// [이현호] 페이징 설정
+	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType) {
+		this.rowPerPage = rowPerPage;
+		this.currentPage = currentPage;
+		this.totalCount = totalCount;
+		this.searchWord= searchWord;
+		this.searchType = searchType;
+		this.beginRow = (currentPage - 1) * rowPerPage;
+	}
 }
