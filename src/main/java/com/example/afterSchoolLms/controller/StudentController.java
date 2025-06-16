@@ -1,6 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
-import com.example.afterSchoolLms.dto.Role;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.service.StudentService;
@@ -50,7 +50,19 @@ public class StudentController {
 	public String personalInformation(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
 		User user = studentService.selectInformation(loginUser.getUserId(), loginUser.getPassword());
+		
+		// 학년 계산
+	    int currentYear = LocalDate.now().getYear();
+	    int birthYear = LocalDate.parse(user.getBirth()).getYear();
+	    int month = LocalDate.now().getMonthValue();
+	   
+	    int grade = currentYear - birthYear - 6;
+	    if (month < 3) {
+	        grade--;
+	    }
+	    
 		model.addAttribute(user);
+		model.addAttribute("grade", grade);
 		return "/student/personalInformation";
 	}
 	

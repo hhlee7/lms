@@ -20,6 +20,10 @@
 			<td>${user.birth}</td>
 		</tr>
 		<tr>
+			<td>학년</td>
+			<td>${grade}</td>
+		</tr>
+		<tr>
 			<td>이메일</td>
 			<td>${user.email}</td>
 		</tr>

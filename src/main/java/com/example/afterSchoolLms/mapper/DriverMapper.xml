@@ -31,7 +31,7 @@
 	<select id="selectDispatchStudent" parameterType="String" resultType="map">
 		SELECT 
 			v.vehicle_no AS vehicleNo, 
-			DATE_FORMAT(end_time, '%Y-%m-%d %H시 %i분') AS endTime,
+			DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
 		    l.day_of_week AS dayOfWeek, 
 			t1.name AS studentName
 		FROM vehicle v 

@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.controller;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -117,9 +118,11 @@ public class DriverController {
 	        }
 	    }
 	    
-	    //log.info("timeSet: " + timeSet.toString());
+	    log.info("timeSet: " + timeSet.toString());
 	    model.addAttribute("dispatchStudentList", dispatchStudentList);
 	    model.addAttribute("timeList", timeSet);  // 시간 리스트도 모델에 추가
+	    // 오늘 날짜 전달
+	    model.addAttribute("now", new Date());
 		return "/driver/dispatchStudent";
 	}
 }
