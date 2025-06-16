@@ -100,7 +100,10 @@ public interface AdminMapper {
 	int getTotalStudentEnrollmentList(Page page);
 
 	// 수강료 납부 내역 조회
-	List<Map<String, Object>> selectPaymentList();
+	List<Map<String, Object>> selectPaymentList(Page page);
+	
+	// 수강료 납부 내역 전체 카운트 가져오기
+	int getTotalPaymentListCount(Page page);
 
 	// 수강 신청 취소 내역 조회
 	List<Map<String, Object>> selectEnrollmentCancelList();

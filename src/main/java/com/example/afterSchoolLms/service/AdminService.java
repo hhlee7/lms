@@ -287,8 +287,13 @@ public class AdminService {
 	}
 
 	// 수강료 납부 내역 조회
-	public List<Map<String, Object>> getPaymentList() {
-		return adminMapper.selectPaymentList();
+	public List<Map<String, Object>> getPaymentList(Page page) {
+		return adminMapper.selectPaymentList(page);
+	}
+	
+	// 수강료 납부 내역 전체 카운트 가져오기
+	public int getTotalPaymentListCount(Page page) {
+		return adminMapper.getTotalPaymentListCount(page);
 	}
 
 	// 수강 신청 취소 내역 조회
@@ -460,5 +465,6 @@ public class AdminService {
 	public List<Map<String, Object>> getTeacherSatisfactionList() {
 		return adminMapper.selectTeacherSatisfactionList();
 	}
+
 
 }

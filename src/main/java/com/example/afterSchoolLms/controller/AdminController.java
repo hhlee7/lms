@@ -653,8 +653,21 @@ public class AdminController {
 	
 	// 수강료 납부 내역 조회 페이지
 	@GetMapping("/admin/paymentList")
-	public String paymentList(Model model) {
-		List<Map<String, Object>> list = adminService.getPaymentList();
+	public String paymentList(Model model
+							,@RequestParam(defaultValue = "1") int page
+							,@RequestParam(defaultValue = "10") int size
+							,@RequestParam(defaultValue = "") String searchWord
+							,@RequestParam(defaultValue = "all") String searchType) {
+		
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalPaymentListCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수강료 납부 내역 목록
+		List<Map<String, Object>> list = adminService.getPaymentList(paging);
 		model.addAttribute("paymentList", list);
 		return "admin/paymentList";
 	}

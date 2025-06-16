@@ -212,7 +212,7 @@
 			se.student_id AS studentId,
 			u.name AS studentName,
 			sb.name AS subjectName,
-			se.enrolled_at AS enrolledAt,
+			DATE_FORMAT(se.enrolled_at, '%Y-%m-%d %H:%i') AS enrolledAt,
 			se.status
 		FROM student_enrollment se
 		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
@@ -226,12 +226,12 @@
 		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
-		ORDER BY enrollmentId
+		ORDER BY enrolledAt DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
 	<!-- 수강 신청 내역 전체 리스트 수 가져오기 -->
-	<select id="getTotalStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page">
+	<select id="getTotalStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
 		SELECT count(*)
 		FROM student_enrollment se
 		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
@@ -247,19 +247,47 @@
 		</where>
 	</select>
 	
-	<!-- 수강료 납부 내역 조회 -->
+	<!-- 수강료 납부 내역 조회 (페이징, 검색) -->
 	<select id="selectPaymentList" resultType="map">
 		SELECT
 			p.payment_id AS paymentId,
 			sb.name AS subjectName,
 			st.name AS studentName,
 			p.amount,
-			p.paid_at AS paidAt
+			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt,
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY paidAt DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 수강료 납부 내역 전체 카운트 가져오기 -->
+	<select id="getTotalPaymentListCount" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT COUNT(*)
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
 	</select>
 	
 	<!-- 수강 신청 취소 내역 조회 -->
