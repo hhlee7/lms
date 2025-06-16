@@ -215,7 +215,7 @@ public class ParentController {
 	        return "redirect:/parent/lectureList?error=" + errorMessage;
 	    }
 
-	    return "redirect:/parent/lectureLegistrationList";
+	    return "redirect:/parent/lecturePayOrCancel";
 	}
 	
 	// 수강료 결제
@@ -254,6 +254,27 @@ public class ParentController {
 		parentService.payment(lectureId, studentId,amount);
 		
 		return "redirect:/parent/lectureLegistrationList";
+	}
+	
+	// 수강신청 결제할 목록 페이지
+	@GetMapping("/parent/lecturePayOrCancel")
+	public String lecturePayOrCancel(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		List<Map<String, Object>> lecturePayOrCancelList = parentService.lecturePayOrCancel(userId);
+		// 자녀정보 가져오기
+	    Map<String, Object> studentInfo = parentService.getStudentInfo(loginUser.getUserId());
+	    String studentId = (String) studentInfo.get("studentId");
+		model.addAttribute("lecturePayOrCancelList", lecturePayOrCancelList);
+		model.addAttribute("userId", userId);
+		model.addAttribute("studentId", studentId);
+		
+		return "/parent/lecturePayOrCancel";
 	}
 	
 	// 수강 취소 및 환불신청

@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.afterSchoolLms.controller.ParentController;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
@@ -14,7 +17,10 @@ import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.mapper.ParentMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ParentService {
 	@Autowired ParentMapper parentMapper;
 	
@@ -124,17 +130,25 @@ public class ParentService {
 	}
 
 	// 수강료 결제
-	public void payment(int lectureId, String studentId, int amount) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("lectureId", lectureId);
-		param.put("studentId", studentId);
-		param.put("amount", amount);
+	@Transactional
+	public void payment(@Param("lectureId")int lectureId, @Param("lectureId")String studentId
+						, @Param("amount")int amount) {
+		int row = parentMapper.updateEnrollmentStatus(lectureId, studentId);
 		
-		int row = parentMapper.updateEnrollmentStatus(param);
+		if(row == 0) {
+			log.info("결제실패");
+		}
 		
-		parentMapper.insertPayment(param);
+		Map<String, Object> map = new HashMap<>();
+		map.put("lectureId", lectureId);
+		map.put("studentId", studentId);
+		map.put("amount", amount);
+		
+		
+		parentMapper.insertPayment(map);
 	}
 
+	// 수강 취소
 	public void cancelLecture(int lectureId, String studentId, String status) {
 		
 		int count = parentMapper.updateToCancel(lectureId, studentId, status);   // 결제 전 상태(status = PENDING) 상태면 단순히 cancel로 변경
@@ -142,6 +156,11 @@ public class ParentService {
 		if(count == 0) {
 			parentMapper.updateToRefund(lectureId, studentId, status);
 		}
+	}
+	
+	// 수강신청 리스트 -> 결제 or 취소 진행
+	public List<Map<String, Object>> lecturePayOrCancel(String userId) {
+		return parentMapper.getLecturePayOrCancel(userId);
 	}
 
 }

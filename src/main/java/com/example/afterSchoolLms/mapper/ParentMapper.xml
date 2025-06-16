@@ -161,25 +161,25 @@
 			) e ON l.lecture_id = e.lecture_id
 		WHERE CURDATE() &lt;= DATE_SUB(l.start_date, INTERVAL 3 DAY)
 	</select>
+		
+	<!-- 1) payment 삽입 -->
+	<insert id="insertPayment" parameterType="map">
+		INSERT INTO payment (enrollment_id, amount, paid_at)
+		SELECT enrollment_id, #{amount}, NOW()
+		FROM student_enrollment
+		WHERE lecture_id = #{lectureId}
+		  AND student_id = #{studentId}
+		  AND status = 'PAID'
+	</insert>
 	
-	<!-- 1) student_enrollment 상태 PENDING → PAID 변경 -->
+	<!-- 2) student_enrollment 상태 PENDING → PAID 변경 -->
 	<update id="updateEnrollmentStatus">
 		UPDATE student_enrollment
 		SET status = 'PAID'
 		WHERE lecture_id = #{lectureId}
 			AND student_id = #{studentId}
 			AND status = 'PENDING'
-		</update>
-		
-		<!-- 2) payment 삽입 -->
-		<insert id="insertPayment" parameterType="map">
-		INSERT INTO payment (enrollment_id, amount, paid_at)
-		VALUES (
-			(SELECT enrollment_id FROM student_enrollment
-			WHERE lecture_id = #{lectureId} AND student_id = #{studentId}),
-			#{amount}, NOW()
-		)
-	</insert>
+	</update>
 	
 	<!-- 전체 사진첩 목록 조회 (검색+페이징) -->
 	<select id="selectAlbumList" resultType="map" parameterType="map">
@@ -259,7 +259,7 @@
 	</insert>
 	
 	<!-- 수강신청 내역 -->
-	<select id="lectureLegistrationList" parameterType="map">
+	<select id="lectureLegistrationList" parameterType="com.example.afterSchoolLms.dto.Subject">
 		SELECT u.name AS studentName,
 			sb.name AS subjectName,
 			lt.start_date AS startDate,
@@ -278,5 +278,34 @@
 		INNER JOIN student_enrollment se ON sp.student_id = se.student_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		WHERE se.status = 'PAID'
+	</select>
+	
+	<select id="getLecturePayOrCancel" parameterType="string" resultType="map">
+	    SELECT 
+	        l.lecture_id AS lectureId,
+	        s.name AS subjectName,
+	        u.name AS teacherName,
+	        l.start_time AS startTime,
+	        l.end_time AS endTime,
+	        l.day_of_week AS dayOfWeek,
+	        l.start_date AS startDate,
+	        l.end_date AS endDate,
+	        c.location,
+	        l.amount,
+	        c.name AS classroomName,
+	        stu.name AS studentName,
+	        se.enrolled_at AS enrollmentAt,
+	        'PENDING' AS status
+	    FROM student_enrollment se
+	    INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+	    INNER JOIN subject s ON l.subject_id = s.subject_id
+	    INNER JOIN classroom c ON l.classroom_id = c.classroom_id
+	    LEFT JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+	    LEFT JOIN user u ON ta.teacher_id = u.user_id
+	    INNER JOIN student_parent sp ON se.student_id = sp.student_id
+	    INNER JOIN user stu ON se.student_id = stu.user_id
+	    WHERE se.status = 'PENDING'
+	      AND sp.parent_id = #{userId}
 	</select>
 </mapper>

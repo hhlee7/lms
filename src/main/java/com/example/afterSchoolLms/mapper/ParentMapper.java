@@ -77,13 +77,18 @@ public interface ParentMapper {
 	List<Map<String, Object>> lectureLegistrationList(String userId);
 
 	// 수강료 결제
-	int updateEnrollmentStatus(Map<String, Object> param);
-	void insertPayment(Map<String, Object> param);
+	int updateEnrollmentStatus(int lectureId, String studentId);
+	void insertPayment(Map<String, Object> map);
 
 	// 1) 결제전 수강 취소
 	int updateToCancel(int lectureId, String studentId, String status);
 	// 2) 결제 후 수강 취소 
 	void updateToRefund(int lectureId, String studentId, String status);
+
+	// 수강 신청 리스트 -> 결제 및 취소 진행
+	List<Map<String, Object>> getLecturePayOrCancel(String userId);
+
+
 
 
 

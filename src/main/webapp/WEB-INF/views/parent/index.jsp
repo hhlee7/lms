@@ -14,6 +14,7 @@
 		<div><a href="/parent/subjectInfo">과목소개</a></div>
 		<div><a href="/parent/teacherInfo">강사소개</a></div>
 		<div><a href="/parent/lectureList">수강신청</a></div>
+		<div><a href="/parent/lecturePayOrCancel">결제</a></div>
 		<div><a href="/parent/lectureLegistrationList">수강 신청내역</a></div>
 		<div><a href="/parent/subject">자녀 수업조회</a></div>
 		<div><a href="/parent/attendance">자녀 출결조회</a></div>

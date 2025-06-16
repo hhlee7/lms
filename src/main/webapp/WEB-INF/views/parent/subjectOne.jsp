@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>${subject.name} 수업 정보</h1>
+	<h1>${subject.subjectName} 수업 정보</h1>
 	<p>${subject.description}</p>
 </body>
 </html>
