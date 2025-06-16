@@ -158,6 +158,18 @@
 					<input type="date" name="endDate" id="endDate">
 				</td>
 			</tr>
+			<tr>
+				<th>배차</th>
+				<td>
+					<select name="assignmentId" id="assignmentId">
+						<c:forEach var="va" items="${vehicleAssignmentList}">
+							<option value="${va.assignmentId}">
+								${va.assignmentId}(${va.vehicleNo}/${va.driverName}/${va.location})
+							</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
 		</table>
 		<button type="submit">등록</button>
 	</form>

@@ -721,12 +721,16 @@ public class AdminController {
 		List<User> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
+		// 등록된 배차 정보 조회
+		List<Map<String, Object>> vehicleAssignmentList = adminService.getVehicleAssignmentList();
+		model.addAttribute("vehicleAssignmentList", vehicleAssignmentList);
+		
 		return "admin/createLecture";
 	}
 	
 	// 수업 등록
 	@PostMapping("/admin/createLecture")
-	public String createLecture(Lecture lecture, TeacherAssignment teacherAssignment) {
+	public String createLecture(Lecture lecture, TeacherAssignment teacherAssignment, VehicleAssignment vehicleAssignment) {
 		// 수업 등록 폼에서 전달된 데이터 확인용 출력
 		log.info(lecture.toString());
 		
@@ -752,6 +756,17 @@ public class AdminController {
 			return "redirect:/admin/lectureManagement";
 		}
 		
+		// 배차 배정 정보 준비
+		vehicleAssignment.setLectureId(lecture.getLectureId());
+		
+		// DB에 배차 배정 정보 등록
+		int row3 = adminService.updateVehicleAssignmentByLectureId(vehicleAssignment);
+		
+		if(row3 != 1) {
+			log.info("배차 배정 update 실패");
+			return "redirect:/admin/lectureManagement";
+		}
+		
 		return "redirect:/admin/lectureManagement";
 	}
 	
@@ -770,6 +785,10 @@ public class AdminController {
 		List<User> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
+		// 등록된 배차 정보 조회
+		List<Map<String, Object>> vehicleAssignmentList = adminService.getVehicleAssignmentList();
+		model.addAttribute("vehicleAssignmentList", vehicleAssignmentList);
+		
 		// 해당 lectureId를 가지는 lecture 데이터 조회
 		Lecture lecture = adminService.getLectureById(lectureId);
 		model.addAttribute("lecture", lecture);
@@ -777,12 +796,16 @@ public class AdminController {
 		// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
 		TeacherAssignment teacherAssignment = adminService.getTeacherById(lecture.getLectureId());
 		model.addAttribute("teacherId", teacherAssignment);
+		
+		// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+		VehicleAssignment vehicleAssignment = adminService.getVehicleAssignmentByLectureId(lecture.getLectureId());
+		model.addAttribute("vehicleAssignment", vehicleAssignment);
 		return "admin/modifyLecture";
 	}
 	
 	// 수업 수정
 	@PostMapping("/admin/modifyLecture")
-	public String modifyLecture(Lecture lecture, @RequestParam String teacherId) {
+	public String modifyLecture(Lecture lecture, @RequestParam String teacherId, @RequestParam int assignmentId) {
 		
 		// 수업 정보 수정
 		int row = adminService.modifyLecture(lecture);
@@ -803,6 +826,26 @@ public class AdminController {
 			return "redirect:/admin/lectureManagement";
 		}
 		
+		// 기존 이 수업에 배정된 assignmentId 찾기
+		VehicleAssignment preVehicleAssignment = adminService.getVehicleAssignmentByLectureId(lecture.getLectureId());
+		// 기존 assignmentId의 lectureId를 null로 설정
+		int row3 = adminService.updateVehicleAssignmentLectureIdNull(preVehicleAssignment.getAssignmentId());
+		
+		if(row3 != 1) {
+			log.info("배차 배정 정보 update error");
+			return "redirect:/admin/lectureManagement";
+		}
+		
+		// 배차 배정 정보 수정 (새로운 assignmentId 행에 lectureId 설정)
+		VehicleAssignment vehicleAssignment = new VehicleAssignment();
+		vehicleAssignment.setLectureId(lecture.getLectureId());
+		vehicleAssignment.setAssignmentId(assignmentId);
+		int row4 = adminService.updateVehicleAssignmentByLectureId(vehicleAssignment);
+		
+		if(row4 != 1) {
+			log.info("배차 배정 정보 update error");
+			return "redirect:/admin/lectureManagement";
+		}
 		return "redirect:/admin/lectureManagement";
 	}
 	

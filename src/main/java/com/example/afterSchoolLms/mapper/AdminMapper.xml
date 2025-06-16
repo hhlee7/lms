@@ -633,6 +633,26 @@
 		VALUES (#{lectureId}, #{teacherId})
 	</insert>
 	
+	<!-- 등록된 배차 정보 조회 -->
+	<select id="selectVehicleAssignmentList" resultType="map">
+		SELECT
+			va.assignment_id AS assignmentId,
+			va.lecture_id AS lectureId,
+			v.vehicle_no AS vehicleNo,
+			u.name AS driverName,
+			va.location
+		FROM vehicle_assignment va
+		INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+		INNER JOIN user u ON va.driver_id = u.user_id
+	</select>
+	
+	<!-- 해당 수업의 배차 배정 등록 -->
+	<update id="updateVehicleAssignmentByLectureId" parameterType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		UPDATE vehicle_assignment set
+			lecture_id = #{lectureId}
+		WHERE assignment_id = #{assignmentId}
+	</update>
+	
 	<!-- 해당 lectureId를 가지는 lecture 데이터 조회 -->
 	<select id="selectLectureById" resultType="com.example.afterSchoolLms.dto.Lecture">
 		SELECT
@@ -659,6 +679,14 @@
 		WHERE lecture_id = #{lectureId}
 	</select>
 	
+	<!-- 해당 lectureId를 가지는 vehicleAssignment 데이터 조회 -->
+	<select id="selectVehicleAssignmentByLectureId" resultType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		SELECT
+			assignment_id AS assignmentId
+		FROM vehicle_assignment
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
 	<!-- 수업 정보 수정 -->
 	<update id="modifyLecture" parameterType="com.example.afterSchoolLms.dto.Lecture">
 		UPDATE lecture SET
@@ -674,6 +702,13 @@
 		UPDATE teacher_assignment SET
 			teacher_id = #{teacherId}
 		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 해당 수업의 배차 배정 정보 수정 시 기존 배차 정보의 lectureId 삭제 (null로 변경) -->
+	<update id="updateVehicleAssignmentLectureIdNull" parameterType="int">
+		UPDATE vehicle_assignment SET
+			lecture_id = NULL
+		WHERE assignment_id = #{assignmentId}
 	</update>
 	
 	<!-- 강의실 관리 페이지에서 강의실 목록 조회 -->

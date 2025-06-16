@@ -128,19 +128,31 @@ public interface AdminMapper {
 
 	// 해당 수업의 강사 배정
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);
+	
+	// 등록된 배차 정보 조회
+	List<Map<String, Object>> selectVehicleAssignmentList();
+
+	// 해당 수업의 배차 배정
+	int updateVehicleAssignmentByLectureId(VehicleAssignment vehicleAssignment);
 
 	// 해당 lectureId를 가지는 lecture 데이터 조회
 	Lecture selectLectureById(int lectureId);
 
 	// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
 	TeacherAssignment selectTeacherById(int lectureId);
+	
+	// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+	VehicleAssignment selectVehicleAssignmentByLectureId(int lectureId);
 
 	// 수업 정보 수정
 	int modifyLecture(Lecture lecture);
 
 	// 해당 수업의 강사 배정 정보 수정
 	int modifyTeacherAssignment(TeacherAssignment teacherAssignment);
-
+	
+	// 배차 배정 정보 수정 (기존 lectureId null로 변경)
+	int updateVehicleAssignmentLectureIdNull(int assignmentId);
+	
 	// 강의실 관리 페이지에서 강의실 목록 조회
 	List<Map<String, Object>> selectClassroom();
 

@@ -20,11 +20,7 @@ import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
-import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Classroom;
@@ -32,7 +28,6 @@ import com.example.afterSchoolLms.dto.Lecture;
 import com.example.afterSchoolLms.dto.Material;
 import com.example.afterSchoolLms.dto.Subject;
 import com.example.afterSchoolLms.dto.TeacherAssignment;
-import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -340,6 +335,16 @@ public class AdminService {
 	public int createTeacherAssignment(TeacherAssignment teacherAssignment) {
 		return adminMapper.createTeacherAssignment(teacherAssignment);
 	}
+	
+	// 등록된 배차 정보 조회
+	public List<Map<String, Object>> getVehicleAssignmentList() {
+		return adminMapper.selectVehicleAssignmentList();
+	}
+	
+	// 해당 수업의 배차 배정
+	public int updateVehicleAssignmentByLectureId(VehicleAssignment vehicleAssignment) {
+		return adminMapper.updateVehicleAssignmentByLectureId(vehicleAssignment);
+	}
 
 	// 해당 lectureId를 가지는 lecture 데이터 조회
 	public Lecture getLectureById(int lectureId) {
@@ -350,6 +355,11 @@ public class AdminService {
 	public TeacherAssignment getTeacherById(int lectureId) {
 		return adminMapper.selectTeacherById(lectureId);
 	}
+	
+	// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+	public VehicleAssignment getVehicleAssignmentByLectureId(int lectureId) {
+		return adminMapper.selectVehicleAssignmentByLectureId(lectureId);
+	}
 
 	// 수업 정보 수정
 	public int modifyLecture(Lecture lecture) {
@@ -359,6 +369,11 @@ public class AdminService {
 	// 해당 수업의 강사 배정 정보 수정
 	public int modifyTeacherAssignment(TeacherAssignment teacherAssignment) {
 		return adminMapper.modifyTeacherAssignment(teacherAssignment);
+	}
+
+	// 배차 배정 정보 수정 (기존 lectureId null로 변경)
+	public int updateVehicleAssignmentLectureIdNull(int assignmentId) {
+		return adminMapper.updateVehicleAssignmentLectureIdNull(assignmentId);
 	}
 
 	// 강의실 관리 페이지에서 강의실 목록 조회
