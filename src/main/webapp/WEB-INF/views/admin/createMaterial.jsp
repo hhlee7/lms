@@ -8,19 +8,36 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
+		$('#materialTitle').on('input', function() {
+			// 입력값이 비어 있지 않으면 에러 메시지 제거
+			if($(this).val().trim() != '') {
+				$('#materialTitleCheck').text('');
+			}
+		});
+		
+		$('#totalCount').on('input', function() {
+			// 입력값이 비어 있지 않으면 에러 메시지 제거
+			if($(this).val().trim() != '') {
+				$('#totalCountCheck').text('');
+			}
+		});
+		
+		// 폼 제출되기 전 유효성 검사 수행
 		$('#materialForm').submit(function(e) {
 			const materialTitle = $('#materialTitle').val().trim();
 			const totalCount = $('#totalCount').val();
 			const usedCount = $('#usedCount').val();
 			
+			// 교보재 이름 유효성 검사
 			if(materialTitle == '') {
-				alert("품목을 입력하세요.");
+				$('#materialTitleCheck').css('color', 'red').text('폼목을 입력하세요.');
 				e.preventDefault();
 				return;
 			}
-		
+			
+			// 교보재 개수 유효성 검사
 			if(totalCount == '' || isNaN(totalCount) || totalCount <= 0) {
-				alert("개수는 1개 이상이어야 합니다.");
+				$('#totalCountCheck').css('color', 'red').text('개수는 1개 이상이어야 합니다.');
 				e.preventDefault();
 				return;
 			}
@@ -47,18 +64,14 @@
 			<th>품목</th>
 			<td>
 				<input type="text" name="materialTitle" id="materialTitle">
+				<span id="materialTitleCheck" style="color:red; margin-left:10px;"></span>
 			</td>
 		</tr>
 		<tr>
 			<th>개수</th>
 			<td>
 				<input type="number" name="totalCount" id="totalCount">
-			</td>
-		</tr>
-		<tr>
-			<th>사용중</th>
-			<td>
-				<input type="number" name="usedCount" id="totalCount">
+				<span id="totalCountCheck" style="color:red; margin-left:10px;"></span>
 			</td>
 		</tr>
 		</table>

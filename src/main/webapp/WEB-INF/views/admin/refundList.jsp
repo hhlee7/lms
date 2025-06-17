@@ -33,7 +33,7 @@
 <body>
 	<h1>환불 관리</h1>
 	
-	<div><a href="/adminMain">[메인 페이지]</a></div>
+	<div><a href="/admin/main">[메인 페이지]</a></div>
 	
 	과목 선택 :
 	<select name="targetSubject" id="targetSubject">

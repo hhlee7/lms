@@ -177,7 +177,10 @@ public interface AdminMapper {
 	int updateVehicleAssignmentLectureIdNull(int assignmentId);
 	
 	// 강의실 관리 페이지에서 강의실 목록 조회
-	List<Map<String, Object>> selectClassroom();
+	List<Map<String, Object>> selectClassroom(Page page);
+	
+	// 강의실 목록 전체 카운트 가져오기
+	int getTotalClassroomList(Page page);
 
 	// 강의실 등록
 	int createClassroom(Classroom classroom);
@@ -189,7 +192,10 @@ public interface AdminMapper {
 	int modifyClassroom(Classroom classroom);
 
 	// 교보재 목록 조회
-	List<Map<String, Object>> selectMaterialList();
+	List<Map<String, Object>> selectMaterialList(Page page);
+	
+	// 교보재 목록 전체 카운트 가져오기
+	int getTotalMaterialList(Page page);
 
 	// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
 	List<Map<String, Object>> selectLecture();
@@ -207,13 +213,19 @@ public interface AdminMapper {
 	int removeMaterial(int materialId);
 
 	// 교보재 요청 목록 조회
-	List<Map<String, Object>> selectMaterialRequestList();
+	List<Map<String, Object>> selectMaterialRequestList(Page page);
+	
+	// 교보재 요청 목록 전체 카운트 가져오기
+	int getTotalMaterialRequestList(Page page);
 
 	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
 	int changeMaterialRequestStatus(int requestId);
 
 	// 출결 목록 조회
-	List<Map<String, Object>> selectAttendanceList();
+	List<Map<String, Object>> selectAttendanceList(Page page);
+	
+	// 출결 목록 전체 카운트 가져오기
+	int getTotalAttendanceList(Page page);
 
 	// 해당 attendanceId를 가지는 attendance 데이터 값 조회
 	Map<String, Object> selectAttendanceById(int attendanceId);
@@ -221,10 +233,24 @@ public interface AdminMapper {
 	// 출결 수정
 	int changeAttendanceStatus(Attendance attendance);
 
-	// 강좌 평가 및 리뷰 목록 조회
-	List<Map<String, Object>> selectSatisfactionList();
+	// 수업 평가 및 리뷰 목록 조회
+	List<Map<String, Object>> selectSatisfactionList(Page page);
 
+	// 수업 평가 및 리뷰 목록 전체 카운트 가져오기
+	int getTotalLectureSatisfactionList(Page page);
+	
+	// 수업 평가 목록 검색을 위한 수업 목록 조회
+	List<Map<String, Object>> selectLectureListForSearch();
+	
 	// 강사 평가 목록 조회
-	List<Map<String, Object>> selectTeacherSatisfactionList();
-
+	List<Map<String, Object>> selectTeacherSatisfactionList(Page page);
+	
+	// 강사 평가 목록 전체 카운트 가져오기
+	int getTotalTeacherSatisfactionList(Page page);
+	
+	// 수업 만족도 평가 통계 조회
+	List<Map<String, Object>> selectLectureSatisfactionStats();
+	
+	// 강사별 만족도 평가 통계 조회
+	List<Map<String, Object>> selectTeacherSatisfactionStats();
 }

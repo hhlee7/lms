@@ -9,7 +9,7 @@
 <body>
 	<h1>과목 관리</h1>
 
-	<div><a href="/adminMain">[메인 페이지]</a></div>
+	<div><a href="/admin/main">[메인 페이지]</a></div>
 	
 	<div><a href="/admin/createSubject">과목 등록</a></div>
 	

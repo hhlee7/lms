@@ -116,7 +116,7 @@ public class AdminController {
 		// 미응답 Q&A 수
 		int qnaCount = adminService.qnaCount();
 		if(qnaCount != 0) {
-			model.addAttribute("qnaCount",qnaCount);			
+			model.addAttribute("qnaCount",qnaCount);
 		}
 		
 		return "admin/main";
@@ -1015,10 +1015,28 @@ public class AdminController {
 	
 	// 강의실 관리 페이지
 	@GetMapping("/admin/classroomManagement")
-	public String classroomManagement(Model model) {
+	public String classroomManagement(Model model
+									,@RequestParam(defaultValue = "1") int page
+									,@RequestParam(defaultValue = "10") int size
+									,@RequestParam(defaultValue = "") String searchWord
+									,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalClassroomList(paging);
+		paging.setTotalCount(totalCount);
+		
 		// 강의실 목록 조회
-		List<Map<String, Object>> list = adminService.getClassroom();
+		List<Map<String, Object>> list = adminService.getClassroom(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+				
+		// 모델에 값 전달
 		model.addAttribute("classroomList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/classroomManagement";
 	}
 	
@@ -1064,10 +1082,28 @@ public class AdminController {
 	
 	// 교보재 관리 페이지
 	@GetMapping("/admin/materialManagement")
-	public String materialManagement(Model model) {
+	public String materialManagement(Model model
+									,@RequestParam(defaultValue = "1") int page
+									,@RequestParam(defaultValue = "10") int size
+									,@RequestParam(defaultValue = "") String searchWord
+									,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalMaterialList(paging);
+		paging.setTotalCount(totalCount);
+		
 		// 교보재 목록 조회
-		List<Map<String, Object>> list = adminService.getMaterialList();
+		List<Map<String, Object>> list = adminService.getMaterialList(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 넘기기
 		model.addAttribute("materialList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/materialManagement";
 	}
 	
@@ -1132,10 +1168,28 @@ public class AdminController {
 	
 	// 교보재 요청 관리 페이지
 	@GetMapping("/admin/materialRequestManagement")
-	public String materialRequestManagement(Model model) {
+	public String materialRequestManagement(Model model
+											,@RequestParam(defaultValue = "1") int page
+											,@RequestParam(defaultValue = "10") int size
+											,@RequestParam(defaultValue = "") String searchWord
+											,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalMaterialRequestList(paging);
+		paging.setTotalCount(totalCount);
+		
 		// 교보재 요청 목록 조회
-		List<Map<String, Object>> list = adminService.getMaterialRequestList();
+		List<Map<String, Object>> list = adminService.getMaterialRequestList(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 넘기기
 		model.addAttribute("materialRequestList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/materialRequestManagement";
 	}
 	
@@ -1154,10 +1208,28 @@ public class AdminController {
 	
 	// 출결 관리 페이지
 	@GetMapping("/admin/attendanceManagement")
-	public String attendanceManagement(Model model) {
+	public String attendanceManagement(Model model
+										,@RequestParam(defaultValue = "1") int page
+										,@RequestParam(defaultValue = "10") int size
+										,@RequestParam(defaultValue = "") String searchWord
+										,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalAttendanceList(paging);
+		paging.setTotalCount(totalCount);
+		
 		// 출결 목록 조회
-		List<Map<String, Object>> list = adminService.getAttendanceList();
+		List<Map<String, Object>> list = adminService.getAttendanceList(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 넘기기
 		model.addAttribute("attendanceList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/attendanceManagement";
 	}
 	
@@ -1183,16 +1255,57 @@ public class AdminController {
 		return "redirect:/admin/attendanceManagement";
 	}
 	
-	// 평과 결과 조회 페이지
-	@GetMapping("/admin/satisfactionList")
-	public String satisfactionList(Model model) {
-		// 강좌 평가 및 리뷰 목록 조회
-		List<Map<String, Object>> list = adminService.getLectureSatisfactionList();
+	// 수업 만족도 평과 결과 및 리뷰 조회 페이지
+	@GetMapping("/admin/lectureSatisfactionList")
+	public String satisfactionList(Model model
+								,@RequestParam(defaultValue = "1") int page
+								,@RequestParam(defaultValue = "10") int size
+								,@RequestParam(defaultValue = "") String searchWord
+								,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalLectureSatisfactionList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수업 만족도 평가 및 리뷰 목록 조회
+		List<Map<String, Object>> list = adminService.getLectureSatisfactionList(paging);
+		// 수업 목록 조회
+		List<Map<String, Object>> LectureList = adminService.getLectureListForSearch();
+				
+		// 모델에 값 넘기기
 		model.addAttribute("LectureSatisfactionList", list);
+		model.addAttribute("lectureList", LectureList);
+		model.addAttribute("page", paging);
+		
+		return "admin/lectureSatisfactionList";
+	}
+	
+	// 강사 만족도 평가 조회 페이지
+	@GetMapping("/admin/teacherSatisfactionList")
+	public String teacherSatisfactionList(Model model
+										,@RequestParam(defaultValue = "1") int page
+										,@RequestParam(defaultValue = "10") int size
+										,@RequestParam(defaultValue = "") String searchWord
+										,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalTeacherSatisfactionList(paging);
+		paging.setTotalCount(totalCount);
 		
 		// 강사 평가 목록 조회
-		List<Map<String, Object>> list2 = adminService.getTeacherSatisfactionList();
-		model.addAttribute("TeacherSatisfactionList", list2);
-		return "admin/satisfactionList";
+		List<Map<String, Object>> list = adminService.getTeacherSatisfactionList(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 넘기기
+		model.addAttribute("TeacherSatisfactionList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
+		return "admin/teacherSatisfactionList";
 	}
 }

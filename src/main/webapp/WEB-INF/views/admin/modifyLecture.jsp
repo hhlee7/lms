@@ -8,6 +8,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
+		$('#recruited, #amount, #startTime, #endTime, #startDate, #endDate').on('input change', function() {
+			const id = $(this).attr('id');
+			$('#' + id + 'Check').text('');
+		});
+		
 		$('#lectureForm').submit(function(e) {
 			const recruited = $('#recruited').val();
 			const amount = $('#amount').val();
@@ -20,49 +25,55 @@
 			const today = new Date().toISOString().split('T')[0];
 			
 			if(recruited == '' || isNaN(recruited) || recruited <= 4) {
-				alert("정원은 5명 이상이어야 합니다.");
+				$('#recruitedCheck').css('color', 'red').text('정원은 5명 이상이어야 합니다.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(amount == '' || isNaN(amount) || amount < 0) {
-				alert("금액은 0원 이상이어야 합니다.");
+				$('#amountCheck').css('color', 'red').text('금액은 0원 이상이어야 합니다.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(startTime == '') {
-				alert("시작 시간을 입력하세요.");
+				$('#startTimeCheck').css('color', 'red').text('시작 시간을 입력하세요.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(endTime == '') {
-				alert("종료 시간을 입력하세요.");
+				$('#endTimeCheck').css('color', 'red').text('종료 시간을 입력하세요.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(startTime > endTime) {
-				alert("시작 시간은 종료 시간보다 빨라야 합니다.");
+				$('#startTimeCheck').css('color', 'red').text('시작 시간은 종료 시간보다 빨라야 합니다.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(startDate == '') {
-				alert("개강일 입력하세요.");
+				$('#startDateCheck').css('color', 'red').text('개강일을 입력하세요.');
+				e.preventDefault();
+				return;
+			}
+			
+			if(startDate < today) {
+				$('#startDateCheck').css('color', 'red').text('개강일은 오늘 날짜 또는 이후여야 합니다.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(endDate == '') {
-				alert("종강일 입력하세요.");
+				$('#endDateCheck').css('color', 'red').text('종강일을 입력하세요.');
 				e.preventDefault();
 				return;
 			}
 			
 			if(startDate > endDate) {
-				alert("개강일은 종강일보다 같거나 빠른 날짜여야 합니다.");
+				$('#startDateCheck').css('color', 'red').text('개강일은 종강일과 같거나 빠른 날짜여야 합니다.');
 				e.preventDefault();
 				return;
 			}
@@ -130,24 +141,28 @@
 				<th>정원</th>
 				<td>
 					<input type="number" name="recruited" id="recruited" value="${lecture.recruited}">
+					<span id="recruitedCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>
 				<th>금액</th>
 				<td>
 					<input type="number" name="amount" id="amount" value="${lecture.amount}">
+					<span id="amountCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>
 				<th>시작 시간</th>
 				<td>
 					<input type="time" name="startTime" id="startTime" value="${lecture.startTime}">
+					<span id="startTimeCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>
 				<th>종료 시간</th>
 				<td>
 					<input type="time" name="endTime" id="endTime" value="${lecture.endTime}">
+					<span id="endTimeCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>
@@ -201,12 +216,14 @@
 				<th>개강일</th>
 				<td>
 					<input type="date" name="startDate" id="startDate" value="${lecture.startDate}">
+					<span id="startDateCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>
 				<th>종강일</th>
 				<td>
 					<input type="date" name="endDate" id="endDate" value="${lecture.endDate}">
+					<span id="endDateCheck" style="color:red; margin-left:10px;"></span>
 				</td>
 			</tr>
 			<tr>

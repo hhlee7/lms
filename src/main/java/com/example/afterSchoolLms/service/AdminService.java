@@ -28,13 +28,6 @@ import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.dto.VehiclePassenger;
 
-
-import com.example.afterSchoolLms.dto.Attendance;
-import com.example.afterSchoolLms.dto.Classroom;
-import com.example.afterSchoolLms.dto.Lecture;
-import com.example.afterSchoolLms.dto.Material;
-import com.example.afterSchoolLms.dto.Subject;
-import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -442,8 +435,13 @@ public class AdminService {
 	}
 
 	// 강의실 관리 페이지에서 강의실 목록 조회
-	public List<Map<String, Object>> getClassroom() {
-		return adminMapper.selectClassroom();
+	public List<Map<String, Object>> getClassroom(Page page) {
+		return adminMapper.selectClassroom(page);
+	}
+	
+	// 강의실 목록 전체 카운트 가져오기
+	public int getTotalClassroomList(Page page) {
+		return adminMapper.getTotalClassroomList(page);
 	}
 
 	// 강의실 등록
@@ -462,8 +460,13 @@ public class AdminService {
 	}
 
 	// 교보재 목록 조회
-	public List<Map<String, Object>> getMaterialList() {
-		return adminMapper.selectMaterialList();
+	public List<Map<String, Object>> getMaterialList(Page page) {
+		return adminMapper.selectMaterialList(page);
+	}
+	
+	// 교보재 목록 전체 카운트 가져오기
+	public int getTotalMaterialList(Page page) {
+		return adminMapper.getTotalMaterialList(page);
 	}
 
 	// 교보재 정보에 등록할 강좌 및 해당 과목 이름 조회
@@ -492,8 +495,13 @@ public class AdminService {
 	}
 
 	// 교보재 요청 목록 조회
-	public List<Map<String, Object>> getMaterialRequestList() {
-		return adminMapper.selectMaterialRequestList();
+	public List<Map<String, Object>> getMaterialRequestList(Page page) {
+		return adminMapper.selectMaterialRequestList(page);
+	}
+	
+	// 교보재 요청 목록 전체 카운트 가져오기
+	public int getTotalMaterialRequestList(Page page) {
+		return adminMapper.getTotalMaterialRequestList(page);
 	}
 
 	// 교보재 요청된 건 완료 처리 (status 값 변경 '요청완료' -> '처리완료')
@@ -502,8 +510,13 @@ public class AdminService {
 	}
 
 	// 출결 목록 조회
-	public List<Map<String, Object>> getAttendanceList() {
-		return adminMapper.selectAttendanceList();
+	public List<Map<String, Object>> getAttendanceList(Page page) {
+		return adminMapper.selectAttendanceList(page);
+	}
+	
+	// 출결 목록 전체 카운트 가져오기
+	public int getTotalAttendanceList(Page page) {
+		return adminMapper.getTotalAttendanceList(page);
 	}
 
 	// 해당 attendanceId를 가지는 attendance 데이터 값 조회
@@ -517,12 +530,37 @@ public class AdminService {
 	}
 
 	// 강좌 평가 및 리뷰 목록 조회
-	public List<Map<String, Object>> getLectureSatisfactionList() {
-		return adminMapper.selectSatisfactionList();
+	public List<Map<String, Object>> getLectureSatisfactionList(Page page) {
+		return adminMapper.selectSatisfactionList(page);
 	}
 
+	// 수업 평가 및 리뷰 목록 전체 카운트 가져오기
+	public int getTotalLectureSatisfactionList(Page page) {
+		return adminMapper.getTotalLectureSatisfactionList(page);
+	}
+	
+	// 수업 평가 목록 검색을 위한 수업 목록 조회
+	public List<Map<String, Object>> getLectureListForSearch() {
+		return adminMapper.selectLectureListForSearch();
+	}
+	
 	// 강사 평가 목록 조회
-	public List<Map<String, Object>> getTeacherSatisfactionList() {
-		return adminMapper.selectTeacherSatisfactionList();
+	public List<Map<String, Object>> getTeacherSatisfactionList(Page page) {
+		return adminMapper.selectTeacherSatisfactionList(page);
+	}
+
+	// 강사 평가 목록 전체 카운트 가져오기
+	public int getTotalTeacherSatisfactionList(Page page) {
+		return adminMapper.getTotalTeacherSatisfactionList(page);
+	}
+
+	// 수업별 만족도 평가 통계 조회
+	public List<Map<String, Object>> getLectureSatisfactionStats() {
+		return adminMapper.selectLectureSatisfactionStats();
+	}
+
+	// 강사별 만족도 평가 통계 조회
+	public List<Map<String, Object>> getTeacherSatisfactionStats() {
+		return adminMapper.selectTeacherSatisfactionStats();
 	}
 }
