@@ -7,29 +7,6 @@
 <title>만족도 평가 및 리뷰 조회</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<script>
-	$(document).ready(function() {
-		function targetSearch(){
-			const selectedSubject = $('#targetSubject').val();
-			const searchWord = $('#searchWord').val();
-			const url = new URL(window.location.href);
-			
-			// 검색 조건 설정
-			url.searchParams.set('searchType', selectedSubject);
-			url.searchParams.set("searchWord", searchWord);
-			url.searchParams.set('page', 1); // 페이지 리셋
-
-			// 새 주소로 이동
-			location.href = url.toString();
-		}
-
-		// 과목 select 박스 변경 시
-		$('#targetSubject').change(targetSearch);
-		
-		// 검색 버튼 클릭 시
-		$('#searchBtn').click(targetSearch);
-	});
-</script>
 </head>
 <body>
 	<h1>만족도 평가 및 리뷰 조회</h1>
@@ -61,34 +38,10 @@
 	
 	<br>
 	
-	<!-- 출결 목록 조회 -->
-	<c:choose>
-		<c:when test="${empty TeacherSatisfactionList}">
-			<p>조회된 평가 목록이 없습니다.</p>
-		</c:when>
-		<c:otherwise>
-			<table border="1">
-				<tr>
-					<th>번호</th>
-					<th>과목</th>
-					<th>학생</th>
-					<th>강사</th>
-					<th>강사 평가 점수</th>
-					<th>평가 일시</th>
-				</tr>
-			<c:forEach var="list" items="${TeacherSatisfactionList}">
-				<tr>
-					<td>${list.satisfactionId}</td>
-					<td>${list.subjectName}</td>
-					<td>${list.studentName}</td>
-					<td>${list.teacherName}</td>
-					<td>${list.ratingTeacher}</td>
-					<td>${list.createAt}</td>
-				</tr>
-			</c:forEach>
-			</table>
-		</c:otherwise>
-	</c:choose>
+	<!-- 테이블 영역 -->
+	<div id="tableContainer">
+		<jsp:include page="fragment/teacherSatisfactionTable.jsp" />
+	</div>
 	
 	<!-- 이름 검색 -->
 	<div>
@@ -96,53 +49,52 @@
 		<button type="button" name="searchBtn" id="searchBtn">검색</button>
 	</div>
 	
-	<!-- 페이지 그룹 이동 및 번호 출력 -->
-	<div>
-		<!-- 이전 그룹 이동 -->
-		<c:if test="${page.prevGroup}">
-			<a href="/admin/teacherSatisfactionList?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
-		</c:if>
-	
-		<!-- 페이지 번호 리스트 -->
-		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-			<c:choose>
-				<c:when test="${i == page.currentPage}">
-					<strong>[${i}]</strong>
-				</c:when>
-				<c:otherwise>
-					<a href="/admin/teacherSatisfactionList?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-	
-		<!-- 다음 그룹 이동 -->
-		<c:if test="${page.nextGroup}">
-			<a href="/admin/teacherSatisfactionList?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
-		</c:if>
-	</div>
-	
 	<h2>강사별 평균 만족도 통계</h2>
-	<canvas id="teacherSatisfactionChart" style="width:100%; max-width:600px; height:300px;"></canvas>
+	<canvas id="teacherSatisfactionChart" style="width:100%; max-width:400px; height:300px;"></canvas>
+	
 	<script>
-		// 강사별 평균 만족도 통계 차트
+	// 테이블 조회
+	function loadTable(page = 1) {
+		const selectedSubject = $('#targetSubject').val(); // 선택한 과목명
+		const searchWord = $('#searchWord').val(); // 입력한 검색어
+
+		$.ajax({
+			url: '/admin/teacherSatisfactionTable',
+			type: 'get',
+			data: {
+				page: page,
+				searchType: selectedSubject,
+				searchWord: searchWord
+			},
+			success: function(data) {
+				// 응답 받은 HTML을 #tableContainer 영역에 삽입
+				$('#tableContainer').html(data);
+			}
+		});
+	}
+	
+	function drawChart() {
+		// 강사별 평균 만족도 통계 차트 출력
 		$.ajax({
 			url : '/admin/teacherSatisfactionStats',
 			type : 'post',
 			success : function(data) {
-				const xValues = []; // 강사(과목)
-				const yValues = []; // 평균 점수
-				const barColors = [];
+				const xValues = []; // x축 : 강사(과목)
+				const yValues = []; // y축 : 평균 점수
+				const barColors = []; // 막대 색상
 
-				// HSLA 기반 색상 자동 생성
+				// 데이터 루프 처리
 				data.forEach(function(e, i) {
 					xValues.push(e.teacherName + "(" + e.subjectName + ")");
 					yValues.push(e.ratingTeacher);
 					
-					// hue 값을 360도 안에서 분산 (채도 90%, 밝기 40%, 투명도 0.7)
+					// 색상 자동 생성 : hue(색상) 값을 360도 색상 안에서 강사 수만큼 균등하게 분할
 					const hue = (i * 360 / data.length) % 360;
+					// HSLA 색상 문자열로 변환 : 색상(hue), 채도 90%, 밝기 40%, 투명도 0.7
 					barColors.push("hsla(" + hue + ", 90%, 40%, 0.7)");
 				});
-
+				
+				// Chart.js 그래프 생성
 				new Chart("teacherSatisfactionChart", {
 					type : "bar",
 					data : {
@@ -154,10 +106,9 @@
 						} ]
 					},
 					options : {
-						legend : {
-							display : false
-						},
+						legend : { display : false },
 						scales : {
+							xAxes : [ {	categoryPercentage: 0.4	} ],
 							yAxes : [ {
 								ticks : {
 									beginAtZero : true,
@@ -165,13 +116,35 @@
 								}
 							} ]
 						},
-						title : {
-							display : false
-						}
+						title : { display : false }
 					}
 				});
 			}
 		});
+	}
+	
+	$(document).ready(function() {
+		// 초기 페이지 로딩 시 테이블과 차트 모두 호출
+		loadTable(1);
+		drawChart();
+		
+		// 과목 선택 드롭다운 변경 시 : 1페이지부터 다시 조회
+		$('#targetSubject').change(function() {
+			loadTable(1);
+		});
+		
+		// 검색 버튼 클릭 시 : 1페이지부터 다시 조회
+		$('#searchBtn').click(function() {
+			loadTable(1);
+		});
+		
+		// 페이징 버튼 클릭 시
+		$(document).on('click', '.paging', function(e) {
+			e.preventDefault(); // 기본 링크 이동 막기
+			const page = $(this).data('page'); // data-page에서 페이지 번호 추출
+			loadTable(page); // 비동기 호출
+		});
+	});
 	</script>
 </body>
 </html>

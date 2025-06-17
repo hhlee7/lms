@@ -1254,7 +1254,7 @@ public class AdminController {
 		
 		return "redirect:/admin/attendanceManagement";
 	}
-	
+
 	// 수업 만족도 평과 결과 및 리뷰 조회 페이지
 	@GetMapping("/admin/lectureSatisfactionList")
 	public String satisfactionList(Model model
@@ -1282,6 +1282,30 @@ public class AdminController {
 		return "admin/lectureSatisfactionList";
 	}
 	
+	// AJAX 요청용 (수업 만족도 평과 및 리뷰 목록 테이블만 반환)
+	@GetMapping("/admin/lectureSatisfactionTable")
+	public String getLectureSatisfactionTable(Model model
+								,@RequestParam(defaultValue = "1") int page
+								,@RequestParam(defaultValue = "10") int size
+								,@RequestParam(defaultValue = "") String searchWord
+								,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalLectureSatisfactionList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수업 만족도 평가 및 리뷰 목록 조회
+		List<Map<String, Object>> list = adminService.getLectureSatisfactionList(paging);
+				
+		// 모델에 값 넘기기
+		model.addAttribute("LectureSatisfactionList", list);
+		model.addAttribute("page", paging);
+		
+		return "admin/fragment/lectureSatisfactionTable";
+	}
+	
 	// 강사 만족도 평가 조회 페이지
 	@GetMapping("/admin/teacherSatisfactionList")
 	public String teacherSatisfactionList(Model model
@@ -1307,5 +1331,29 @@ public class AdminController {
 		model.addAttribute("page", paging);
 		
 		return "admin/teacherSatisfactionList";
+	}
+	
+	// AJAX 요청용 (강사 만족도 평과 목록 테이블만 반환)
+	@GetMapping("/admin/teacherSatisfactionTable")
+	public String getTeacherSatisfactionTable(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "10") int size
+			,@RequestParam(defaultValue = "") String searchWord
+			,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalTeacherSatisfactionList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 강사 평가 목록 조회
+		List<Map<String, Object>> list = adminService.getTeacherSatisfactionList(paging);
+		
+		// 모델에 값 넘기기
+		model.addAttribute("TeacherSatisfactionList", list);
+		model.addAttribute("page", paging);
+		
+		return "admin/fragment/teacherSatisfactionTable";
 	}
 }
