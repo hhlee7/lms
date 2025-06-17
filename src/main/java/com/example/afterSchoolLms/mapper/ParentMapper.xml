@@ -526,4 +526,12 @@
 		FROM album_photo
 		WHERE album_id = #{albumId};
 	</select>
+	
+	<!-- 3일 미 결제시 CANCEL처리 -->
+	<update id="autoCancelLectures">
+		UPDATE student_enrollment
+	    SET status = 'CANCEL'
+	    WHERE status = 'PENDING'
+	    	AND enrolled_at &lt;= NOW() - INTERVAL 3 DAY
+	</update>
 </mapper>

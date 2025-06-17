@@ -136,5 +136,7 @@ public interface ParentMapper {
 	
 	// 앨범 사진조회
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);
+
+	void autoCancelLectures();
 	
 }
