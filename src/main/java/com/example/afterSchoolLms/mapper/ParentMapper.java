@@ -75,7 +75,7 @@ public interface ParentMapper {
     int modifyCancelToPending(String studentId, int lectureId);
     
 	// qna게시판
-	int totalCountByParent(String userId);
+	int totalCountByParent();
 	
 	List<Qna> qnaList(String userId, int beginRow, int size);
 

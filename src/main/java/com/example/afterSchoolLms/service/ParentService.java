@@ -124,8 +124,8 @@ public class ParentService {
 	}
 	
 	// qna total수
-	public int totalCountByParent(String userId) {
-		return parentMapper.totalCountByParent(userId);
+	public int totalCountByParent() {
+		return parentMapper.totalCountByParent();
 	}
 	
 	// qna 질문

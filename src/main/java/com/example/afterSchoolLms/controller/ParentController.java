@@ -359,7 +359,7 @@ public class ParentController {
 		String userId = loginUser.getUserId();
 		
 		Page paging = new Page(size, page, 0);
-		int totalCount = parentService.totalCountByParent(userId);
+		int totalCount = parentService.totalCountByParent();
 		List<Qna> qnaList = parentService.qnaList(userId, paging.getBeginRow(), size);
 		int totalPage = (int) Math.ceil((double) totalCount / size);
 		model.addAttribute("page", page);
