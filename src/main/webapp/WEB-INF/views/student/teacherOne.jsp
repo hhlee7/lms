@@ -91,7 +91,11 @@
 
     	<c:forEach var="review" items="${reviewList}">
       		<div class="review">
-        		<div class="review-rating">평점: ${review.ratingTeacher}점</div>
+        		<div class="review-rating">
+          			<c:forEach var="i" begin="1" end="${review.ratingTeacher}">
+            			⭐
+          			</c:forEach>
+        		</div>
         		<div class="review-content">"${review.content}"</div>
       		</div>
     	</c:forEach>

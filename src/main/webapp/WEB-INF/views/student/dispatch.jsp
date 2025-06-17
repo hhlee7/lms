@@ -6,23 +6,75 @@
 <head>
 <meta charset="UTF-8">
 <title>내 배차 조회</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background-color: #f5f6fa;
+        color: #333;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+        font-size: 28px;
+        color: #007acc;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .dispatch-card {
+        background-color: #f0f4f8;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .dispatch-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .dispatch-card h2 {
+        margin-top: 0;
+        color: #007acc;
+        font-size: 22px;
+    }
+
+    .dispatch-info p {
+        margin: 6px 0;
+        line-height: 1.4;
+    }
+</style>
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<h1>배차 조회</h1>
-	<c:forEach var="dispatch" items="${dispatchList}">
-		<div>
-			<p>과목명: ${dispatch.subjectName}</p>
-            <p>강사명: ${dispatch.teacherName}</p>
-            <p>요일: ${dispatch.dayOfWeek}</p>
-            <p>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
-            <p>수업기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
-			<p>기사님: ${dispatch.driverName}</p>
-			<p>주차장소: ${dispatch.location}</p>
-			<p>차량번호: ${dispatch.vehicleNo}</p>
-			<p>기사 연락처: ${dispatch.driverPhone}</p>
-			<hr>
-		</div>
-	</c:forEach>
+	<div class="container">
+        <h1>내 배차 조회</h1>
+
+        <c:forEach var="dispatch" items="${dispatchList}">
+            <div class="dispatch-card">
+                <h2>${dispatch.subjectName}</h2>
+                <div class="dispatch-info">
+                    <p><strong>강사명:</strong> ${dispatch.teacherName}</p>
+                    <p><strong>요일:</strong> ${dispatch.dayOfWeek}</p>
+                    <p><strong>시간:</strong> ${dispatch.startTime} ~ ${dispatch.endTime}</p>
+                    <p><strong>수업 기간:</strong> ${dispatch.startDate} ~ ${dispatch.endDate}</p>
+                    <p><strong>기사님:</strong> ${dispatch.driverName}</p>
+                    <p><strong>주차 장소:</strong> ${dispatch.location}</p>
+                    <p><strong>차량 번호:</strong> ${dispatch.vehicleNo}</p>
+                    <p><strong>기사 연락처:</strong> ${dispatch.driverPhone}</p>
+                </div>
+            </div>
+        </c:forEach>
+    </div>
 </body>
 </html>

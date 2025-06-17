@@ -7,6 +7,13 @@
 <meta charset="UTF-8">
 <title>출결 조회</title>
 <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f5f6fa;
+      color: #333;
+    }
+    
     table {
         width: 90%;
         margin: 30px auto;

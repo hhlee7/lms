@@ -32,10 +32,11 @@
     }
 
     .teacher-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
+		display: flex;
+	    flex-wrap: nowrap;
+	    gap: 20px;
+	    overflow-x: auto;
+	    padding-bottom: 10px;
     }
 
     .teacher-card {
