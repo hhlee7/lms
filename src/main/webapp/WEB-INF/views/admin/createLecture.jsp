@@ -8,6 +8,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
+		/*$('#recruited, #amount, #startTime, #endTime, #startDate, #endDate').on('input change', function() {
+			const id = $(this).attr('id');
+			$('#' + id + 'Error')
+		});
+		*/
 		$('#lectureForm').submit(function(e) {
 			const recruited = $('#recruited').val();
 			const amount = $('#amount').val();
