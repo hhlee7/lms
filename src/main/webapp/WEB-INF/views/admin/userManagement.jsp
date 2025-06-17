@@ -19,7 +19,7 @@
 			url.searchParams.set('page', 1); // 페이지 리셋
 
 			// 검색 조건도 유지하고 싶다면 다음도 함께 포함
-			const searchWord = $('#searchWord').val();
+			const searchWord = $('#searchName').val();
 			const searchType = url.searchParams.get("searchType") || "all";
 			url.searchParams.set("searchWord", searchWord);
 			url.searchParams.set("searchType", searchType);
@@ -85,7 +85,7 @@
 	</c:if>
 	
 	<!-- 이름 검색 -->
-	이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord}">
+	이름 : <input type="text" name="searchName" id="searchName" value="${searchName}">
 	<button type="button" name="searchBtn" id="searchBtn">검색</button>
 	
 	<!-- 페이지 그룹 이동 및 번호 출력 -->

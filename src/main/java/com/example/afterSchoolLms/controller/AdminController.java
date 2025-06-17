@@ -60,6 +60,30 @@ public class AdminController {
         this.loginService = loginService;
     }
 	
+    /** 학생 배차 취소 조회 페이지 **/
+    @GetMapping("/admin/vehicleCancel")
+    public String vehicleCancel(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "10") int size
+			,@RequestParam(defaultValue = "") String searchName
+			,@RequestParam(defaultValue = "") String searchDate) {
+    	
+		// 페이징
+		Page paging = new Page(size, page, 0, searchName, searchDate, null);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.cancelCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		model.addAttribute("page",paging);
+
+		// 전체 리스트
+		List<Map<String, Object>> cancelList = adminService.selectCancelList(paging);
+		model.addAttribute("cancelList",cancelList);
+    	
+    	return "/admin/vehicleCancel";
+    }
+    
     /** 학생 배차 관리 페이지 **/
     @GetMapping("/admin/studentDispatchManagement")
     public String studentDispatchManagement(Model model

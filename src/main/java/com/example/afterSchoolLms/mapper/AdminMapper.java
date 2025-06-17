@@ -44,6 +44,9 @@ public interface AdminMapper {
 	List<Map<String,Object>> selectLectureList();			// 수업 조회
 	List<User> selectDrvierlist();							// 운전기사 리스트 조회
 	
+	List<Map<String,Object>> selectCancelList(Page page);	// 배차 취소 조회
+	int cancelCount(Page page);								// 배차 취소 데이터 수
+	
 	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
 	Map<String,Object> selectAlbumOne(int albumId);			// 앨범 상세 조회

@@ -54,6 +54,51 @@
 		  </if>
 	</select>
 
+	<!-- 배차 취소 리스트 조회 -->
+	<select id="selectCancelList" resultType="map" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT
+			u.name AS studentName,
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			vc.cancel_reason AS cancelReason,
+			vc.decided_at AS decidedAt
+		FROM vehicle_cancel vc
+		INNER JOIN payment p ON vc.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchWord != null and searchWord != ''">
+				AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+			<if test="searchType != null and searchType != ''">
+				AND DATE(vc.decided_at) = #{searchType}
+			</if>
+		</where>
+		ORDER BY decidedAt DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+
+	<!-- 배차 취소 데이터 수 -->
+	<select id="cancelCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+		FROM vehicle_cancel vc
+		INNER JOIN payment p ON vc.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchWord != null and searchWord != ''">
+				AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+			<if test="searchType != null and searchType != ''">
+				AND DATE(vc.decided_at) = #{searchType}
+			</if>
+		</where>
+	</select>
+
 	<!-- 수업 아이디로 학생 배차 조회 -->
 	<select id="selectPassengerList" parameterType="map">
 		SELECT

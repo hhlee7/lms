@@ -116,6 +116,7 @@
 		<a href="vehicleManagement">[차량 관리]</a>
 		<a href="noticeManagement">[공지사항 관리]</a>
 		<a href="studentDispatchManagement">[학생 배차 조회]</a>
+		<a href="vehicleCancel">[학생 배차 취소 조회]</a>
 		<a href="albumManagement">[수업 사진첩]</a>
 		<a href="qnaManagement">[학부모 Q&A] <span style="color:red">${qnaCount}!</span></a>
 	</div>

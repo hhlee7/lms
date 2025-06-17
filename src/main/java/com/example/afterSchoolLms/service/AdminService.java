@@ -49,6 +49,16 @@ public class AdminService {
 		return adminMapper.getPassengerList(target);
 	}
 	
+	/** 배차 취소 리스트 가져오기 **/
+	public List<Map<String,Object>> selectCancelList(Page page){
+		return adminMapper.selectCancelList(page);
+	}
+	
+	/** 배차 취소 리스트 데이터 수 **/
+	public int cancelCount(Page page) {
+		return adminMapper.cancelCount(page);
+	}
+	
 	/** Q&A 리스트 조회 **/
 	public List<Qna> selectQnaList(Page page) {
 		return adminMapper.selectQnaList(page);
