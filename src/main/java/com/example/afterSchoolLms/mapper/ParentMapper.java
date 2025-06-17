@@ -60,7 +60,8 @@ public interface ParentMapper {
     int modifyCancelToPending(String studentId, int lectureId);
     
 	// qna게시판
-	List<Qna> qnaList(int beginRow, int size);
+	List<Qna> qnaList(String userId, int beginRow, int size);
+	int totalCountByParent(String userId);
 
 	// qna 질문
 	int insertQna(String userId, String question);
@@ -95,6 +96,7 @@ public interface ParentMapper {
 	Map<String, Object> getLectureDates(int lectureId);
 
 	int hasOverlappingLecture(String studentId, String newStartDate, String newEndDate);
+
 
 
 

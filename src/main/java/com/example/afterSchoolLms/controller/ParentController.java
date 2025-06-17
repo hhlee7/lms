@@ -135,8 +135,9 @@ public class ParentController {
 		}
 		String userId = loginUser.getUserId();
 		Map<String, Object> vehicleInfo = parentService.getVehicleInfo(userId);
-		
 		model.addAttribute("vehicleInfo", vehicleInfo);
+		model.addAttribute("isCancelledToday", vehicleInfo.get("isCancelledToday"));
+
 		return "/parent/vehicleInfo";
 	}
 	
@@ -325,7 +326,7 @@ public class ParentController {
 	@GetMapping("/parent/qnaList")
 	public String qnaList(HttpSession session, Model model
 						,@RequestParam(defaultValue = "1") int page
-						,@RequestParam(defaultValue = "10") int size) {
+						,@RequestParam(defaultValue = "5") int size) {
 		User loginUser = (User) session.getAttribute("loginUser");
 
 		if (loginUser == null) {
@@ -335,8 +336,8 @@ public class ParentController {
 		String userId = loginUser.getUserId();
 		
 		Page paging = new Page(size, page, 0);
-		int totalCount = parentService.totalCount(paging);
-		List<Qna> qnaList = parentService.qnaList(paging.getBeginRow(), size);
+		int totalCount = parentService.totalCountByParent(userId);
+		List<Qna> qnaList = parentService.qnaList(userId, paging.getBeginRow(), size);
 		int totalPage = (int) Math.ceil((double) totalCount / size);
 		model.addAttribute("page", page);
 		model.addAttribute("size", size);

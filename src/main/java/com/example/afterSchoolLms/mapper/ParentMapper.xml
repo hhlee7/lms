@@ -75,27 +75,33 @@
 			va.assignment_id,
 			p.payment_id,
 			vc.decided_at,
-			DATE(vc.decided_at) = CURDATE() AS isCancelledToday,
+			CASE 
+				WHEN DATE_FORMAT(vc.decided_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN 1 
+		      ELSE 0 
+		   END AS isCancelledToday,
 			l.end_time AS endTime
 		FROM vehicle_passenger vp
-		INNER JOIN payment p ON vp.payment_id = p.payment_id
-		INNER JOIN student_enrollment se ON se.enrollment_id = p.enrollment_id
-		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
-		INNER JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
-		INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
-		INNER JOIN user u ON se.student_id = u.user_id
+		LEFT JOIN payment p ON vp.payment_id = p.payment_id
+		LEFT JOIN student_enrollment se ON se.enrollment_id = p.enrollment_id
+				AND se.status = 'PAID'     
+		LEFT JOIN lecture l ON se.lecture_id = l.lecture_id
+		LEFT JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
+		LEFT JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+		LEFT JOIN user u ON se.student_id = u.user_id
 		INNER JOIN student_parent sp ON u.user_id = sp.student_id
-		INNER JOIN (
+			AND sp.parent_id = 'par001' 
+		LEFT JOIN (
 			SELECT va.assignment_id, va.driver_id, u.name, u.phone
 			FROM vehicle_assignment va
 			INNER JOIN user u ON va.driver_id = u.user_id
-			) t1 ON t1.assignment_id = va.assignment_id
-		LEFT JOIN vehicle_cancel vc 
-			ON vc.payment_id = p.payment_id 
-			AND vc.assignment_id = va.assignment_id 
-			AND DATE(vc.decided_at) = CURDATE()
-		WHERE sp.parent_id = #{userId}
-  			AND se.status = 'PAID'
+		) t1 ON t1.assignment_id = va.assignment_id
+		LEFT JOIN (
+			SELECT *
+			FROM vehicle_cancel
+			WHERE DATE(decided_at) = CURDATE()
+		) vc ON vc.payment_id = p.payment_id 
+			AND vc.assignment_id = va.assignment_id
+		LIMIT 10
 	</select>
 	
 	<!-- 자녀 수업 조회 -->
@@ -258,7 +264,15 @@
 		SELECT qna_id AS qnaId, parent_id AS parentId, question, answer, created_at AS createdAt
 		FROM qna
 		ORDER BY created_at DESC
+		LIMIT #{beginRow}, #{size}
 	</select>
+	
+	<select id="totalCountByParent" parameterType="String" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM qna 
+	    WHERE parent_id = #{userId}
+	</select>
+
 	
 	<!-- qna 등록 -->
 	<insert id="insertQna">
@@ -293,7 +307,7 @@
 	    LIMIT 1
 	</select>
 	
-	<!-- 취소 신청 INSERT -->
+	<!-- 차량 탑승 취소 신청 INSERT -->
 	<insert id="insertVehicleCancel" parameterType="map">
 	    INSERT INTO vehicle_cancel (payment_id, assignment_id, cancel_reason)
 	    VALUES (#{paymentId}, #{assignmentId}, #{reason})

@@ -10,7 +10,7 @@
 </head>
 <body>
 	<c:choose>
-	    <c:when test="${vehicleInfo.isCancelledToday == 1}">
+	    <c:when test="${not empty vehicleInfo and vehicleInfo.isCancelledToday eq 1}">
 	        <h1>${vehicleInfo.studentName}의 배차 정보</h1>
 	        <p style="color:red; font-weight:bold;">금일 배차를 취소했습니다.</p>
 	    </c:when>
@@ -25,6 +25,7 @@
 	    </c:when>
 	
 	    <c:otherwise>
+	    	<h1>${vehicleInfo.studentName}의 탑승 차량 정보</h1>
 	        <p>배차 정보가 없습니다.</p>
 	    </c:otherwise>
 	</c:choose>

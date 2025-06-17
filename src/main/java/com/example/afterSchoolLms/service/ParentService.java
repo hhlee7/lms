@@ -108,8 +108,13 @@ public class ParentService {
 	}
 	
 	// qna게시판
-	public List<Qna> qnaList(int beginRow, int size) {
-		return parentMapper.qnaList(beginRow, size);
+	public List<Qna> qnaList(String userId, int beginRow, int size) {
+		return parentMapper.qnaList(userId, beginRow, size);
+	}
+	
+	// qna total수
+	public int totalCountByParent(String userId) {
+		return parentMapper.totalCountByParent(userId);
 	}
 	
 	// qna 질문
@@ -191,5 +196,7 @@ public class ParentService {
 	    
 		parentMapper.refundLeture(lectureId, studentId, status, startDate);	
 	}
+	
+
 
 }
