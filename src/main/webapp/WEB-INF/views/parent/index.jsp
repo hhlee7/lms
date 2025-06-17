@@ -11,8 +11,8 @@
 	<div>
 		<div>방과후교육</div>
 		<div><a href="/parent/notice">공지사항</a></div>
-		<div><a href="/parent/subjectInfo">과목소개</a></div>
-		<div><a href="/parent/teacherInfo">강사소개</a></div>
+		<div><a href="/parent/subject">과목소개</a></div>
+		<div><a href="/parent/teacher">강사소개</a></div>
 		<div><a href="/parent/lectureList">수강신청</a></div>
 		<div><a href="/parent/lecturePayOrCancel">결제</a></div>
 		<div><a href="/parent/lectureLegistrationList">수강 신청내역</a></div>

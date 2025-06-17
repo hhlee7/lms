@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.ParentMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +40,25 @@ public class ParentService {
 		return parentMapper.noticeById(noticeId);
 	}
 	
-	// 수업 상세페이지
-	public Subject subjectOne(String subjectName) {
-		return parentMapper.subjectOne(subjectName);
+	// 과목 전체 검색
+	public List<Subject> subject() {
+		return parentMapper.selectSubject();
 	}
-
+	
+	// 과목 상세 검색
+	public Subject subjectOne(String subjectName) {
+		return parentMapper.selectSubjectOne(subjectName);
+	}
+// 과목 상세 - 평균 평점 조회
+	public Double subjectOneRating(String subjectName) {
+		return parentMapper.selectSubjectOneRating(subjectName);
+	}
+	
+	// 과목 상세 - 리뷰 조회
+	public List<Map<String, Object>> subjectOneReview(String subjectName) {
+		return parentMapper.selectSubjectOneReview(subjectName);
+	}
+		
 	// 비밀번호 변경
 	public int updatePw(String id, String currentPw, String updatePw) {
 		return parentMapper.updatePw(id, currentPw, updatePw);
@@ -66,11 +82,6 @@ public class ParentService {
 	// 자녀 수업 조회
 	public List<Map<String, Object>> getSubjectInfo(String userId) {
 		return parentMapper.subjectInfo(userId);
-	}
-
-	// 자녀 출결 조회
-	public List<Attendance> getAttendance(String userId) {
-		return parentMapper.attendance(userId);
 	}
 
 	// 수강신청 가능 리스트 출력
@@ -196,7 +207,49 @@ public class ParentService {
 	    
 		parentMapper.refundLeture(lectureId, studentId, status, startDate);	
 	}
+
+	// 강사 전체 검색
+	public List<User> teacher() {
+		return parentMapper.selectTeacher();
+	}
 	
+   // 강사 상세 검색
+   public Map<String, Object> teacherOne(String teacherId) {
+      return parentMapper.selectTeacherOne(teacherId);
+   }
+   
+   // 강사 상세 - 평균 평점 조회
+   public Double teacherOneRating(String teacherId) {
+      return parentMapper.selectTeacherOneRating(teacherId);
+   }
+   
+   // 강사 상세 - 리뷰 조회
+   public List<Map<String, Object>> teacherOneReview(String teacherId) {
+      return parentMapper.selectTeacherOneReview(teacherId);
+   }
 
-
+	// 자녀 출결 조회
+	public List<Map<String, Object>> selectAttendance(String studentId) {
+		return parentMapper.selectAttendance(studentId);
+	}
+	
+	// 사진첩 총개수(검색기능)
+	public int albumTotalCount(String searchWord) {
+		return parentMapper.selectAlbumTotalCount(searchWord);
+	}
+	
+	// 사진첩(검색기능)
+	public List<Map<String, Object>> albumList(Map<String, Object> paramMap) {
+		return parentMapper.selectAlbumtList(paramMap);
+	}
+	
+	// 앨범 상세보기
+	public Map<String,Object> albumOne(int albumId){
+		return parentMapper.selectAlbumOne(albumId);
+	}
+	
+	// 앨범 사진조회
+	public List<AlbumPhoto> albumPhotoList(int albumId){
+		return parentMapper.selectAlbumPhotoList(albumId);
+	}
 }

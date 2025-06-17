@@ -24,13 +24,49 @@
 		WHERE notice_id = #{noticeId}
 	</select>
 	
-	<!-- 수업 상세페이지(정보) -->
-	<select id="subjectOne" parameterType="String" resultType="com.example.afterSchoolLms.dto.Subject">
-		SELECT name AS name, description AS description
+	<!-- 과목소개 -->
+	<select id="selectSubject" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			subject_id AS subjectId,
+			NAME AS subjectName
 		FROM subject
-		WHERE name = #{type}
 	</select>
 	
+	<!-- 과목상세페이지 -->
+	<select id="selectSubjectOne" parameterType="String" resultType="com.example.afterSchoolLms.dto.Subject">
+		SELECT 
+			name AS subjectName,
+			description
+		FROM subject
+		WHERE name = #{subjectName}
+	</select>
+	
+	<!-- 과목평점 -->
+	<select id="selectSubjectOneRating" parameterType="String" resultType="Double">
+		SELECT ROUND(AVG(sf.rating_lecture), 1) AS avgRating
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		WHERE sb.name = #{subjectName}
+	</select>
+	
+	<!-- 과목리뷰 -->
+	<select id="selectSubjectOneReview" parameterType="String" resultType="map">
+		SELECT sf.rating_lecture AS ratingLecture,
+		       r.content AS content
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+		WHERE sb.name = #{subjectName}
+		ORDER BY r.review_id DESC
+		LIMIT 0, 3
+	</select>
+
 	<!-- 비밀번호 확인 -->
 	<select id="checkPw" parameterType="String" resultType="String">
 		SELECT user_id AS userId
@@ -257,8 +293,6 @@
 		WHERE lecture_id = #{lectureId}
 	</select>
 	
-	
-	
 	<!-- qna목록 -->
 	<select id="qnaList" resultType="com.example.afterSchoolLms.dto.Qna">
 		SELECT qna_id AS qnaId, parent_id AS parentId, question, answer, created_at AS createdAt
@@ -273,7 +307,6 @@
 	    WHERE parent_id = #{userId}
 	</select>
 
-	
 	<!-- qna 등록 -->
 	<insert id="insertQna">
 		INSERT INTO qna(parent_id, question) 
@@ -385,4 +418,113 @@
         	AND se.status = #{status}
         	AND l.start_date >= DATE_ADD(CURDATE(), INTERVAL 3 DAY)
 	</update>
+	
+	<!-- 강사 조회 -->
+	<select id="selectTeacher" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT name AS userName, user_id AS userId
+		FROM user
+		WHERE role_id = 3
+	</select>
+	
+	<!-- 강사 상세페이지 -->
+	<select id="selectTeacherOne" parameterType="String" resultType="map">
+		SELECT 
+			u.name AS teacherName,
+			th.last_education AS lastEducation,
+			th.personal_history AS personalHistory
+		FROM user u
+		INNER JOIN teacher_history th ON u.user_id = th.teacher_id
+		WHERE u.user_id = #{teacherId}
+	</select>
+	
+	<!-- 강사 평점 -->
+	<select id="selectTeacherOneRating" parameterType="String" resultType="Double">
+		SELECT ROUND(AVG(sf.rating_teacher), 1) AS ratingTeacher
+		FROM satisfaction sf 
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+		WHERE ta.teacher_id = #{teacherId}
+	</select>
+	
+	<!-- 강사 리뷰 -->
+	<select id="selectTeacherOneReview" parameterType="String" resultType="map">
+		SELECT 
+			sf.rating_teacher AS ratingTeacher,
+			r.content AS content
+		FROM satisfaction sf
+		INNER JOIN payment p ON sf.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN review r ON sf.satisfaction_id = r.satisfaction_id
+		WHERE ta.teacher_id = #{teacherId}
+		ORDER BY r.review_id DESC
+		LIMIT 0, 3
+	</select>
+	
+	<!-- 출석 -->
+	<select id="selectAttendance" parameterType="String" resultType="map">
+		SELECT
+		   ad.attend_date AS attendDate,
+		   ad.status AS status,
+		   sb.name AS subjectName,
+   		   t.name AS teacherName
+		FROM (SELECT * FROM user WHERE user_id = #{studentId}) u
+		INNER JOIN student_enrollment se ON se.student_id = u.user_id
+		INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
+		INNER JOIN attendance ad ON p.payment_id = ad.payment_id
+		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+		INNER JOIN subject sb ON l.subject_id = sb.subject_id
+		INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
+		INNER JOIN user t ON ta.teacher_id = t.user_id
+	</select>
+	
+	<!-- 앨범카운트 -->
+	<select id="selectAlbumTotalCount" parameterType="String">
+		SELECT COUNT(*)
+	  	FROM album
+	  	<if test="searchWord != null and searchWord != ''">
+	    	WHERE title LIKE CONCAT('%', #{searchWord}, '%')
+	  	</if>
+	</select>
+	<!-- 앨범리스트 -->
+	<select id="selectAlbumtList" parameterType="map" resultType="map">
+		SELECT
+			ab.album_id AS albumId,
+			ab.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			ab.title AS title,
+			ab.description,
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
+		FROM album ab
+		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
+		WHERE ab.title LIKE CONCAT('%', #{searchWord}, '%')
+		LIMIT #{beginRow}, #{size}
+	</select>
+	<!-- 엘범 삼세보기 -->
+	<select id="selectAlbumOne" resultType="map">
+		SELECT
+			ab.album_id AS albumId,
+			ab.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			ab.title AS title,
+			ab.description,
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
+		FROM (SELECT * FROM album WHERE album_id = #{albumId}) ab
+		INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	</select>
+	<!-- 앨범에 사진 리스트 -->
+	<select id="selectAlbumPhotoList" resultType="com.example.afterSchoolLms.dto.AlbumPhoto">
+		SELECT
+			photo_id AS photoId,
+			album_id AS albumId,
+			file_path AS filePath
+		FROM album_photo
+		WHERE album_id = #{albumId};
+	</select>
 </mapper>

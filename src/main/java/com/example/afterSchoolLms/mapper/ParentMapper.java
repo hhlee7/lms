@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Attendance;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Qna;
 import com.example.afterSchoolLms.dto.Subject;
-import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.User;
+
 
 @Mapper
 public interface ParentMapper {
@@ -24,8 +26,18 @@ public interface ParentMapper {
 	// 공지사항 상세페이지
 	Notice noticeById(int noticeId);
 
-	// 수업 정보
-	Subject subjectOne(String subjectName);
+	// 과목 전체
+	List<Subject> selectSubject();
+	
+	// 과목 상세
+	Subject selectSubjectOne(String subjectName);
+	
+	// 과목 상세 - 평균 평점 조회
+	Double selectSubjectOneRating(String subjectName);
+	
+	// 과목 상세 - 리뷰 조회
+	List<Map<String, Object>> selectSubjectOneReview(String subjectName);
+	
 
 	int updatePw(String id, String currentPw, String updatePw);
 
@@ -42,6 +54,9 @@ public interface ParentMapper {
 
 	// 자녀 출결 조회
 	List<Attendance> attendance(String userId);
+	
+	
+	List<Map<String, Object>> selectAttendance(String studentId);
 	
 	// 수강신청 가능 리스트 출력
 	List<Map<String, Object>> lectureList();
@@ -60,8 +75,9 @@ public interface ParentMapper {
     int modifyCancelToPending(String studentId, int lectureId);
     
 	// qna게시판
-	List<Qna> qnaList(String userId, int beginRow, int size);
 	int totalCountByParent(String userId);
+	
+	List<Qna> qnaList(String userId, int beginRow, int size);
 
 	// qna 질문
 	int insertQna(String userId, String question);
@@ -97,12 +113,28 @@ public interface ParentMapper {
 
 	int hasOverlappingLecture(String studentId, String newStartDate, String newEndDate);
 
+	// 강사 전체
+	List<User> selectTeacher();
+	
+   // 강사 상세
+   Map<String, Object> selectTeacherOne(String teacherId);
+   
+   // 강사 상세 - 평균 평점 조회
+   Double selectTeacherOneRating(String teacherId);
+   
+   // 강사 상세 - 리뷰 조회
+   List<Map<String, Object>> selectTeacherOneReview(String teacherId);
 
-
-
-
-
-
-
-
+	// 사진첩 총개수(검색기능)
+	int selectAlbumTotalCount(String searchWord);
+	
+	// 사진첩(검색기능)
+	List<Map<String, Object>> selectAlbumtList(Map<String, Object> paramMap);
+	
+	// 앨범 상세 보기
+	Map<String,Object> selectAlbumOne(int albumId);
+	
+	// 앨범 사진조회
+	List<AlbumPhoto> selectAlbumPhotoList(int albumId);
+	
 }

@@ -80,4 +80,12 @@ public class Page {
 	public int getNextGroupPage() {
 	    return endPage + 1;
 	}
+	
+    public Page(int rowPerPage, int currentPage, int totalCount, String searchWord) {
+	      this.rowPerPage = rowPerPage;
+	      this.currentPage = currentPage;
+	      this.totalCount = totalCount;
+	      this.beginRow = (currentPage - 1) * rowPerPage;
+	      this.searchWord= searchWord;
+	   }
 }
