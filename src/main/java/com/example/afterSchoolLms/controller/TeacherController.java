@@ -1,9 +1,10 @@
 package com.example.afterSchoolLms.controller;
-
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +20,7 @@ import com.example.afterSchoolLms.service.AttendanceService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-	
-	
+ 
 	@Controller
 	@RequestMapping("/teacher")
 	@Slf4j
@@ -192,10 +192,15 @@ import lombok.extern.slf4j.Slf4j;
 	            HttpSession session,
 	            Model model,
 	            @RequestParam(defaultValue = "1") int page,
-	            @RequestParam(defaultValue = "") String keyword
+	            @RequestParam(defaultValue = "") String keyword,
+	            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchDate
 	    ) {
 	        User loginUser = (User) session.getAttribute("loginUser");
 	        String teacherId = loginUser.getUserId();
+
+	        if (searchDate == null) {
+	            searchDate = LocalDate.now(); // 날짜 없으면 오늘로 기본
+	        }
 
 	        int rowPerPage = 10;
 	        int startRow = (page - 1) * rowPerPage;
@@ -205,16 +210,18 @@ import lombok.extern.slf4j.Slf4j;
 	        param.put("startRow", startRow);
 	        param.put("rowPerPage", rowPerPage);
 	        param.put("keyword", keyword);
+	        param.put("searchDate", searchDate);
 
-	        List<Map<String, Object>> attendanceList = teacherMapper.selectAttendanceListByTeacher(param);
-	        int totalRow = teacherMapper.countAttendanceListByTeacher(param);
+	        List<Map<String, Object>> attendanceList = attendanceMapper.selectAttendanceListByTeacher(param); // 이거로 수정
+	        int totalRow = attendanceMapper.countAttendanceListByTeacher(param);
 	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
 
 	        model.addAttribute("attendanceList", attendanceList);
 	        model.addAttribute("page", page);
 	        model.addAttribute("lastPage", lastPage);
 	        model.addAttribute("keyword", keyword);
-
+	        model.addAttribute("searchDate", searchDate); // 👉 이거 잊지 마!
+	        
 	        return "teacher/attendanceList";
 	    }
 
@@ -263,7 +270,7 @@ import lombok.extern.slf4j.Slf4j;
 	        param.put("keyword", keyword);
 
 	        List<Map<String, Object>> noticeList = teacherMapper.selectNoticeList(param);
-	        int totalRow = teacherMapper.countNoticeList(keyword);
+	        int totalRow = teacherMapper.countNoticeListByRole(param);
 	        int lastPage = (int) Math.ceil((double) totalRow / rowPerPage);
 
 	        model.addAttribute("noticeList", noticeList);
@@ -272,6 +279,13 @@ import lombok.extern.slf4j.Slf4j;
 	        model.addAttribute("keyword", keyword);
 
 	        return "teacher/noticeList"; // JSP 경로에 맞춰 조절
+	    }
+	  // 공지사항 상세보기  
+	    @GetMapping("/noticeOne")
+	    public String noticeOne(@RequestParam("noticeId") int noticeId, Model model) {
+	        Map<String, Object> notice = teacherMapper.selectNoticeOne(noticeId);
+	        model.addAttribute("notice", notice);
+	        return "teacher/noticeOne"; // JSP 경로
 	    }
 	 // 사진첩 
 	    @GetMapping("/album/list")

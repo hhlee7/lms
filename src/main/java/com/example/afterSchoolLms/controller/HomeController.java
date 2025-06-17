@@ -26,10 +26,10 @@ public class HomeController {
         
         // 각자의 맞는 방과후페이지로 넘어감
         switch (loginUser.getRoleId()) {
-            case 1: return "redirect:/adminMain";
+            case 1: return "adminMain";
             case 2: return "redirect:/student/main";
             case 3: return "redirect:/teacher/main";
-            case 4: return "redirect:/parent/main";
+            case 4: return "redirect:/parent/index";
             case 5: return "redirect:/driver/main";
             default: return "redirect:/";
         }
