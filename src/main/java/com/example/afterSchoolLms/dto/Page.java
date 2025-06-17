@@ -52,6 +52,14 @@ public class Page {
 		this.beginRow = (currentPage - 1) * rowPerPage;
 	}
 	
+	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord) {
+		this.rowPerPage = rowPerPage;
+		this.currentPage = currentPage;
+		this.totalCount = totalCount;
+		this.beginRow = (currentPage - 1) * rowPerPage;
+		this.searchWord= searchWord;
+	}
+	
 	// 전체 데이터 입력해서 시작,마지막 페이지 구하는 메소드
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;

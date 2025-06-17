@@ -1,5 +1,6 @@
 package com.example.afterSchoolLms.controller;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,13 @@ public class DriverController {
 		User loginUser = (User) session.getAttribute("loginUser");
 		model.addAttribute("loginUser", loginUser);
 		return "/driver/main";
+	}
+	
+	// 로그아웃
+	@GetMapping("/driver/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate();
+	    return "redirect:/";
 	}
 	
 	// 기사 개인정보 페이지
@@ -82,7 +90,7 @@ public class DriverController {
 			, @RequestParam String currentPw
 			, @RequestParam String updatePw) {
 		driverService.updatePw(userId, currentPw, updatePw);
-		return "redirect:/";
+		return "redirect:/driver/logout";
 	}
 
 	// 기사 배차 조회
@@ -110,9 +118,11 @@ public class DriverController {
 	        }
 	    }
 	    
-	    //log.info("timeSet: " + timeSet.toString());
+	    log.info("timeSet: " + timeSet.toString());
 	    model.addAttribute("dispatchStudentList", dispatchStudentList);
 	    model.addAttribute("timeList", timeSet);  // 시간 리스트도 모델에 추가
+	    // 오늘 날짜 전달
+	    model.addAttribute("now", new Date());
 		return "/driver/dispatchStudent";
 	}
 }

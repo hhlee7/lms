@@ -8,8 +8,7 @@
 <title>과목 소개</title>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
-	<hr>
+	<jsp:include page="header.jsp"></jsp:include>
 	<h1>과목 소개</h1>
 	<c:forEach var="subject" items="${subjectList}">
 		<div>

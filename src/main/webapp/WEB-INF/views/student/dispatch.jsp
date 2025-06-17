@@ -9,13 +9,14 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
+	<h1>배차 조회</h1>
 	<c:forEach var="dispatch" items="${dispatchList}">
 		<div>
 			<p>과목명: ${dispatch.subjectName}</p>
             <p>강사명: ${dispatch.teacherName}</p>
             <p>요일: ${dispatch.dayOfWeek}</p>
             <p>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
+            <p>수업기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
 			<p>기사님: ${dispatch.driverName}</p>
 			<p>주차장소: ${dispatch.location}</p>
 			<p>차량번호: ${dispatch.vehicleNo}</p>

@@ -9,7 +9,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>공지사항</h1>
    	<table border="1">
 		<tr>

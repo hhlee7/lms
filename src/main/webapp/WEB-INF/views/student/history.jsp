@@ -9,8 +9,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
 	<c:forEach var="history" items="${historyList}">
 		<h3>과목 : ${history.subjectName}</h3>
 		<h3>강사 : ${history.teacherName}</h3>

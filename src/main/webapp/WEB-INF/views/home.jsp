@@ -12,7 +12,7 @@
             case 1: buttonLink = "/adminMain"; break;
             case 2: buttonLink = "/student/main"; break;
             case 3: buttonLink = "/teacher/main"; break;
-            case 4: buttonLink = "/parent/main"; break;
+            case 4: buttonLink = "/parent/index"; break;
             case 5: buttonLink = "/driver/main"; break;
         }
     }
@@ -163,7 +163,7 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" 
          alt="학교 로고" 
          style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px; border-radius: 50%;" />
-    여의도초등학교
+    송린초등학교
   </div>
   <nav>
     <a href="/">Home</a>

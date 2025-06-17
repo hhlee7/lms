@@ -51,12 +51,17 @@ public interface TeacherMapper {
     List<Map<String, Object>> selectNoticeList(Map<String, Object> param);
     
     // 공지사항 총 개수 조회: 키워드 조건에 따른 전체 공지사항 개수 반환 (페이징용)
-    int countNoticeList(String keyword);
+    int countNoticeListByRole(Map<String, Object> param);
+    
+    // 공지사항 상세보기
+    Map<String, Object> selectNoticeOne(int noticeId);
     
     // 전체 사진첩 조회 (검색+페이징)
     List<Map<String, Object>> selectAlbumList(Map<String, Object> param);
 
     // 전체 사진첩 총 개수 조회
     int countAlbumList(Map<String, Object> param);
+    
+    
 
 }

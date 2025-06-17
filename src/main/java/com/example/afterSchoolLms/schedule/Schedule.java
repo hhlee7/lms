@@ -23,13 +23,18 @@ public class Schedule {
 	private final AttendanceMapper attendanceMapper;
 	@Autowired AdminService adminService;
 
-	// 매일 자정에 결석으로 출결 초기화
-	@Scheduled(cron = "0 0 0 * * ?") // 매일 00:00
-	public void initDailyAttendance() {
-		attendanceMapper.insertDailyDefaultAttendance();
-		System.out.println("출결 초기화 완료(기본값: 결석)");
-	}
-	
+	// 매일 자정에 오늘 수업 있는 강의만 출결 초기화
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 00:00
+    public void initDailyAttendance() {
+        List<Integer> lectureIds = attendanceMapper.selectLectureIdsForToday();
+        if (!lectureIds.isEmpty()) {
+            attendanceMapper.insertDailyAttendanceByLectureIds(lectureIds);
+            System.out.println("출석 초기화 완료 (대상 수업 수: " + lectureIds.size() + ")");
+        } else {
+            System.out.println("오늘 수업이 없어 출석 초기화 생략");
+        }
+    }
+    
 	// 수업 끝나기 전 배차 정보 초기화
 	@Scheduled(cron = "0 50 15 * * ?") 
 	public void initDailyPassangerFirst() {
@@ -78,5 +83,5 @@ public class Schedule {
 			adminService.insertPassenger(vp);
 		}
 	}
-	
 }
+

@@ -9,7 +9,7 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
+	<h1>만족도 평가</h1>
 	<c:forEach var="lecture" items="${lectureDoneList}">
 		<div>
 			<p>과목명: ${lecture.subjectName}</p>

@@ -9,7 +9,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>${teacher.teacherName} 강사 정보</h1>
 	<p>최종 학력 : ${teacher.lastEducation}</p>
 	<p>경력 : ${teacher.personalHistory}</p>

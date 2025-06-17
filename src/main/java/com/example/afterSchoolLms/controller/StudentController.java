@@ -1,6 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.AlbumPhoto;
 import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.Subject;
@@ -36,11 +38,31 @@ public class StudentController {
 		return "/student/main";
 	}
 	
+	// 로그아웃
+	@GetMapping("/student/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate();
+	    return "redirect:/";
+	}
+	
 	// 학생 개인정보 페이지
 	@GetMapping("/student/personalInformation")
 	public String personalInformation(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		model.addAttribute("loginUser", loginUser);
+		User user = studentService.selectInformation(loginUser.getUserId(), loginUser.getPassword());
+		
+		// 학년 계산
+	    int currentYear = LocalDate.now().getYear();
+	    int birthYear = LocalDate.parse(user.getBirth()).getYear();
+	    int month = LocalDate.now().getMonthValue();
+	   
+	    int grade = currentYear - birthYear - 6;
+	    if (month < 3) {
+	        grade--;
+	    }
+	    
+		model.addAttribute(user);
+		model.addAttribute("grade", grade);
 		return "/student/personalInformation";
 	}
 	
@@ -48,7 +70,8 @@ public class StudentController {
 	@GetMapping("/student/updateInformation")
 	public String updateInformation(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		model.addAttribute("loginUser", loginUser);
+		User user = studentService.selectInformation(loginUser.getUserId(), loginUser.getPassword());
+		model.addAttribute(user);
 		return "/student/updateInformation";
 	}
 	
@@ -58,7 +81,7 @@ public class StudentController {
 			, @RequestParam String currentPw
 			, @RequestParam String updatePw) {
 		studentService.updatePw(userId, currentPw, updatePw);
-		return "redirect:/student/main";
+		return "redirect:/student/logout";
 	}
 
 	// 학생 본인 수업조회
@@ -280,5 +303,51 @@ public class StudentController {
 		model.addAttribute("rating", rating);
 		model.addAttribute("reviewList", reviewList);
 		return "/student/teacherOne";
+	}
+	
+	// 사진첩 페이지
+	@GetMapping("/student/album")
+	public String albumManagement(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "4") int size
+			,@RequestParam(defaultValue = "") String searchWord) {
+
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord);
+		int totalCount = studentService.albumTotalCount(searchWord);
+		//log.info("albumTotalCount: " + totalCount);
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("beginRow", paging.getBeginRow());
+		paramMap.put("size", size);
+		paramMap.put("searchWord", searchWord);
+		
+		List<Map<String,Object>> albumList = studentService.albumList(paramMap);
+		int totalPage = (int) Math.ceil((double) totalCount / size);
+		model.addAttribute("albumList", albumList);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("searchWord", searchWord);
+		return "/student/album";
+	}
+	
+	// 사진첩 앨범 상세페이지
+	@GetMapping("/student/albumOne")
+	public String albumOne(Model model
+			, @RequestParam String albumId) {
+		
+		Map<String,Object> album = studentService.albumOne(Integer.parseInt(albumId));
+		List<AlbumPhoto> photoList = studentService.albumPhotoList(Integer.parseInt(albumId));
+		
+		// 웹에 노출 가능한 경로로 변환
+	    for (AlbumPhoto photo : photoList) {
+	        photo.setFilePath("/upload/" + photo.getFilePath());
+	    }
+		
+		model.addAttribute("photoList",photoList);
+		model.addAttribute("album",album);
+		return "/student/albumOne";
 	}
 }
