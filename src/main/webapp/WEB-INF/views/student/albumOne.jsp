@@ -7,8 +7,7 @@
 <title>앨범 상세</title>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
-	<hr>
+	<jsp:include page="header.jsp"></jsp:include>
 	<h1>앨범 상세 페이지</h1>
 	
 	<c:if test="${album != null}">

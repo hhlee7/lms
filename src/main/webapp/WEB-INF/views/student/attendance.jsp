@@ -61,8 +61,7 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
+
 	<h1 style="text-align:center;">
 	    ${year}년 ${month + 1}월
 	</h1>

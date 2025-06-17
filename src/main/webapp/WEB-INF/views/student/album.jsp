@@ -8,8 +8,7 @@
 <title>사진첩</title>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
-	<hr>
+	<jsp:include page="header.jsp"></jsp:include>
 	<h1>사진첩</h1>
 	
 	<form id="searchForm" method="get" action="/student/album">

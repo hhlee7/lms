@@ -12,8 +12,7 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
+
 	<h3><fmt:formatDate value="${now}" pattern="yyyy-MM-dd"/> 배차</h3>
 	
 	<!-- 시간 선택 -->

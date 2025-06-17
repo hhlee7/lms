@@ -9,7 +9,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>${subject.subjectName} 수업 정보</h1>
 	<p>${subject.description}</p>
 	

@@ -7,9 +7,8 @@
 <title>학생 개인정보 페이지</title>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
+	<jsp:include page="header.jsp"></jsp:include>
+	<h1>내 개인정보</h1>
 	<table border="1">
 		<tr>
 			<td>이름</td>

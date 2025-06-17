@@ -66,8 +66,7 @@ $(function() {
 
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
+
 	<form id="updateForm" method="post" action="/driver/updateInformation">
 		<input type="hidden" value="${user.userId}" id="userId" name="userId"> 
 		이름 : <input type="text" value="${user.userName}" readonly="readonly"><br>

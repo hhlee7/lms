@@ -9,7 +9,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<c:forEach var="dispatch" items="${dispatchList}">
 		<div>
 			<p>차량번호: ${dispatch.vehicleNo}</p>

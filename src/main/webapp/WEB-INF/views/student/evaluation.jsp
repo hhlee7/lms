@@ -28,7 +28,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>만족도 평가</h1>
 	<h3>과목 : ${subjectName}</h3>
 	<h3>강사 : ${teacherName}</h3>

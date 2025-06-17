@@ -58,7 +58,6 @@
 
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	
 	<form id="updateForm" method="post" action="/student/updateInformation">
 		<input type="hidden" value="${user.userId}" id="userId" name="userId"> 
