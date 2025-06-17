@@ -1,92 +1,120 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>배차 취소 조회</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-	$(document).ready(function() {
-		function targetSearch(){
-			const searchDate = $('#searchDate').val();
-			const searchName = $('#searchWord').val();
-			const url = new URL(window.location.href);
+  <meta charset="UTF-8" />
+  <title>배차 취소 조회</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 
-			if(searchDate !== '') {
-				url.searchParams.set('searchDate', searchDate);
-			}
-			url.searchParams.set('searchName', searchName);
+  <script>
+    $(document).ready(function () {
+      function targetSearch() {
+        const searchDate = $('#searchDate').val();
+        const searchName = $('#searchWord').val();
+        const url = new URL(window.location.href);
 
-			location.href = url.toString();
-		}
+        if (searchDate !== '') {
+          url.searchParams.set('searchDate', searchDate);
+        }
+        url.searchParams.set('searchName', searchName);
 
-		$('#searchBtn').click(targetSearch);
-		$('#searchDate').change(targetSearch);
-	});
-</script>
+        location.href = url.toString();
+      }
+
+      $('#searchBtn').click(targetSearch);
+      $('#searchDate').change(targetSearch);
+    });
+  </script>
 </head>
 <body>
-	<h1>배차 취소 관리 페이지 입니다.</h1>
-	<a href="/admin/main">[메인 페이지]</a>
 
-	<!-- 날짜 선택 -->
-	<div>
-		날짜 선택 : 
-		<input type="date" id="searchDate" name="searchDate" value="${param.searchDate}">
-	</div>
+  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
+  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
 
-	<!-- 취소 목록 -->
-	<c:if test="${cancelList != null}">
-		<table border="1">
-			<tr>
-				<th>학생</th>
-				<th>과목</th>
-				<th>사유</th>
-				<th>요일</th>
-				<th>취소 시간</th>
-			</tr>
-			<c:forEach var="can" items="${cancelList}">
-				<tr>
-					<td>${can.studentName}</td>
-					<td>${can.subjectName}</td>
-					<td>${can.cancelReason}</td>
-					<td>${can.dayOfWeek}</td>
-					<td>${can.decidedAt}</td>
-				</tr>
-			</c:forEach>
-		</table>
-	</c:if>
+  <main class="main-content">
+    <section class="mb-4 text-center">
+      <h2 class="fw-bold">❌ 배차 취소 관리</h2>
+    </section>
 
-	<!-- 이름 검색 -->
-	이름 : 
-	<input type="text" name="searchWord" id="searchWord" value="${param.searchName}">
-	<button type="button" name="searchBtn" id="searchBtn">검색</button>
-	
-	<!-- 페이지 그룹 이동 및 번호 출력 -->
-	<div>
-		<!-- 이전 그룹 이동 -->
-		<c:if test="${page.prevGroup}">
-			<a href="?page=${page.prevGroupPage}&searchName=${param.searchName}&searchDate=${param.searchDate}">«</a>
-		</c:if>
-	
-		<!-- 페이지 번호 리스트 -->
-		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-			<c:choose>
-				<c:when test="${i == page.currentPage}">
-					<strong>[${i}]</strong>
-				</c:when>
-				<c:otherwise>
-					<a href="?page=${i}&searchName=${param.searchName}&searchDate=${param.searchDate}">[${i}]</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-	
-		<!-- 다음 그룹 이동 -->
-		<c:if test="${page.nextGroup}">
-			<a href="?page=${page.nextGroupPage}&searchName=${param.searchName}&searchDate=${param.searchDate}">»</a>
-		</c:if>
-	</div>
+    <!-- 검색 필터 -->
+    <section class="search-section mb-4">
+      <form class="row gy-2 gx-3 align-items-center justify-content-center" onsubmit="return false;">
+        <div class="col-md-auto">
+          <label for="searchDate" class="form-label fw-semibold">날짜 선택</label>
+          <input type="date" id="searchDate" name="searchDate" class="form-control" value="${param.searchDate}" />
+        </div>
+
+        <div class="col-md-auto">
+          <label for="searchWord" class="form-label fw-semibold">학생 이름</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="searchWord" id="searchWord" class="form-control" value="${param.searchName}" />
+          </div>
+        </div>
+
+        <div class="col-md-auto mt-3 mt-md-4">
+          <button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 취소 목록 테이블 -->
+    <section class="table-responsive mb-4">
+      <c:if test="${cancelList != null && !cancelList.isEmpty()}">
+        <table class="table table-bordered table-hover bg-white shadow-sm">
+          <thead class="table-light text-center">
+            <tr>
+              <th>학생</th>
+              <th>과목</th>
+              <th>사유</th>
+              <th>요일</th>
+              <th>취소 시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <c:forEach var="can" items="${cancelList}">
+              <tr>
+                <td>${can.studentName}</td>
+                <td>${can.subjectName}</td>
+                <td>${can.cancelReason}</td>
+                <td>${can.dayOfWeek}</td>
+                <td>${can.decidedAt}</td>
+              </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+      </c:if>
+      <c:if test="${cancelList == null || cancelList.isEmpty()}">
+        <div class="text-center text-muted fst-italic">취소된 배차 내역이 없습니다.</div>
+      </c:if>
+    </section>
+
+    <!-- 페이징 -->
+    <section class="d-flex justify-content-center">
+      <ul class="pagination pagination-sm">
+        <c:if test="${page.prevGroup}">
+          <li class="page-item">
+            <a class="page-link" href="?page=${page.prevGroupPage}&searchName=${param.searchName}&searchDate=${param.searchDate}">«</a>
+          </li>
+        </c:if>
+
+        <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+          <li class="page-item <c:if test='${i == page.currentPage}'>active</c:if>">
+            <a class="page-link" href="?page=${i}&searchName=${param.searchName}&searchDate=${param.searchDate}">${i}</a>
+          </li>
+        </c:forEach>
+
+        <c:if test="${page.nextGroup}">
+          <li class="page-item">
+            <a class="page-link" href="?page=${page.nextGroupPage}&searchName=${param.searchName}&searchDate=${param.searchDate}">»</a>
+          </li>
+        </c:if>
+      </ul>
+    </section>
+  </main>
+
 </body>
 </html>

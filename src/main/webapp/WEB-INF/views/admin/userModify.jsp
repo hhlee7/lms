@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 수정</title>
+<%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 <!-- jQuery CDN (페이지에 없으면 추가) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -77,64 +78,74 @@
 	});
 </script>
 </head>
-<body>
-	<h1>관리자 회원 수정 페이지</h1>
-	<form:form action="userModify" method="post" modelAttribute="user">
-		<input type="text" id="userId" name="userId" value="${selectedUser.userId}"/>
-		<table border="1">
-			<tr>
-				<td>역할</td>
-				<td>
-					${selectedUser.roleName}
-				</td>
-			</tr>
-			<tr>
-				<td>이메일</td>
-				<td>
-					<form:input path="email" value="${selectedUser.email}"/>
-					<button type="button" id="checkEmailBtn">중복 검사</button>
-			        <span id="checkResult" style="color:red; margin-left:10px;"></span>
-					<form:errors path="email" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>이름</td>
-				<td>
-					${selectedUser.userName}
-				</td>
-			</tr>
-			<tr>
-				<td>전화번호</td>
-				<td>
-					<form:input path="phone" value="${selectedUser.phone}"/>
-					<form:errors path="phone" cssClass="error" />
-					<span id="phoneError"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>주소</td>
-				<td>
-					<span>${selectedUser.address}</span>
-					<br>
-					<input type="text" name="postcode" id="postcode" placeholder="우편번호">
-					<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-					<input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
-					<input type="text" name="jibunAddress" id="jibunAddress" placeholder="지번주소">
-					<span id="guide" style="color:#999;display:none"></span>
-					<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소">
-					<input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목">
-					<input type="hidden" name="address" id="fullAddress">
-					<form:errors path="address" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>생년월일</td>
-				<td>${selectedUser.birth}</td>
-			</tr>
-		</table>
-		<button type="submit" id="modifyBtn" name="modifyBtn">수정</button>
-	</form:form>
-	<a href="userOne?userId=${selectedUser.userId}">뒤로</a>
+
+  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
+  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+
+  <main class="main-content container mt-4">
+    <h2 class="fw-bold mb-4">👤 관리자 회원 수정</h2>
+
+    <form:form action="userModify" method="post" modelAttribute="user">
+      <input type="hidden" id="userId" name="userId" value="${selectedUser.userId}"/>
+
+      <div class="mb-3">
+        <label class="form-label">역할</label>
+        <input type="text" class="form-control" value="${selectedUser.roleName}" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">이메일</label>
+        <div class="input-group">
+          <form:input path="email" cssClass="form-control" id="email" value="${selectedUser.email}" />
+          <button class="btn btn-outline-secondary" type="button" id="checkEmailBtn">중복 검사</button>
+        </div>
+        <div id="checkResult" class="form-text text-danger"></div>
+        <form:errors path="email" cssClass="text-danger small" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">이름</label>
+        <input type="text" class="form-control" value="${selectedUser.userName}" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">전화번호</label>
+        <form:input path="phone" cssClass="form-control" id="phone" value="${selectedUser.phone}" />
+        <div id="phoneError" class="form-text text-danger"></div>
+        <form:errors path="phone" cssClass="text-danger small" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">주소</label>
+        <div class="mb-2">
+          <span>${selectedUser.address}</span>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-4">
+            <input type="text" id="postcode" class="form-control" placeholder="우편번호" />
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-secondary" onclick="execDaumPostcode()">우편번호 찾기</button>
+          </div>
+        </div>
+        <input type="text" id="roadAddress" class="form-control mb-2" placeholder="도로명 주소" />
+        <input type="text" id="jibunAddress" class="form-control mb-2" placeholder="지번 주소" />
+        <input type="text" id="detailAddress" class="form-control mb-2" placeholder="상세 주소" />
+        <input type="text" id="extraAddress" class="form-control mb-2" placeholder="참고 항목" />
+        <input type="hidden" name="address" id="fullAddress" />
+        <div id="guide" class="form-text text-muted" style="display: none;"></div>
+        <form:errors path="address" cssClass="text-danger small" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">생년월일</label>
+        <input type="text" class="form-control" value="${selectedUser.birth}" readonly />
+      </div>
+
+      <button type="submit" id="modifyBtn" class="btn btn-primary">수정</button>
+      <a href="userOne?userId=${selectedUser.userId}" class="btn btn-outline-secondary ms-2">뒤로</a>
+    </form:form>
+  </main>
 	
 	
 	<!-- 카카오 주소API 호출을 위한 CDN주소 -->
