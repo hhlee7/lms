@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -11,7 +12,8 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
+
+	<h3><fmt:formatDate value="${now}" pattern="yyyy-MM-dd"/> 배차</h3>
 	
 	<!-- 시간 선택 -->
 	<select id="timeSelect">
@@ -42,13 +44,15 @@
 	
 	    $(document).ready(function () {
 	        $('#timeSelect').change(function () {
-	            let selectedTime = $(this).val().trim();
-	            console.log('selectedTime:', selectedTime); 
+	        	const selectedTime = $(this).val().trim();
 	            $('.student-row').hide();
 
 	            if (selectedTime) {
-	            	selectedTime = escapeSelector(selectedTime);
-	                $(`.student-row[data-endtime='${selectedTime}']`).show();
+	            	$('.student-row').each(function () {
+	                    if ($(this).data('endtime') === selectedTime) {
+	                        $(this).show();
+	                    }
+	                });
 	            }
 	        });
 	    });

@@ -9,11 +9,13 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>${subject.subjectName} 수업 정보</h1>
 	<p>${subject.description}</p>
-	<p>평균 평점 : ${rating} </p>
 	
+	<c:if test="${not empty rating}">
+		<p>평균 평점 : ${rating}</p>
+	</c:if>
+
 	<c:forEach var="review" items="${reviewList}">
 		<div>
 			<span>평점 : ${review.ratingLecture}</span>

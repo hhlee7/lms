@@ -17,8 +17,10 @@
 	<select id="selectDispatch" parameterType="String" resultType="map">
 		SELECT 
 			v.vehicle_no AS vehicleNo, 
-			l.end_time AS endTime, 
-			l.day_of_week AS dayOfWeek
+			DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		    l.day_of_week AS dayOfWeek,
+		    l.start_date as startDate,
+		    l.end_date as endDate
 		FROM vehicle v 
 		INNER JOIN vehicle_assignment va ON v.vehicle_id = va.vehicle_id
 		INNER JOIN user u ON u.user_id = va.driver_id
@@ -29,8 +31,8 @@
 	<select id="selectDispatchStudent" parameterType="String" resultType="map">
 		SELECT 
 			v.vehicle_no AS vehicleNo, 
-			l.end_time AS endTime, 
-			l.day_of_week AS dayOfWeek, 
+			DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		    l.day_of_week AS dayOfWeek, 
 			t1.name AS studentName
 		FROM vehicle v 
 		INNER JOIN vehicle_assignment va ON v.vehicle_id = va.vehicle_id

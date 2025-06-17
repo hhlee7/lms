@@ -7,29 +7,32 @@
 <title>학생 개인정보 페이지</title>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
-	<hr>
-	
+	<jsp:include page="header.jsp"></jsp:include>
+	<h1>내 개인정보</h1>
 	<table border="1">
 		<tr>
 			<td>이름</td>
-			<td>${loginUser.userName}</td>
+			<td>${user.userName}</td>
 		</tr>
 		<tr>
 			<td>생년월일</td>
-			<td>${loginUser.birth}</td>
+			<td>${user.birth}</td>
+		</tr>
+		<tr>
+			<td>학년</td>
+			<td>${grade}</td>
 		</tr>
 		<tr>
 			<td>이메일</td>
-			<td>${loginUser.email}</td>
+			<td>${user.email}</td>
 		</tr>
 		<tr>
 			<td>주소</td>
-			<td>${loginUser.address}</td>
+			<td>${user.address}</td>
 		</tr>
 		<tr>
 			<td>전화번호</td>
-			<td>${loginUser.phone}</td>
+			<td>${user.phone}</td>
 		</tr>
 	</table>
 	

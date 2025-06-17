@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>여의도초 방과후교육</title>
+  <title>방과후교육</title>
   <style>
     body {
       margin: 0;

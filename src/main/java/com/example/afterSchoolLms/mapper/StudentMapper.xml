@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.afterSchoolLms.mapper.StudentMapper">
 	
+	<select id="selectInformation" parameterType="String" resultType="com.example.afterSchoolLms.dto.User">
+		SELECT
+			user_id AS userId,
+			NAME AS userName,
+			birth,
+			email,
+			address,
+			phone
+		FROM user
+		WHERE user_id=#{id} AND PASSWORD=#{password}
+	</select>
+	
 	<select id="checkPw" parameterType="String" resultType="String">
 		SELECT user_id AS userId
 		FROM user
@@ -11,8 +23,8 @@
 	<select id="selectLecture" parameterType="String" resultType="map">
 		SELECT
 		   sb.name AS subjectName,
-		   lt.start_time AS startTime,
-		   lt.end_time AS endTime,
+		   DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
+		   DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
 		   lt.day_of_week AS dayOfWeek,
 		   lt.start_date AS startDate,
 		   lt.end_date AS endDate,
@@ -21,22 +33,25 @@
 		   t.name AS teacherName
 		FROM (SELECT * FROM user WHERE user_id = #{id}) u
 		INNER JOIN student_enrollment se ON se.student_id = u.user_id
+		INNER JOIN payment p ON se.enrollment_id = p.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user t ON ta.teacher_id = t.user_id
-		WHERE CURDATE() BETWEEN lt.start_date AND lt.end_date
+		WHERE CURDATE() &lt;= lt.end_date
+		ORDER BY lt.start_date ASC
 	</select>
 	
 	<select id="selectDisptach" parameterType="String" resultType="map">
-		SELECT 
-			concat(va.vehicle_id,'호차') AS vehicleId,
+		SELECT
 			sb.name AS subjectName,
 			t1.name AS teacherName,
-			lt.start_time AS startTime,
-			lt.end_time AS endTime,
-			lt.day_of_week AS dayOfWeek,
+			DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
+		    DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		    lt.day_of_week AS dayOfWeek,
+		    lt.start_date AS startDate,
+   			lt.end_date AS endDate,
 			d.name AS driverName,
 			d.phone AS driverPhone,
 	        va.driver_id AS driverId,
@@ -45,7 +60,7 @@
 		FROM (SELECT * FROM user WHERE user_id = #{id}) u
 		INNER JOIN student_enrollment se ON u.user_id = se.student_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
-		INNER JOIN subject sb ON lt.lecture_id = sb.subject_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN (SELECT u.name, ta.lecture_id
 						FROM teacher_assignment ta
 						INNER JOIN user u ON ta.teacher_id = u.user_id) t1
@@ -54,7 +69,7 @@
 		INNER JOIN vehicle_assignment va ON se.lecture_id = va.lecture_id
 		INNER JOIN vehicle v ON v.vehicle_id = va.vehicle_id
 		LEFT JOIN user d ON d.user_id = va.driver_id
-		WHERE CURDATE() BETWEEN lt.start_date AND lt.end_date
+		WHERE CURDATE() &lt;= lt.end_date
 	</select>
 	
 	<select id="totalCount">
@@ -67,7 +82,7 @@
 		SELECT notice_id AS noticeId,
 			title,
 			content,
-			created_at AS createdAt
+			DATE_FORMAT(created_at, '%Y-%m-%d %H시 %i분') AS createdAt
 		FROM notice
 		WHERE target_role_id = 2
 		ORDER BY notice_id desc
@@ -78,7 +93,7 @@
 		SELECT notice_id AS noticeId,
 			title,
 			content,
-			created_at AS createdAt
+			DATE_FORMAT(created_at, '%Y-%m-%d %H시 %i분') AS createdAt
 		FROM notice
 		WHERE notice_id = #{noticeId}
 	</select>
@@ -128,15 +143,15 @@
 		   s.satisfaction_id AS satisfactionId,
 		   r.review_id AS reviewId,
 		   sb.name AS subjectName,
-		   lt.start_time AS startTime,
-		   lt.end_time AS endTime,
+		   DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
+		   DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
 		   lt.day_of_week AS dayOfWeek,
 		   lt.start_date AS startDate,
 		   lt.end_date AS endDate,
 		   cr.name AS classroomName,
 		   cr.location AS classroomLocation,
 		   t.name AS teacherName
-		FROM (SELECT * FROM user WHERE user_id = 'stu002') u
+		FROM (SELECT * FROM user WHERE user_id = #{id}) u
 		INNER JOIN student_enrollment se ON se.student_id = u.user_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
@@ -147,6 +162,7 @@
 		LEFT JOIN satisfaction s ON s.payment_id = p.payment_id
 		LEFT JOIN review r ON r.satisfaction_id = s.satisfaction_id
 		WHERE CURDATE() &gt;= lt.end_date
+		ORDER BY lt.end_date ASC
 	</select>
 	
 	<select id="selectHistory" parameterType="String" resultType="map">
@@ -224,6 +240,51 @@
 		WHERE ta.teacher_id = #{teacherId}
 		ORDER BY r.review_id DESC
 		LIMIT 0, 3
+	</select>
+	
+	<select id="selectAlbumTotalCount" parameterType="String">
+		SELECT COUNT(*)
+	  	FROM album
+	  	<if test="searchWord != null and searchWord != ''">
+	    	WHERE title LIKE CONCAT('%', #{searchWord}, '%')
+	  	</if>
+	</select>
+	
+	<select id="selectAlbumtList" parameterType="map" resultType="map">
+		SELECT
+			ab.album_id AS albumId,
+			ab.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			ab.title AS title,
+			ab.description,
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
+		FROM album ab
+		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
+		WHERE ab.title LIKE CONCAT('%', #{searchWord}, '%')
+		LIMIT #{beginRow}, #{size}
+	</select>
+	
+	<select id="selectAlbumOne" resultType="map">
+		SELECT
+			ab.album_id AS albumId,
+			ab.lecture_id AS lectureId,
+			sb.name AS subjectName,
+			ab.title AS title,
+			ab.description,
+			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt
+		FROM (SELECT * FROM album WHERE album_id = #{albumId}) ab
+		INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	</select>
+	
+	<select id="selectAlbumPhotoList" resultType="com.example.afterSchoolLms.dto.AlbumPhoto">
+		SELECT
+			photo_id AS photoId,
+			album_id AS albumId,
+			file_path AS filePath
+		FROM album_photo
+		WHERE album_id = #{albumId};
 	</select>
 	
 	<insert id="insertEvaluation" parameterType="String">

@@ -21,7 +21,6 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<hr>
 	<h1>리뷰 작성</h1>
 	<h3>과목 : ${subjectName}</h3>
 	<h3>강사 : ${teacherName}</h3>
