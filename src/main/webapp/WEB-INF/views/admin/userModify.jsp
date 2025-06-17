@@ -79,9 +79,6 @@
 </script>
 </head>
 
-  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
-  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
-
   <main class="main-content container mt-4">
     <h2 class="fw-bold mb-4">👤 관리자 회원 수정</h2>
 

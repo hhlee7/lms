@@ -11,9 +11,6 @@
 </head>
 <body>
 
-  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
-  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
-
   <main class="main-content">
     <section class="mb-4">
       <h2 class="fw-bold text-center">📌 공지사항 상세</h2>

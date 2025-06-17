@@ -60,6 +60,12 @@ public class AdminController {
         this.loginService = loginService;
     }
 	
+    /** 관리자 대시보드 페이지 **/
+    @GetMapping("/admin/dashboard")
+    public String dashboard() {
+    	return "/admin/dashboard";
+    }
+    
     /** 학생 배차 취소 조회 페이지 **/
     @GetMapping("/admin/vehicleCancel")
     public String vehicleCancel(Model model

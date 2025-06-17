@@ -10,9 +10,6 @@
 </head>
 <body>
 
-  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
-  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
-
   <main class="main-content container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2 class="fw-bold">앨범 관리</h2>

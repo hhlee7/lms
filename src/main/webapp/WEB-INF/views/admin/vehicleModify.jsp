@@ -10,9 +10,6 @@
 </head>
 <body>
 
-  <%@ include file="/WEB-INF/views/common/topbar.jsp" %>
-  <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
-
   <main class="main-content">
     <section class="mb-4 text-center">
       <h2 class="fw-bold">🛠 차량 정보 수정</h2>
