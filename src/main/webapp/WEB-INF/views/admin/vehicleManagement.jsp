@@ -12,7 +12,7 @@
 </head>
 <body>
 	<h1>차량 관리 페이지 입니다.</h1>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	<c:if test="${vehicleList == null}">
 		차량이 없습니다.
 	</c:if>
@@ -24,10 +24,10 @@
 			<th>#</th>
 			<th>차량 번호</th>
 			<th>인원</th>
-			<th>차량 정보 수정</th>
 			<th>기사님</th>
 			<th>전화번호</th>
 			<th>주차</th>
+			<th>차량 정보</th>
 			<th>차량 배정</th>
 		</tr>
 			<c:forEach var="vehicle" items="${vehicleList}">
@@ -35,10 +35,10 @@
 					<td>${vehicle.vehicleId}</td>
 					<td>${vehicle.vehicleNo}</td>
 					<td>${vehicle.capacity}</td>
-					<td><a href="vehicleModify?vehicleId=${vehicle.vehicleId}">수정</a></td>
 					<td><a href="userOne?userId=${vehicle.driverId}">${vehicle.driverName}</a></td>
 					<td>${vehicle.phone}</td>
 					<td>${vehicle.location}</td>
+					<td><a href="vehicleModify?vehicleId=${vehicle.vehicleId}">수정</a></td>
 					<td><a href="vehicleAssignmentInsert?vehicleId=${vehicle.vehicleId}">배정</a></td>
 				</tr>
 			</c:forEach>

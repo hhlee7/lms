@@ -34,7 +34,7 @@
 				<td>${notice.createdAt}</td>
 			</tr>
 		</table>
-	<a href="noticeModify?noticeId=${notice.noticeId}">수정</a>
-	<a href="noticeManagement">뒤로</a>
+	<a href="/admin/noticeModify?noticeId=${notice.noticeId}">수정</a>
+	<a href="/admin/noticeManagement">뒤로</a>
 </body>
 </html>

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Subject {
 	private int subjectId;
-	private String subjectName;  // subjectName -> name으로 수정 DB와 통일
+	private String subjectName;
 	private String description;
 	private String createdAt;
 }

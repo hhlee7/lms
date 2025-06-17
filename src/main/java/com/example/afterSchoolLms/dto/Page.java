@@ -10,7 +10,7 @@ public class Page {
 	private int totalCount;
 	private String searchWord; // 검색어
 	private String searchType; // 검색타입
-	private int roleType; 	   // [윤성권] role 별로 검색하려고 추가 했습니다.
+	private Integer roleType;  // [윤성권] Null 허용 하려고 필드 타입 바꿨습니다.
 	private String searchName; // 검색할 name
 	
 	// [윤성권] lastPage 를 생성자에서 생성할 때 변수에 저장되는 방식으로 변경 했습니다
@@ -19,7 +19,7 @@ public class Page {
 	private int startPage;
 	private int endPage;
 	
-	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType, int roleType) {
+	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType, Integer roleType) {
 		this.rowPerPage = rowPerPage;
 		this.currentPage = currentPage;
 		this.totalCount = totalCount;
@@ -32,8 +32,6 @@ public class Page {
 			this.searchName = searchWord;
 		}
 		
-		
-		// [윤성권] [1][2][3][4]... 페이지 버튼 구현하려고 추가 했습니다
 		// 전체 페이지 수
 		this.lastPage = (int) Math.ceil((double) totalCount / rowPerPage);
 
@@ -88,5 +86,15 @@ public class Page {
 
 	public int getNextGroupPage() {
 	    return endPage + 1;
+	}
+	
+	// [이현호] 페이징 처리 및 검색 조건 초기화 생성자
+	public Page(int rowPerPage, int currentPage, int totalCount, String searchWord, String searchType) {
+		this.rowPerPage = rowPerPage;
+		this.currentPage = currentPage;
+		this.totalCount = totalCount;
+		this.searchWord = searchWord;
+		this.searchType = searchType;
+		this.beginRow = (currentPage - 1) * rowPerPage;
 	}
 }

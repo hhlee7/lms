@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1>앨범 상세 페이지</h1>
-	<a href="albumManagement">뒤로</a>
+	<a href="/admin/albumManagement">뒤로</a>
 	
 	<c:if test="${album != null}">
 		<table border="1">

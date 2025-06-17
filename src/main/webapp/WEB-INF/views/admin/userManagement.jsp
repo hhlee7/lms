@@ -19,8 +19,8 @@
 			url.searchParams.set('page', 1); // 페이지 리셋
 
 			// 검색 조건도 유지하고 싶다면 다음도 함께 포함
-			const searchWord = $('#searchWord').val();
-			const searchType = url.searchParams.get("searchType") || "title";
+			const searchWord = $('#searchName').val();
+			const searchType = url.searchParams.get("searchType") || "all";
 			url.searchParams.set("searchWord", searchWord);
 			url.searchParams.set("searchType", searchType);
 
@@ -37,7 +37,7 @@
 	<h1>회원 관리 페이지 입니다.</h1>
 	${loginUser.userName} 님 환영합니다.
 	<br>
-	<a href="adminMain">[메인 페이지]</a>
+	<a href="/admin/main">[메인 페이지]</a>
 	<div><a href="userInsert">회원 추가</a></div>
 	역할 선택 : <select name="targetRole" id="targetRole">
 		<option id="targetRole" value="all">전체</option>
@@ -68,24 +68,24 @@
 				<th>아이디 생성일</th>
 				<th>자세히</th>
 			</tr>
-			<c:forEach var="user" items="${userList}">
+			<c:forEach var="us" items="${userList}">
 			<tr>
-				<td>${user.userId}</td>
-				<td>${user.roleId}</td>
-				<td>${user.userName}</td>
-				<td>${user.birth}</td>
-				<td>${user.email}</td>
-				<td>${user.phone}</td>
-				<td>${user.address}</td>
-				<td>${user.createdAt}</td>
-				<td><a href="userOne?userId=${user.userId}">자세히</a></td>
+				<td>${us.userId}</td>
+				<td>${us.roleName}</td>
+				<td>${us.userName}</td>
+				<td>${us.birth}</td>
+				<td>${us.email}</td>
+				<td>${us.phone}</td>
+				<td>${us.address}</td>
+				<td>${us.createdAt}</td>
+				<td><a href="userOne?userId=${us.userId}">자세히</a></td>
 			</tr>
 			</c:forEach>
 		</table>
 	</c:if>
 	
 	<!-- 이름 검색 -->
-	이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord}">
+	이름 : <input type="text" name="searchName" id="searchName" value="${searchName}">
 	<button type="button" name="searchBtn" id="searchBtn">검색</button>
 	
 	<!-- 페이지 그룹 이동 및 번호 출력 -->

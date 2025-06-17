@@ -55,12 +55,6 @@
 				return;
 			}
 			
-			if(startDate < today) {
-				alert("개강일은 오늘 날짜 또는 이후여야 합니다.");
-				e.preventDefault();
-				return;
-			}
-			
 			if(endDate == '') {
 				alert("종강일 입력하세요.");
 				e.preventDefault();
@@ -213,6 +207,28 @@
 				<th>종강일</th>
 				<td>
 					<input type="date" name="endDate" id="endDate" value="${lecture.endDate}">
+				</td>
+			</tr>
+			<tr>
+				<th>배차</th>
+				<td>
+					<select name="assignmentId" id="assignmentId">
+						<option value="">없음</option>
+						<c:forEach var="va" items="${vehicleAssignmentList}">
+							<c:choose>
+								<c:when test="${va.assignmentId == vehicleAssignment.assignmentId}">
+									<option value="${va.assignmentId}" selected>
+										${va.assignmentId}(${va.vehicleNo}/${va.driverName}/${va.location})
+									</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${va.assignmentId}">
+										${va.assignmentId}(${va.vehicleNo}/${va.driverName}/${va.location})
+									</option>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
 				</td>
 			</tr>
 		</table>

@@ -23,12 +23,13 @@ import com.example.afterSchoolLms.dto.StudentParent;
 import com.example.afterSchoolLms.dto.TeacherHistory;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
+import com.example.afterSchoolLms.dto.VehiclePassenger;
 
 @Mapper
 public interface AdminMapper {
 	
 	// SELECT
-	List<User> selectUserList(Page page);	// 전체 회원 조회
+	List<Map<String,Object>> selectUserList(Page page);	// 전체 회원 조회
 	int getTotalCount(Page page);			// 전체 회원 데이터 수 조회
 	List<Role> selectRoleList();			// 역할 리스트 조회
 	Map<String,Object> selectUserByUserId(String userId);				// 회원 아이디로 유저 한 명 조회
@@ -43,11 +44,16 @@ public interface AdminMapper {
 	List<Map<String,Object>> selectLectureList();			// 수업 조회
 	List<User> selectDrvierlist();							// 운전기사 리스트 조회
 	
+	List<Map<String,Object>> selectCancelList(Page page);	// 배차 취소 조회
+	int cancelCount(Page page);								// 배차 취소 데이터 수
+	
 	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
 	Map<String,Object> selectAlbumOne(int albumId);			// 앨범 상세 조회
 	
-	List<Qna> selectQnaList();								// Qna 리스트 조회
+	List<Qna> selectQnaList(Page page);						// Qna 리스트 조회
+	int qnaTotalCount(Page page);							// Qna 전체 데이터 수 조회
+	int qnaCount();											// 미응답 Qna 수
 	Qna selectQnaOne(int qnaId);							// Qna 상세 조회
 	
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
@@ -56,8 +62,11 @@ public interface AdminMapper {
 	
 	Vehicle selectVehicleByVehicleId(int vehicleId);							// 차량 아이디로 차량 조회
 	VehicleAssignment selectVehicleAssignmentByVehicleId(int vehicleId);		// 차량 아이디로 배정 조회
+	List<Map<String,Object>> selectPassengerList(Map<String,Object> map);		// 타겟 수업 아이디, 이름으로 학생 배차 조회
 	
 	User selectUserEmail(String email);											// 유저 이메일 중복 검사를 위해 조회
+	
+	List<Map<String,Object>> getPassengerList(Map<String,Object> map);			// 승객 추가를 위한 paymentId 와 탑승 시간, 요일 가져오기 (타겟은 시간, 요일)	
 	
 	// UPDATE
 	int modifyUser(User user);											// 회원 데이터 수정
@@ -78,6 +87,8 @@ public interface AdminMapper {
 	int insertAlbum(Album album);							// 앨범 등록
 	int insertAlbumPhoto(AlbumPhoto albumPhoto);			// 앨범 사진 등록
 
+	int insertPassenger(VehiclePassenger vehiclePassenger);	// 오늘 배차 정보 등록
+	
 	// 과목 조회
 	List<Subject> selectSubjectList();
 	
@@ -94,16 +105,28 @@ public interface AdminMapper {
 	int removeSubject(int subjectId);
 
 	// 수강 신청 내역 조회
-	List<Map<String, Object>> selectStudentEnrollmentList();
+	List<Map<String, Object>> selectStudentEnrollmentList(Page page);
+	
+	// 수강 신청 전체 데이터 수 조회
+	int getTotalStudentEnrollmentList(Page page);
 
 	// 수강료 납부 내역 조회
-	List<Map<String, Object>> selectPaymentList();
+	List<Map<String, Object>> selectPaymentList(Page page);
+	
+	// 수강료 납부 내역 전체 카운트 가져오기
+	int getTotalPaymentListCount(Page page);
 
 	// 수강 신청 취소 내역 조회
-	List<Map<String, Object>> selectEnrollmentCancelList();
+	List<Map<String, Object>> selectEnrollmentCancelList(Page page);
+	
+	// 수강 신청 취소 내역 전체 카운트 가져오기
+	int getTotalenrollmentCancelList(Page page);
 
 	// 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회)
-	List<Map<String, Object>> selectRefundList();
+	List<Map<String, Object>> selectRefundList(Page page);
+	
+	// 환불 내역 전체 카운트 가져오기
+	int getTotalRefundList(Page page);
 
 	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
 	int changeRefund(int enrollmentId);
@@ -111,8 +134,11 @@ public interface AdminMapper {
 	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
 	int removePayment(int enrollmentId);
 
-	// 수업 리스트 조회(전체 수업 조회 (종강 수업 포함))
-	List<Map<String, Object>> selectAllLectureList();
+	// 수업 목록 조회(전체 수업 조회 (종강 수업 포함))
+	List<Map<String, Object>> selectAllLectureList(Page page);
+	
+	// 수업 목록 전체 카운트 가져오기
+	int getTotalLectureList(Page page);
 	
 	// 수업 등록
 	int createLecture(Lecture lecture);
@@ -125,19 +151,31 @@ public interface AdminMapper {
 
 	// 해당 수업의 강사 배정
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);
+	
+	// 등록된 배차 정보 조회
+	List<Map<String, Object>> selectVehicleAssignmentList(Integer lectureId);
+
+	// 해당 수업의 배차 배정
+	int updateVehicleAssignmentByLectureId(VehicleAssignment vehicleAssignment);
 
 	// 해당 lectureId를 가지는 lecture 데이터 조회
 	Lecture selectLectureById(int lectureId);
 
 	// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
 	TeacherAssignment selectTeacherById(int lectureId);
+	
+	// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+	VehicleAssignment selectVehicleAssignmentByLectureId(int lectureId);
 
 	// 수업 정보 수정
 	int modifyLecture(Lecture lecture);
 
 	// 해당 수업의 강사 배정 정보 수정
 	int modifyTeacherAssignment(TeacherAssignment teacherAssignment);
-
+	
+	// 배차 배정 정보 수정 (기존 lectureId null로 변경)
+	int updateVehicleAssignmentLectureIdNull(int assignmentId);
+	
 	// 강의실 관리 페이지에서 강의실 목록 조회
 	List<Map<String, Object>> selectClassroom();
 
@@ -188,4 +226,5 @@ public interface AdminMapper {
 
 	// 강사 평가 목록 조회
 	List<Map<String, Object>> selectTeacherSatisfactionList();
+
 }

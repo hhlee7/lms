@@ -4,27 +4,137 @@
 
 	<!-- ======= SELECT ======= -->
 	<!-- 회원 리스트 조회 (페이징, 검색 가능) -->
-	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.User">
+	<select id="selectUserList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
 		SELECT
-			user_id AS userId,
-			role_id AS roleId,
-			NAME AS userName,
-			email, phone, address,
-			created_at AS createdAt,
-			birth
-		FROM user
-		<where>
-		    <if test="searchType != 'all'">
-		        role_id = #{roleType}
-		    </if>
-		    <if test="searchWord != ''">
-		        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
-		    </if>
-		</where>
-		ORDER BY roleId
+			u.user_id AS userId,
+			u.role_id AS roleId,
+			r.role_name AS roleName,
+			u.NAME AS userName,
+			u.email, phone, address,
+			u.created_at AS createdAt,
+			u.birth
+		FROM (SELECT * FROM user
+			<where>
+			    <if test="searchType != 'all'">
+			        role_id = #{roleType}
+			    </if>
+			    <if test="searchWord != ''">
+			        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+			    </if>
+			</where>
+		) u
+		INNER JOIN role r ON u.role_id = r.role_id
+		ORDER BY u.role_Id
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
+	<!-- 오늘 배차할 학생 데이터 가져오기 (취소 데이터가 있는 것은 제외) -->
+	<select id="getPassengerList" parameterType="map" resultType="map">
+		SELECT
+		    va.assignment_id AS assignmentId,
+		    p.payment_id AS paymentId,
+		    lt.day_of_week AS dayOfWeek,
+		    DATE_SUB(lt.end_time, INTERVAL 10 MINUTE) AS endTime
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
+		LEFT JOIN vehicle_cancel vc 
+		       ON vc.assignment_id = va.assignment_id 
+		      AND DATE(vc.decided_at) = CURDATE()
+		WHERE lt.end_date >= CURDATE()
+		  AND vc.assignment_id IS NULL
+		  
+		  <if test="dayOfWeek != null and dayOfWeek != ''">
+		  	AND lt.day_of_week = #{dayOfWeek}
+		  </if>
+		  
+		  <if test="targetTime != null and targetTime != ''">
+		  	AND DATE_FORMAT(DATE_SUB(lt.end_time, INTERVAL 10 MINUTE), '%H:%i') = #{targetTime}
+		  </if>
+	</select>
+
+	<!-- 배차 취소 리스트 조회 -->
+	<select id="selectCancelList" resultType="map" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT
+			u.name AS studentName,
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			vc.cancel_reason AS cancelReason,
+			vc.decided_at AS decidedAt
+		FROM vehicle_cancel vc
+		INNER JOIN payment p ON vc.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchWord != null and searchWord != ''">
+				AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+			<if test="searchType != null and searchType != ''">
+				AND DATE(vc.decided_at) = #{searchType}
+			</if>
+		</where>
+		ORDER BY decidedAt DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+
+	<!-- 배차 취소 데이터 수 -->
+	<select id="cancelCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+		FROM vehicle_cancel vc
+		INNER JOIN payment p ON vc.payment_id = p.payment_id
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchWord != null and searchWord != ''">
+				AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+			<if test="searchType != null and searchType != ''">
+				AND DATE(vc.decided_at) = #{searchType}
+			</if>
+		</where>
+	</select>
+
+	<!-- 수업 아이디로 학생 배차 조회 -->
+	<select id="selectPassengerList" parameterType="map">
+		SELECT
+			st.user_id AS studentId,
+			st.name AS studentName,
+			vc.vehicle_no AS vehicleNo,
+			dr.user_id AS driverId,
+			dr.name AS driverName,
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			lt.end_time AS endTime
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
+		INNER JOIN (
+			SELECT * FROM lecture 
+			<where>
+				end_date >= CURDATE()
+				<if test="lectureId != null and lectureId != ''">
+					AND lecture_id = #{lectureId}
+				</if>
+			</where>
+		) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
+		INNER JOIN vehicle vc ON va.vehicle_id = vc.vehicle_id
+		INNER JOIN user dr ON va.driver_id = dr.user_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN (
+			SELECT * FROM user
+			<where>
+				<if test="searchName != null and searchName != ''">
+					AND name LIKE CONCAT('%', #{searchName}, '%')
+				</if>
+			</where>
+		) st ON se.student_id = st.user_id
+	</select>
+
 	<!-- 유저 리스트 전체 데이터 가져오기 -->
 	<select id="getTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
 		SELECT COUNT(*) 
@@ -53,6 +163,17 @@
 		</where>
 	</select>
 	
+	<!-- Q&A 전체 데이터 수 조회 -->
+	<select id="qnaTotalCount" parameterType="com.example.afterSchoolLms.dto.Page">
+		SELECT COUNT(*) 
+			FROM qna
+		<where>
+		    <if test="searchWord != ''">
+		        AND question LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
 	<!-- 공지사항 하나 조회 -->
 	<select id="selectNoticeOne" parameterType="map">
 		SELECT 
@@ -73,18 +194,23 @@
 	<!-- 앨범 리스트 조회 -->
 	<select id="selectAlbumList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
 		SELECT
-			ab.album_id AS albumId,
-			ab.lecture_id AS lectureId,
-			sb.name AS subjectName,
-			ab.title AS title,
-			ab.description,
-			DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt,
-			ap.photo_id AS photoId,
-			ap.file_path AS filePath
+		    ab.album_id AS albumId,
+		    ab.lecture_id AS lectureId,
+		    sb.name AS subjectName,
+		    ab.title AS title,
+		    ab.description,
+		    DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt,
+		    ap.photo_id AS photoId,
+		    ap.file_path AS filePath
 		FROM album ab
-		LEFT OUTER JOIN album_photo ap ON ab.album_id = ap.album_id
-		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
-		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN (
+		    SELECT album_id, MIN(photo_id) AS max_photo_id
+		    FROM album_photo
+		    GROUP BY album_id
+		) latest_photo ON ab.album_id = latest_photo.album_id
+		INNER JOIN album_photo ap ON ap.photo_id = latest_photo.max_photo_id
+		INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
 	</select>
 	
 	<!-- 앨범 상세 조회 -->
@@ -111,8 +237,16 @@
 		WHERE album_id = #{albumId};
 	</select>
 	
-	<!-- Q&A 조회 (검색 페이징 해야함)-->
-	<select id="selectQnaList" resultType="com.example.afterSchoolLms.dto.Qna">
+	<!-- 미응답 Q&A 수 -->
+	<select id="qnaCount">
+		SELECT
+			COUNT(*)
+		FROM qna
+		WHERE answer IS NULL;
+	</select>
+	
+	<!-- Q&A 조회 (검색, 페이징)-->
+	<select id="selectQnaList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="com.example.afterSchoolLms.dto.Qna">
 		SELECT
 			qna_id AS qnaId,
 			parent_id AS parentId,
@@ -121,7 +255,23 @@
 			answer,
 			created_at AS createdAt,
 			answered_at AS answeredAt
-		FROM qna;
+		FROM qna
+		<where>
+		    <if test="searchWord != ''">
+		        AND question LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY 
+		    answered_at IS NOT NULL,
+		    CASE 
+		        WHEN answered_at IS NULL THEN created_at
+		        ELSE NULL
+		    END ASC,
+		    CASE 
+		        WHEN answered_at IS NOT NULL THEN created_at
+		        ELSE NULL
+		    END DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
 	<!-- Q&A 상세 조회 -->
@@ -154,6 +304,7 @@
 		       u.name AS teacherName,
 		       cr.name AS classroomName,
 		       cr.location AS location,
+		       lt.lecture_id AS lectureId,
 		       lt.start_time AS startTime,
 		       lt.end_time AS endTime,
 		       lt.day_of_week AS 'dayOfWeek',
@@ -165,6 +316,7 @@
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user u ON ta.teacher_id = u.user_id
 	</select>
+	
 	<!-- 과목 조회 -->
 	<select id="selectSubjectList" resultType="com.example.afterSchoolLms.dto.Subject">
 		SELECT 
@@ -173,6 +325,7 @@
 			description,
 			created_at AS createdAt
 		FROM subject
+		ORDER BY createdAT DESC
 	</select>
 	
 	<!-- 과목 추가 -->
@@ -205,46 +358,136 @@
 		WHERE subject_id = #{subjectId};
 	</delete>
 	
-	<!-- 수강 신청 내역 조회 -->
-	<select id="selectStudentEnrollmentList" resultType="map">
+	<!-- 수강 신청 내역 조회 (페이징, 검색) -->
+	<select id="selectStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
 		SELECT 
 			se.enrollment_id AS enrollmentId,
 			se.student_id AS studentId,
 			u.name AS studentName,
 			sb.name AS subjectName,
-			se.enrolled_at AS enrolledAt,
-			se.status
+			DATE_FORMAT(se.enrolled_at, '%Y-%m-%d %H:%i') AS enrolledAt,
+			CASE se.status
+				WHEN 'PENDING' THEN '납부 대기'
+				WHEN 'PAID' THEN '납부 완료'
+				WHEN 'CANCEL' THEN '신청 취소'
+				WHEN 'REFUNDWAIT' THEN '환불 대기'
+				WHEN 'REFUND' THEN '환불 완료'
+			END AS status
 		FROM student_enrollment se
 		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
 		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY enrolledAt DESC, enrollmentId DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
-	<!-- 수강료 납부 내역 조회 -->
+	<!-- 수강 신청 내역 전체 리스트 수 가져오기 -->
+	<select id="getTotalStudentEnrollmentList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT count(*)
+		FROM student_enrollment se
+		INNER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 수강료 납부 내역 조회 (페이징, 검색) -->
 	<select id="selectPaymentList" resultType="map">
 		SELECT
 			p.payment_id AS paymentId,
 			sb.name AS subjectName,
 			st.name AS studentName,
 			p.amount,
-			p.paid_at AS paidAt
+			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY paidAt DESC, paymentId DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
-	<!-- 수강 신청 취소 내역 조회 -->
-	<select id="selectEnrollmentCancelList">
-		SELECT
-			sb.name AS subjectName,
-			st.name AS studentName,
-			st.phone
-		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCLE') se
+	<!-- 수강료 납부 내역 전체 카운트 가져오기 -->
+	<select id="getTotalPaymentListCount" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT COUNT(*)
+		FROM payment p
+		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 수강 신청 취소 내역 조회 -->
+	<select id="selectEnrollmentCancelList" resultType="map">
+		SELECT
+			se.enrollment_id AS enrollmentId,
+			sb.name AS subjectName,
+			st.name AS studentName,
+			st.phone,
+			se.enrolled_at AS enrolledAt
+		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCEL') se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY enrolledAt DESC, enrollmentId DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 수강 신청 취소 내역 전체 카운트 가져오기 -->
+	<select id="getTotalenrollmentCancelList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT COUNT(*)
+		FROM (SELECT * FROM student_enrollment WHERE status = 'CANCEL') se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user st ON se.student_id = st.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND st.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
 	</select>
 	
 	<!-- 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회) -->
@@ -253,11 +496,42 @@
 			se.enrollment_id AS enrollmentId,
 			u.name AS studentName,
 			sb.name AS subjectName,
-			se.status
-		FROM (SELECT * FROM student_enrollment WHERE STATUS IN ('REFUNDWAIT', 'REFUND')) se
+			CASE se.status
+				WHEN 'REFUNDWAIT' THEN '환불 대기'
+				WHEN 'REFUND' THEN '환불 완료'
+			END AS status,
+			se.enrolled_at AS enrolledAt
+		FROM (SELECT * FROM student_enrollment WHERE status IN ('REFUNDWAIT', 'REFUND')) se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY enrolledAt DESC, enrollmentId DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 환불 내역 전체 카운트 가져오기 -->
+	<select id="getTotalRefundList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT COUNT(*)
+		FROM (SELECT * FROM student_enrollment WHERE status IN ('REFUNDWAIT', 'REFUND')) se
+		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN user u ON se.student_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
 	</select>
 	
 	<!-- 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리 -->
@@ -272,7 +546,7 @@
 		WHERE enrollment_id = #{enrollmentId}
 	</delete>
 	
-	<!-- 수업 리스트 조회 (전체 수업 조회 (종강된 수업 포함))-->
+	<!-- 수업 목록 조회 (전체 수업 조회 (종강된 수업 포함))-->
 	<select id="selectAllLectureList" resultType="map">
 		SELECT
 			lt.lecture_id AS lectureId,
@@ -280,16 +554,51 @@
 			u.name AS teacherName,
 			cr.name AS classroomName,
 			cr.location AS location,
-			lt.start_time AS startTime,
-			lt.end_time AS endTime,
+			DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+			DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
 			lt.day_of_week AS 'dayOfWeek',
 			lt.start_date AS startDate,
-			lt.end_date AS endDate
+			lt.end_date AS endDate,
+			va.assignment_id AS assignmentId,
+			v.vehicle_no AS vehicleNo,
+			d.name AS driverName,
+			va.location AS vehicleLocation
 		FROM lecture lt
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user u ON ta.teacher_id = u.user_id
+		LEFT JOIN vehicle_assignment va ON lt.lecture_id = va.lecture_id
+		LEFT JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+		LEFT JOIN user d ON va.driver_id = d.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
+		ORDER BY startDate DESC, startTime DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 수업 목록 전체 카운트 가져오기 -->
+	<select id="getTotalLectureList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+		SELECT COUNT(*)
+		FROM lecture lt
+		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
+		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
+		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
+		INNER JOIN user u ON ta.teacher_id = u.user_id
+		<where>
+			<if test="searchType != 'all'">
+		        sb.name = #{searchType}
+		    </if>
+		    <if test="searchWord != ''">
+		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		    </if>
+		</where>
 	</select>
 	
 	<!-- 공지사항 리스트 조회 페이징, 검색 -->
@@ -506,6 +815,16 @@
 	</update>
 	
 	<!-- ======= INSERT ======= -->
+	
+	<!-- 배차 정보 등록(스케쥴러) -->
+	<insert id="insertPassenger" parameterType="com.example.afterSchoolLms.dto.VehiclePassenger">
+		INSERT INTO vehicle_passenger(
+			assignment_id, payment_id
+		) VALUES(
+			#{assignmentId}, #{paymentId}
+		)
+	</insert>
+	
 	<!-- 회원 등록 -->
 	<insert id="insertUser" parameterType="com.example.afterSchoolLms.dto.User">
 		INSERT INTO user(
@@ -606,6 +925,35 @@
 		VALUES (#{lectureId}, #{teacherId})
 	</insert>
 	
+	<!-- 등록된 배차 정보 조회 (이미 수업에 배정된 배차 정보는 제외) -->
+	<select id="selectVehicleAssignmentList" resultType="map">
+		SELECT
+			va.assignment_id AS assignmentId,
+			va.lecture_id AS lectureId,
+			v.vehicle_no AS vehicleNo,
+			u.name AS driverName,
+			va.location
+		FROM vehicle_assignment va
+		INNER JOIN vehicle v ON va.vehicle_id = v.vehicle_id
+		INNER JOIN user u ON va.driver_id = u.user_id
+		WHERE
+			<choose>
+				<when test="lectureId != null">
+					va.lecture_id IS null OR va.lecture_id = #{lectureId}
+				</when>
+				<otherwise>
+					va.lecture_id IS null
+				</otherwise>
+			</choose>
+	</select>
+	
+	<!-- 해당 수업의 배차 배정 등록 -->
+	<update id="updateVehicleAssignmentByLectureId" parameterType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		UPDATE vehicle_assignment set
+			lecture_id = #{lectureId}
+		WHERE assignment_id = #{assignmentId}
+	</update>
+	
 	<!-- 해당 lectureId를 가지는 lecture 데이터 조회 -->
 	<select id="selectLectureById" resultType="com.example.afterSchoolLms.dto.Lecture">
 		SELECT
@@ -632,6 +980,14 @@
 		WHERE lecture_id = #{lectureId}
 	</select>
 	
+	<!-- 해당 lectureId를 가지는 vehicleAssignment 데이터 조회 -->
+	<select id="selectVehicleAssignmentByLectureId" resultType="com.example.afterSchoolLms.dto.VehicleAssignment">
+		SELECT
+			assignment_id AS assignmentId
+		FROM vehicle_assignment
+		WHERE lecture_id = #{lectureId}
+	</select>
+	
 	<!-- 수업 정보 수정 -->
 	<update id="modifyLecture" parameterType="com.example.afterSchoolLms.dto.Lecture">
 		UPDATE lecture SET
@@ -647,6 +1003,13 @@
 		UPDATE teacher_assignment SET
 			teacher_id = #{teacherId}
 		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 해당 수업의 배차 배정 정보 수정 시 기존 배차 정보의 lectureId 삭제 (null로 변경) -->
+	<update id="updateVehicleAssignmentLectureIdNull" parameterType="int">
+		UPDATE vehicle_assignment SET
+			lecture_id = NULL
+		WHERE assignment_id = #{assignmentId}
 	</update>
 	
 	<!-- 강의실 관리 페이지에서 강의실 목록 조회 -->
