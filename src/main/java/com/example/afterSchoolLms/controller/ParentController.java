@@ -492,14 +492,14 @@ public class ParentController {
     @GetMapping("/parent/teacherOne")
     public String teacherOne(Model model
           , @RequestParam String teacherId) {
-       log.info(teacherId);
+       //log.info(teacherId);
        Map<String, Object> teacher = parentService.teacherOne(teacherId);
        //log.info(teacher.toString());
        // 강사 평균평점 넣기
        Double rating = parentService.teacherOneRating(teacherId);
        // 강사 리뷰 최신 3개 넣기
        List<Map<String, Object>> reviewList = parentService.teacherOneReview(teacherId);
-       log.info("reviewList: " + reviewList);
+       //log.info("reviewList: " + reviewList);
        model.addAttribute("teacher", teacher);
        model.addAttribute("rating", rating);
        model.addAttribute("reviewList", reviewList);
@@ -551,5 +551,22 @@ public class ParentController {
  		model.addAttribute("album",album);
  		return "/parent/albumOne";
  	}
+ 	
+	//자녀 수업 조회
+	@GetMapping("/parent/studentSubject")
+	public String subjectInfo(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+		}
+		
+		String userId = loginUser.getUserId();
+		List<Map<String, Object>> subject = parentService.getSubjectInfo(userId);
+		model.addAttribute("subject", subject);
+		model.addAttribute("userId", userId);
+		
+		return "/parent/studentSubject";
+	}
 
 }
