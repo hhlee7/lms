@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ include file="/WEB-INF/views/common/topbar.jsp" %>
 <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
 
     <!-- 공통 스타일 & 라이브러리 -->
@@ -36,7 +35,7 @@
     top: 0;
     left: 0;
     height: 100vh;
-    padding: 80px 16px 16px;
+    padding: 32px 16px 16px;
     overflow-y: auto;
   }
 
@@ -54,7 +53,7 @@
   /* 메인 콘텐츠 영역 */
   .main-content {
     margin-left: 260px;
-    padding: 100px 40px;
+    padding: 40px 40px;
   }
 
   /* 테이블 */

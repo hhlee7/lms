@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <style>
@@ -14,12 +15,26 @@
     }
 
     .sidebar {
-      width: 240px;
-      height: 100vh;
-      background-color: #1f1f2e;
-      color: #f1f1f1;
-      padding: 20px;
-    }
+	  width: 240px;
+	  height: 100vh;
+	  background-color: #1f1f2e;
+	  color: #f1f1f1;
+	  padding: 20px;
+	  position: relative; /* 중요! 하단 요소 위치를 위해 */
+	  display: flex;
+	  flex-direction: column;
+	}
+
+	.sidebar-header {
+	  margin-bottom: 30px;
+	}
+	
+	.sidebar-footer {
+	  position: absolute;
+	  bottom: 20px;
+	  left: 20px;
+	  right: 20px;
+	}
 
     .menu-title {
       font-size: 16px;
@@ -104,6 +119,14 @@
 
 <body>
   <nav class="sidebar">
+ 	 <!-- 사이드바 상단 로고+타이틀 -->
+	<div class="sidebar-header mb-4 d-flex align-items-center gap-2">
+	  <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" 
+	       alt="로고" width="28" height="28" class="rounded-circle" />
+	  <span class="fw-bold fs-6">방과후 교육 관리자</span>
+	</div>
+
+  
     <div class="menu-title">관리자 메뉴</div>
 
     <div class="menu-group">
@@ -165,6 +188,13 @@
         <a href="/admin/qnaManagement">Q&A<c:if test="${qnaCount > 0}"><span class="qna-badge">${qnaCount}</span></c:if></a>
       </div>
     </div>
+    
+    <!-- 사이드바 하단 로그아웃 -->
+	<div class="sidebar-footer mt-auto" style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+	  <a href="/logout" class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center gap-2">
+	    <i class="fas fa-right-from-bracket"></i> 로그아웃
+	  </a>
+	</div>
   </nav>
 </body>
 </html>
