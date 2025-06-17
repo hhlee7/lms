@@ -81,7 +81,6 @@
 
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	${loginUser.userName}학생 반갑습니다.
 
 	<!-- ✅ HERO 배너 -->
 	<div class="hero" style="

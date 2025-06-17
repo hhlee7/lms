@@ -34,7 +34,7 @@ public class StudentController {
 	@GetMapping("/student/main")
 	public String main(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		model.addAttribute("loginUser", loginUser);
+		session.setAttribute("loginUser", loginUser);
 		return "/student/main";
 	}
 	
@@ -343,7 +343,7 @@ public class StudentController {
 		
 		// 웹에 노출 가능한 경로로 변환
 	    for (AlbumPhoto photo : photoList) {
-	        photo.setFilePath("/upload/" + photo.getFilePath());
+	        photo.setFilePath("/images/" + photo.getFilePath());
 	    }
 		
 		model.addAttribute("photoList",photoList);
