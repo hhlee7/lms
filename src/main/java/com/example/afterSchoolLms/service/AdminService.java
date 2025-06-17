@@ -27,6 +27,14 @@ import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.dto.VehiclePassenger;
+
+
+import com.example.afterSchoolLms.dto.Attendance;
+import com.example.afterSchoolLms.dto.Classroom;
+import com.example.afterSchoolLms.dto.Lecture;
+import com.example.afterSchoolLms.dto.Material;
+import com.example.afterSchoolLms.dto.Subject;
+import com.example.afterSchoolLms.dto.TeacherAssignment;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -287,6 +295,7 @@ public class AdminService {
 	        }
 	    }
 	}
+	
 	// 과목 조회
 	public List<Subject> getSubjectList() {
 		return adminMapper.selectSubjectList();
@@ -313,23 +322,43 @@ public class AdminService {
 	}
 	
 	// 수강 신청 내역 조회
-	public List<Map<String, Object>> getStudentEnrollmentList() {
-		return adminMapper.selectStudentEnrollmentList();
+	public List<Map<String, Object>> getStudentEnrollmentList(Page page) {
+		return adminMapper.selectStudentEnrollmentList(page);
+	}
+	
+	// 수강 신청 리스트 전체 카운트 가져오기
+	public int getTotalStudentEnrollmentCount(Page page) {
+		return adminMapper.getTotalStudentEnrollmentList(page);
 	}
 
 	// 수강료 납부 내역 조회
-	public List<Map<String, Object>> getPaymentList() {
-		return adminMapper.selectPaymentList();
+	public List<Map<String, Object>> getPaymentList(Page page) {
+		return adminMapper.selectPaymentList(page);
+	}
+	
+	// 수강료 납부 내역 전체 카운트 가져오기
+	public int getTotalPaymentListCount(Page page) {
+		return adminMapper.getTotalPaymentListCount(page);
 	}
 
 	// 수강 신청 취소 내역 조회
-	public List<Map<String, Object>> getEnrollmentCancelList() {
-		return adminMapper.selectEnrollmentCancelList();
+	public List<Map<String, Object>> getEnrollmentCancelList(Page page) {
+		return adminMapper.selectEnrollmentCancelList(page);
+	}
+	
+	// 수강 신청 취소 내역 전체 카운트 가져오기
+	public int getTotalenrollmentCancelList(Page page) {
+		return adminMapper.getTotalenrollmentCancelList(page);
 	}
 
 	// 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회)
-	public List<Map<String, Object>> getRefundList() {
-		return adminMapper.selectRefundList();
+	public List<Map<String, Object>> getRefundList(Page page) {
+		return adminMapper.selectRefundList(page);
+	}
+	
+	// 환불 내역 전체 카운트 가져오기
+	public int getTotalrefundList(Page page) {
+		return adminMapper.getTotalRefundList(page);
 	}
 
 	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
@@ -342,9 +371,14 @@ public class AdminService {
 		return adminMapper.removePayment(enrollmentId);
 	}
 
-	// 수업 리스트 조회
-	public List<Map<String, Object>> getLectureList() {
-		return adminMapper.selectAllLectureList();
+	// 수업 목록 조회
+	public List<Map<String, Object>> getLectureList(Page page) {
+		return adminMapper.selectAllLectureList(page);
+	}
+	
+	// 수업 목록 전체 카운트 가져오기
+	public int getTotalLectureList(Page page) {
+		return adminMapper.getTotalLectureList(page);
 	}
 
 	// 수업 등록
@@ -366,6 +400,16 @@ public class AdminService {
 	public int createTeacherAssignment(TeacherAssignment teacherAssignment) {
 		return adminMapper.createTeacherAssignment(teacherAssignment);
 	}
+	
+	// 등록된 배차 정보 조회
+	public List<Map<String, Object>> getVehicleAssignmentList(Integer lectureId) {
+		return adminMapper.selectVehicleAssignmentList(lectureId);
+	}
+	
+	// 해당 수업의 배차 배정
+	public int updateVehicleAssignmentByLectureId(VehicleAssignment vehicleAssignment) {
+		return adminMapper.updateVehicleAssignmentByLectureId(vehicleAssignment);
+	}
 
 	// 해당 lectureId를 가지는 lecture 데이터 조회
 	public Lecture getLectureById(int lectureId) {
@@ -376,6 +420,11 @@ public class AdminService {
 	public TeacherAssignment getTeacherById(int lectureId) {
 		return adminMapper.selectTeacherById(lectureId);
 	}
+	
+	// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+	public VehicleAssignment getVehicleAssignmentByLectureId(int lectureId) {
+		return adminMapper.selectVehicleAssignmentByLectureId(lectureId);
+	}
 
 	// 수업 정보 수정
 	public int modifyLecture(Lecture lecture) {
@@ -385,6 +434,11 @@ public class AdminService {
 	// 해당 수업의 강사 배정 정보 수정
 	public int modifyTeacherAssignment(TeacherAssignment teacherAssignment) {
 		return adminMapper.modifyTeacherAssignment(teacherAssignment);
+	}
+
+	// 배차 배정 정보 수정 (기존 lectureId null로 변경)
+	public int updateVehicleAssignmentLectureIdNull(int assignmentId) {
+		return adminMapper.updateVehicleAssignmentLectureIdNull(assignmentId);
 	}
 
 	// 강의실 관리 페이지에서 강의실 목록 조회
@@ -471,6 +525,4 @@ public class AdminService {
 	public List<Map<String, Object>> getTeacherSatisfactionList() {
 		return adminMapper.selectTeacherSatisfactionList();
 	}
-
-
 }

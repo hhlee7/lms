@@ -707,33 +707,110 @@ public class AdminController {
 	
 	// 수강 신청 현황 조회 페이지
 	@GetMapping("/admin/studentEnrollmentList")
-	public String studentEnrollmentList(Model model) {
-		List<Map<String, Object>> list = adminService.getStudentEnrollmentList();
+	public String studentEnrollmentList(Model model
+										,@RequestParam(defaultValue = "1") int page
+										,@RequestParam(defaultValue = "10") int size
+										,@RequestParam(defaultValue = "") String searchWord
+										,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalStudentEnrollmentCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		
+		// 수강 신청 리스트
+		List<Map<String, Object>> list = adminService.getStudentEnrollmentList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("studentEnrollmentList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/studentEnrollmentList";
 	}
 	
 	// 수강료 납부 내역 조회 페이지
 	@GetMapping("/admin/paymentList")
-	public String paymentList(Model model) {
-		List<Map<String, Object>> list = adminService.getPaymentList();
+	public String paymentList(Model model
+							,@RequestParam(defaultValue = "1") int page
+							,@RequestParam(defaultValue = "10") int size
+							,@RequestParam(defaultValue = "") String searchWord
+							,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalPaymentListCount(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수강료 납부 리스트
+		List<Map<String, Object>> list = adminService.getPaymentList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("paymentList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/paymentList";
 	}
 	
 	// 수강 신청 취소 내역 조회 페이지
 	@GetMapping("/admin/enrollmentCancelList")
-	public String enrollmentCancelList(Model model) {
-		List<Map<String, Object>> list = adminService.getEnrollmentCancelList();
+	public String enrollmentCancelList(Model model
+										,@RequestParam(defaultValue = "1") int page
+										,@RequestParam(defaultValue = "10") int size
+										,@RequestParam(defaultValue = "") String searchWord
+										,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalenrollmentCancelList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수강 신청 취소 리스트
+		List<Map<String, Object>> list = adminService.getEnrollmentCancelList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("enrollmentCancelList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/enrollmentCancelList";
 	}
 	
 	// 환불 내역 조회 (수강 신청의 status가 'REFUNDWAIT' or 'REFUND'인 데이터만 조회)
 	@GetMapping("/admin/refundList")
-	public String refundList(Model model) {
-		List<Map<String, Object>> list = adminService.getRefundList();
+	public String refundList(Model model
+							,@RequestParam(defaultValue = "1") int page
+							,@RequestParam(defaultValue = "10") int size
+							,@RequestParam(defaultValue = "") String searchWord
+							,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalrefundList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 환불 리스트
+		List<Map<String, Object>> list = adminService.getRefundList(paging);
+		// 과목 리스트
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("refundList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/refundList";
 	}
 	
@@ -761,10 +838,28 @@ public class AdminController {
 	
 	// 수업 관리 페이지
 	@GetMapping("/admin/lectureManagement")
-	public String lectureManagement(Model model) {
-		// 수업 리스트 조회
-		List<Map<String, Object>> list = adminService.getLectureList();
+	public String lectureManagement(Model model
+									,@RequestParam(defaultValue = "1") int page
+									,@RequestParam(defaultValue = "10") int size
+									,@RequestParam(defaultValue = "") String searchWord
+									,@RequestParam(defaultValue = "all") String searchType) {
+		// 페이징
+		Page paging = new Page(size, page, 0, searchWord, searchType);
+		
+		// 전체 데이터 수 구하기
+		int totalCount = adminService.getTotalLectureList(paging);
+		paging.setTotalCount(totalCount);
+		
+		// 수업 목록 조회
+		List<Map<String, Object>> list = adminService.getLectureList(paging);
+		// 과목 목록 조회
+		List<Subject> subjectList = adminService.getSubjectList();
+		
+		// 모델에 값 전달
 		model.addAttribute("lectureList", list);
+		model.addAttribute("subjectList", subjectList);
+		model.addAttribute("page", paging);
+		
 		return "admin/lectureManagement";
 	}
 	
@@ -783,12 +878,16 @@ public class AdminController {
 		List<User> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
+		// 등록된 배차 정보 조회 (이미 수업에 배정된 배차 정보는 제외)
+		List<Map<String, Object>> vehicleAssignmentList = adminService.getVehicleAssignmentList(null);
+		model.addAttribute("vehicleAssignmentList", vehicleAssignmentList);
+		
 		return "admin/createLecture";
 	}
 	
 	// 수업 등록
 	@PostMapping("/admin/createLecture")
-	public String createLecture(Lecture lecture, TeacherAssignment teacherAssignment) {
+	public String createLecture(Lecture lecture, TeacherAssignment teacherAssignment, @RequestParam(required = false) Integer assignmentId) {
 		// 수업 등록 폼에서 전달된 데이터 확인용 출력
 		log.info(lecture.toString());
 		
@@ -814,6 +913,21 @@ public class AdminController {
 			return "redirect:/admin/lectureManagement";
 		}
 		
+		// 배차 정보가 있을 경우에만 연결
+		if(assignmentId != null) {
+			VehicleAssignment vehicleAssignment = new VehicleAssignment();
+			vehicleAssignment.setLectureId(lecture.getLectureId());
+			vehicleAssignment.setAssignmentId(assignmentId);
+			
+			// DB에 배차 배정 정보 등록
+			int row3 = adminService.updateVehicleAssignmentByLectureId(vehicleAssignment);
+			
+			if(row3 != 1) {
+				log.info("배차 배정 update 실패");
+				return "redirect:/admin/lectureManagement";
+			}
+		}
+		
 		return "redirect:/admin/lectureManagement";
 	}
 	
@@ -832,6 +946,10 @@ public class AdminController {
 		List<User> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
+		// 등록된 배차 정보 조회 (현재 수업에 배정된 배차 정보 포함 / 다른 수업에 배정된 배차 정보는 제외)
+		List<Map<String, Object>> vehicleAssignmentList = adminService.getVehicleAssignmentList(lectureId);
+		model.addAttribute("vehicleAssignmentList", vehicleAssignmentList);
+		
 		// 해당 lectureId를 가지는 lecture 데이터 조회
 		Lecture lecture = adminService.getLectureById(lectureId);
 		model.addAttribute("lecture", lecture);
@@ -839,12 +957,19 @@ public class AdminController {
 		// 해당 lectureId를 가지는 teacherAssignment 데이터 조회
 		TeacherAssignment teacherAssignment = adminService.getTeacherById(lecture.getLectureId());
 		model.addAttribute("teacherId", teacherAssignment);
+		
+		// 해당 lectureId를 가지는 vehicleAssignment 데이터 조회
+		VehicleAssignment vehicleAssignment = adminService.getVehicleAssignmentByLectureId(lecture.getLectureId());
+		model.addAttribute("vehicleAssignment", vehicleAssignment);
+		
 		return "admin/modifyLecture";
 	}
 	
 	// 수업 수정
 	@PostMapping("/admin/modifyLecture")
-	public String modifyLecture(Lecture lecture, @RequestParam String teacherId) {
+	public String modifyLecture(Lecture lecture,
+								@RequestParam String teacherId,
+								@RequestParam(required = false) Integer assignmentId) {
 		
 		// 수업 정보 수정
 		int row = adminService.modifyLecture(lecture);
@@ -863,6 +988,26 @@ public class AdminController {
 		if(row2 != 1) {
 			log.info("강사 배정 정보 update error");
 			return "redirect:/admin/lectureManagement";
+		}
+		
+		// 기존 수업에 배정된 assignmentId 조회 및 연결 해제
+		VehicleAssignment preVehicleAssignment = adminService.getVehicleAssignmentByLectureId(lecture.getLectureId());
+		if(preVehicleAssignment != null) {
+			if(adminService.updateVehicleAssignmentLectureIdNull(preVehicleAssignment.getAssignmentId()) != 1) {
+				log.info("기존 배차 연결 해제 실패");
+				return "redirect:/admin/lectureManagement";
+			}
+		}
+		
+		// 새로운 배차가 선택된 경우에만 연결
+		if(assignmentId != null) {
+			VehicleAssignment vehicleAssignment = new VehicleAssignment();
+			vehicleAssignment.setLectureId(lecture.getLectureId());
+			vehicleAssignment.setAssignmentId(assignmentId);
+			if(adminService.updateVehicleAssignmentByLectureId(vehicleAssignment) != 1) {
+				log.info("새 배차 연결 실패");
+				return "redirect:/admin/lectureManagement";
+			}
 		}
 		
 		return "redirect:/admin/lectureManagement";
