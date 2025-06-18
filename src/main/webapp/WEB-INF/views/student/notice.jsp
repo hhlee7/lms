@@ -1,57 +1,169 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>공지사항 조회</title>
+<title>공지사항</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  body {
+    background-color: #f9f9fb;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .notice-section {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 40px 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  }
+
+  .notice-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #222;
+  }
+
+  .notice-header p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 30px;
+  }
+
+  .notice-table th {
+    background-color: #f2f4f8;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .notice-table tbody tr:hover {
+    background-color: #f8f9ff;
+    transition: background-color 0.3s ease;
+  }
+
+  .notice-table td a {
+    text-decoration: none;
+    color: #222;
+  }
+
+  .notice-table td a:hover {
+    text-decoration: underline;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+  }
+
+  .pagination .page-link {
+    color: #007bff;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #ccc;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+
+  .total-count {
+    text-align: right;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 0.95rem;
+  }
+</style>
 </head>
 <body>
-	<jsp:include page="header.jsp"></jsp:include>
-	<h1>공지사항</h1>
-   	<table border="1">
-		<tr>
-        	<th>번호</th>
-			<th>제목</th>
-        	<th>작성자</th>
-        	<th>작성일</th>
-      	</tr>
-      	<c:forEach var="notice" items="${noticeList}">
-			<tr>
-				<td>${notice.noticeId}</td>
-            	<td><a href="/student/noticeOne?noticeId=${notice.noticeId}">${notice.title}</a></td>
-            	<td>관리자</td>
-            	<td>${notice.createdAt}</td>
-			</tr>
-		</c:forEach>
-	</table>
-   
-	<c:set var="startPage" value="${page - 2 < 1 ? 1 : page - 2}" />
-	<c:set var="endPage" value="${page + 2 > totalPage ? totalPage : page + 2}" />
-	
-	<!-- 처음 버튼 -->
-	<c:if test="${page > 1}">
-	    <a href="?page=1&size=${size}">처음</a>
-	    <a href="?page=${page - 1}&size=${size}">이전</a>
-	</c:if>
-	
-	<!-- 페이지 번호들 -->
-	<c:forEach var="i" begin="${startPage}" end="${endPage}">
-	    <c:choose>
-	        <c:when test="${i == page}">
-	            <strong>${i}</strong>
-	        </c:when>
-	        <c:otherwise>
-	            <a href="?page=${i}&size=${size}">${i}</a>
-	        </c:otherwise>
-	    </c:choose>
-	</c:forEach>
-	
-	<!-- 다음, 끝 버튼 -->
-	<c:if test="${page < totalPage}">
-	    <a href="?page=${page + 1}&size=${size}">다음</a>
-	    <a href="?page=${totalPage}&size=${size}">끝</a>
-	</c:if>
+
+<jsp:include page="header.jsp" />
+
+<div class="notice-section">
+  <div class="notice-header text-center">
+    <h2>공지사항</h2>
+    <p>학교에서 전하는 최신 소식을 확인하세요.</p>
+  </div>
+
+  <div class="total-count">
+    총 <strong>${totalCount}</strong>건
+  </div>
+
+<table class="table table-hover notice-table align-middle">
+  <thead>
+    <tr>
+      <th style="width: 10%;">번호</th>
+      <th class="text-center">제목</th>
+      <th style="width: 15%;">작성자</th>
+      <th style="width: 20%;">작성일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <c:forEach var="notice" items="${noticeList}">
+      <tr>
+        <td class="text-center">${notice.noticeId}</td>
+        <td class="text-center">
+		  <a href="/student/noticeOne?noticeId=${notice.noticeId}" 
+		     class="fw-semibold text-dark text-decoration-none">
+		    ${notice.title}
+		  </a>
+		</td>
+        <td class="text-center">관리자</td>
+        <td class="text-center">${notice.createdAt}</td>
+      </tr>
+    </c:forEach>
+  </tbody>
+</table>
+
+
+  <!-- 페이지네이션 계산 -->
+  <c:if test="${totalPage <= 5}">
+    <c:set var="startPage" value="1"/>
+    <c:set var="endPage" value="${totalPage}"/>
+  </c:if>
+  <c:if test="${totalPage > 5}">
+    <c:set var="startPage" value="${page - 2}"/>
+    <c:set var="endPage" value="${page + 2}"/>
+    <c:if test="${startPage < 1}">
+      <c:set var="startPage" value="1"/>
+      <c:set var="endPage" value="5"/>
+    </c:if>
+    <c:if test="${endPage > totalPage}">
+      <c:set var="endPage" value="${totalPage}"/>
+      <c:set var="startPage" value="${totalPage - 4 < 1 ? 1 : totalPage - 4}"/>
+    </c:if>
+  </c:if>
+
+  <!-- 페이지네이션 UI -->
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item ${page == 1 ? 'disabled' : ''}">
+        <a class="page-link" href="?page=1&size=${size}">처음</a>
+      </li>
+      <li class="page-item ${page == 1 ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${page - 1}&size=${size}">이전</a>
+      </li>
+      <c:forEach var="i" begin="${startPage}" end="${endPage}">
+        <li class="page-item ${i == page ? 'active' : ''}">
+          <a class="page-link" href="?page=${i}&size=${size}">${i}</a>
+        </li>
+      </c:forEach>
+      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${page + 1}&size=${size}">다음</a>
+      </li>
+      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${totalPage}&size=${size}">끝</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
