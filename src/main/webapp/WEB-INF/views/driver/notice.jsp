@@ -118,7 +118,7 @@
       <tr>
         <td class="text-center">${notice.noticeId}</td>
         <td class="text-center">
-		  <a href="/student/noticeOne?noticeId=${notice.noticeId}" 
+		  <a href="/driver/noticeOne?noticeId=${notice.noticeId}" 
 		     class="fw-semibold text-dark text-decoration-none">
 		    ${notice.title}
 		  </a>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.User;
 
 @Mapper
@@ -19,6 +20,15 @@ public interface DriverMapper {
 	// 비밀번호 변경
 	int updatePw(String id, String currentPw, String updatePw);
 	
+	// 공지사항 총 개수
+	int totalCount();
+	
+	// 전체 공지사항
+	List<Notice> selectNotice(int beginRow, int size);
+	
+	// 공지사항 하나
+	Notice selectNoticeOne(int noticeId);
+		
 	// 배차 조회
 	List<Map<String, Object>> selectDispatch(String userId);
 	

@@ -99,7 +99,18 @@
 							$('#updatePw2').val('');
 							return;
 						}
-						$('#updateForm').submit();
+						
+					 	const confirmChange = confirm("비밀번호를 변경하시겠습니까?");
+	                    	if (confirmChange) {
+	                        	$('#updateForm').submit();  // 예 -> 전송
+	                    	} else {
+	                        	alert("비밀번호 변경이 취소되었습니다.");  // 아니오 -> 메시지 출력만 하고 멈춤
+	                        	$('#currentPw').val('');
+	                        	$('#updatePw').val('');
+								$('#updatePw2').val('');
+	                        	return;
+	                    	}
+		                    
 					} else {
 						alert('현재 비밀번호가 틀렸습니다.');
 						$('#currentPw').val('');
