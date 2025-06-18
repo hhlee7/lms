@@ -130,6 +130,7 @@
 	<div><a href="/admin/materialManagement">교보재 관리</a></div>
 	<div><a href="/admin/materialRequestManagement">교보재 요청 관리</a></div>
 	<div><a href="/admin/attendanceManagement">출결 관리</a></div>
-	<div><a href="/admin/satisfactionList">만족도 평가 및 리뷰 조회</a></div>
+	<div><a href="/admin/lectureSatisfactionList">수업 만족도 평가 및 리뷰 조회</a></div>
+	<div><a href="/admin/teacherSatisfactionList">강사 만족도 평가 조회</a></div>
 </body>
 </html>

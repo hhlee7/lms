@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +35,7 @@
 <body>
 	<h1>수강료 납부 내역</h1>
 	
-	<div><a href="/adminMain">[메인 페이지]</a></div>
+	<div><a href="/admin/main">[메인 페이지]</a></div>
 	
 	과목 선택 :
 	<select name="targetSubject" id="targetSubject">
@@ -77,7 +79,7 @@
 						<td>${list.paymentId}</td>
 						<td>${list.subjectName}</td>
 						<td>${list.studentName}</td>
-						<td>${list.amount}</td>
+						<td><fmt:formatNumber value="${list.amount}" type="number" />원</td>
 						<td>${list.paidAt}</td>
 					</tr>
 				</c:forEach>

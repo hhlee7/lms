@@ -4,39 +4,134 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>classroomManagement</title>
+<title>강의실 관리</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function() {
+		function targetSearch(){
+			const selectedSubject = $('#targetSubject').val();
+			const searchWord = $('#searchWord').val();
+			const url = new URL(window.location.href);
+			
+			// 검색 조건 설정
+			url.searchParams.set('searchType', selectedSubject);
+			url.searchParams.set("searchWord", searchWord);
+			url.searchParams.set('page', 1); // 페이지 리셋
+
+			// 새 주소로 이동
+			location.href = url.toString();
+		}
+
+		// 과목 select 박스 변경 시
+		$('#targetSubject').change(targetSearch);
+		
+		// 검색 버튼 클릭 시
+		$('#searchBtn').click(targetSearch);
+	});
+</script>
 </head>
 <body>
 	<h1>강의실 관리</h1>
 	
 	<h2>강의실 목록</h2>
-	<table border="1">
-		<tr>
-			<th>번호</th>
-			<th>이름</th>
-			<th>위치</th>
-			<th>수용 인원</th>
-			<th>현재 배정 과목</th>
-			<th>현재 배정 강사</th>
-			<th>강의 시작 시간</th>
-			<th>강의 종료 시간</th>
-			<th>수정</th>
-		</tr>
-	<c:forEach var="list" items="${classroomList}">
-		<tr>
-			<td>${list.classroomId}</td>
-			<td>${list.classroomName}</td>
-			<td>${list.location}</td>
-			<td>${list.capacity}</td>
-			<td>${list.subjectName}</td>
-			<td>${list.teacherName}</td>
-			<td>${list.startTime}</td>
-			<td>${list.endTime}</td>
-			<td><a href="/admin/modifyClassroom?classroomId=${list.classroomId}">수정</a></td>
-		</tr>
-	</c:forEach>
-	</table>
 	
-	<a href="/admin/createClassroom">강의실 등록</a>
+	<div><a href="/admin/main">[메인 페이지]</a></div>
+	
+	<div><a href="/admin/createClassroom">강의실 등록</a></div>
+	
+	과목 선택 :
+	<select name="targetSubject" id="targetSubject">
+		<option value="all">전체</option>
+		<c:if test="${subjectList != null}">
+			<c:forEach var="subject" items="${subjectList}">
+				<c:choose>
+					<c:when test="${param.searchType == subject.subjectName}">
+						<option value="${subject.subjectName}" selected>
+							${subject.subjectName}
+						</option>
+					</c:when>
+					<c:otherwise>
+						<option value="${subject.subjectName}">
+							${subject.subjectName}
+						</option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</c:if>
+	</select>
+	
+	<br>
+	
+	<!-- 강의실 목록 조회 -->
+	<c:choose>
+		<c:when test="${empty classroomList}">
+			<p>조회된 강의실 목록이 없습니다.</p>
+		</c:when>
+		<c:otherwise>
+			<table border="1">
+				<tr>
+					<th>번호</th>
+					<th>이름</th>
+					<th>위치</th>
+					<th>수용 인원</th>
+					<th>배정 과목</th>
+					<th>배정 강사</th>
+					<th>수업 시작 시간</th>
+					<th>수업 종료 시간</th>
+					<th>요일</th>
+					<th>개강일</th>
+					<th>종강일</th>
+					<th>수정</th>
+				</tr>
+			<c:forEach var="list" items="${classroomList}">
+				<tr>
+					<td>${list.classroomId}</td>
+					<td>${list.classroomName}</td>
+					<td>${list.location}</td>
+					<td>${list.capacity}</td>
+					<td>${list.subjectName}</td>
+					<td>${list.teacherName}</td>
+					<td>${list.startTime}</td>
+					<td>${list.endTime}</td>
+					<td>${list.dayOfWeek}</td>
+					<td>${list.startDate}</td>
+					<td>${list.endDate}</td>
+					<td><a href="/admin/modifyClassroom?classroomId=${list.classroomId}">수정</a></td>
+				</tr>
+			</c:forEach>
+			</table>
+		</c:otherwise>
+	</c:choose>
+	
+	<!-- 강사 이름 검색 -->
+	<div>
+		강사 이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord != null ? page.searchWord : ''}">
+		<button type="button" name="searchBtn" id="searchBtn">검색</button>
+	</div>
+	
+	<!-- 페이지 그룹 이동 및 번호 출력 -->
+	<div>
+		<!-- 이전 그룹 이동 -->
+		<c:if test="${page.prevGroup}">
+			<a href="/admin/classroomManagement?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
+		</c:if>
+	
+		<!-- 페이지 번호 리스트 -->
+		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+			<c:choose>
+				<c:when test="${i == page.currentPage}">
+					<strong>[${i}]</strong>
+				</c:when>
+				<c:otherwise>
+					<a href="/admin/classroomManagement?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	
+		<!-- 다음 그룹 이동 -->
+		<c:if test="${page.nextGroup}">
+			<a href="/admin/classroomManagement?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
+		</c:if>
+	</div>
 </body>
 </html>

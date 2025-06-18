@@ -34,7 +34,7 @@
 	<h1>수업 관리</h1>
 	
 	<h2>수업 목록</h2>
-	<div><a href="/adminMain">[메인 페이지]</a></div>
+	<div><a href="/admin/main">[메인 페이지]</a></div>
 	
 	<div><a href="/admin/createLecture">수업 등록</a></div>
 	
