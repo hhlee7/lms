@@ -5,67 +5,104 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>수업 만족도 평가 페이지</title>
+<title>수업 만족도 평가</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
         font-family: 'Segoe UI', sans-serif;
-        margin: 0;
         background-color: #f5f6fa;
-        color: #333;
+        margin: 0;
     }
 
     .container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     h1 {
-        font-size: 28px;
-        color: #007acc;
-        margin-bottom: 30px;
         text-align: center;
+        color: #007acc;
+        margin-bottom: 40px;
+        font-weight: bold;
     }
 
     .evaluation-card {
-        background-color: #f0f4f8;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        background-color: #f9fbfd;
+        transition: box-shadow 0.2s ease;
     }
 
     .evaluation-card:hover {
-        transform: translateY(-3px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    .evaluation-card h2 {
-        margin-top: 0;
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .card-header h2 {
+        font-size: 20px;
         color: #007acc;
-        font-size: 22px;
+        margin: 0;
+    }
+
+    .status-badge {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+
+    .done {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .not-done {
+        background-color: #f8d7da;
+        color: #721c24;
     }
 
     .lecture-info p {
-        margin: 6px 0;
-        line-height: 1.4;
+        margin: 5px 0;
+        font-size: 14px;
+        color: #444;
     }
-
-    .actions {
-        margin-top: 15px;
-    }
+    
+    lecture-info {
+	    margin-bottom: 20px;
+	}
+	
+	.lecture-info p {
+	    margin: 10px 0;
+	    font-size: 14px;
+	    color: #444;
+	}
+	
+	.actions {
+	    display: flex;
+	    flex-wrap: wrap;
+	    gap: 10px;
+	    margin-top: 10px;
+	}
 
     .actions a {
-        display: inline-block;
         margin-right: 10px;
-        padding: 8px 14px;
+        padding: 7px 14px;
         background-color: #007acc;
         color: white;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 6px;
         font-size: 14px;
         transition: background-color 0.2s ease;
     }
@@ -74,71 +111,82 @@
         background-color: #005f99;
     }
 
-    .actions span {
-        font-size: 14px;
-        color: #555;
-        margin-right: 10px;
+    .actions .disabled {
+        background-color: #cccccc;
+        color: #666;
+        cursor: not-allowed;
+        pointer-events: none;
     }
 
-    .actions .disabled {
-        color: gray;
-        cursor: not-allowed;
+    .actions span {
+        font-size: 14px;
+        margin-right: 10px;
     }
 </style>
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
+
 	<div class="container">
-        <h1>만족도 평가</h1>
+        <h1>📝 수업 만족도 평가</h1>
 
         <c:forEach var="lecture" items="${lectureDoneList}">
-            <div class="evaluation-card">
-                <h2>${lecture.subjectName}</h2>
-                <div class="lecture-info">
-                    <p><strong>강사명:</strong> ${lecture.teacherName}</p>
-                    <p><strong>요일:</strong> ${lecture.dayOfWeek}</p>
-                    <p><strong>시간:</strong> ${lecture.startTime} ~ ${lecture.endTime}</p>
-                    <p><strong>강의실:</strong> ${lecture.classroomName}</p>
-                    <p><strong>위치:</strong> ${lecture.classroomLocation}</p>
-                    <p><strong>수업 기간:</strong> ${lecture.startDate} ~ ${lecture.endDate}</p>
-                </div>
+	        <div class="evaluation-card">
+	            <div class="card-header">
+	                <h2>📘 ${lecture.subjectName}</h2>
+	                <c:choose>
+	                    <c:when test="${not empty lecture.satisfactionId}">
+	                        <span class="status-badge done">✅ 평가 완료</span>
+	                    </c:when>
+	                    <c:otherwise>
+	                        <span class="status-badge not-done">⚠️ 미평가</span>
+	                    </c:otherwise>
+	                </c:choose>
+	            </div>
 
-                <div class="actions">
-                    <c:choose>
-                        <c:when test="${not empty lecture.satisfactionId}">
-                            <span>✅ 만족도 평가 완료</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
-                                만족도 평가
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
+	            <div class="lecture-info">
+	                <p>👨‍🏫 <strong>강사:</strong> ${lecture.teacherName}</p>
+	                <p>🗓️ <strong>요일:</strong> ${lecture.dayOfWeek}</p>
+	                <p>⏰ <strong>시간:</strong> ${lecture.startTime} ~ ${lecture.endTime}</p>
+	                <p>📅 <strong>수업 기간:</strong> ${lecture.startDate} ~ ${lecture.endDate}</p>
+	            </div>
 
-                    <c:choose>
-                        <c:when test="${not empty lecture.satisfactionId}">
-                            <c:choose>
-                                <c:when test="${not empty lecture.reviewId}">
-                                    <span>📝 리뷰 작성 완료</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="/student/review?satisfactionId=${lecture.satisfactionId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
-                                        리뷰 작성
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="disabled">리뷰 작성 불가</span>
-                        </c:otherwise>
-                    </c:choose>
+	            <div class="actions">
+	                <c:choose>
+	                    <c:when test="${not empty lecture.satisfactionId}">
+	                        <span>✔️ 만족도 평가 완료</span>
+	                    </c:when>
+	                    <c:otherwise>
+	                        <a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
+	                            ✍️ 평가하기
+	                        </a>
+	                    </c:otherwise>
+	                </c:choose>
 
-                    <c:if test="${not empty lecture.satisfactionId}">
-                        <a href="/student/history?paymentId=${lecture.paymentId}">내 작성내역 보기</a>
-                    </c:if>
-                </div>
-            </div>
-        </c:forEach>
+	                <c:choose>
+	                    <c:when test="${not empty lecture.satisfactionId}">
+	                        <c:choose>
+	                            <c:when test="${not empty lecture.reviewId}">
+	                                <span>📝 리뷰 완료</span>
+	                            </c:when>
+	                            <c:otherwise>
+	                                <a href="/student/review?satisfactionId=${lecture.satisfactionId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
+	                                    💬 리뷰 쓰기
+	                                </a>
+	                            </c:otherwise>
+	                        </c:choose>
+	                    </c:when>
+	                    <c:otherwise>
+	                        <a class="disabled">리뷰 작성 불가</a>
+	                    </c:otherwise>
+	                </c:choose>
+
+	                <c:if test="${not empty lecture.satisfactionId}">
+	                    <a href="/student/history?paymentId=${lecture.paymentId}">📄 내 작성 내역</a>
+	                </c:if>
+	            </div>
+	        </div>
+	    </c:forEach>
     </div>
 </body>
 </html>
