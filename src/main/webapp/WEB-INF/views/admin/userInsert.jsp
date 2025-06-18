@@ -1,15 +1,155 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>회원 추가</title>
-<!-- jQuery CDN (페이지에 없으면 추가) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8">
+  <title>회원 추가</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .navbar {
+      background-color: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      z-index: 1050;
+    }
+    .sidebar {
+      background-color: #111827;
+      color: #f9fafb;
+      width: 240px;
+      position: fixed;
+      height: 100vh;
+      padding: 80px 16px 16px;
+      overflow-y: auto;
+    }
+    .sidebar .nav-link {
+      color: #d1d5db;
+      border-radius: 0.375rem;
+    }
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background-color: #1f2937;
+      color: #fff !important;
+    }
+    .main-content {
+      margin-left: 260px;
+      padding: 100px 40px;
+    }
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #111827; /* 검정색으로 변경 */
+    }
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+    .form-control {
+      border-radius: 10px;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .btn-primary {
+      background-color: #3b82f6;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+    #checkEmailBtn {
+      background-color: #3b82f6; /* 파란색 */
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: white;
+      margin-left: 0; /* 왼쪽으로 붙임 */
+      margin-top: 6px;
+    }
+    .email-input-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .error {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 4px;
+      display: block;
+    }
+    #roleFieldsArea .form-group {
+      margin-top: 16px;
+    }
+    #roleFieldsArea .form-label {
+      display: block;
+      margin-bottom: 6px;
+    }
+    #studentId {
+      width: 100%;
+      border-radius: 10px;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+    }
+    #postcode,
+    #roadAddress,
+    #jibunAddress,
+    #detailAddress,
+    #extraAddress {
+      width: 100%;
+      border-radius: 10px;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 8px;
+    }
+    #fullAddress {
+      display: none;
+    }
+    #guide {
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+    input[type="button"] {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    select.role-select {
+      border-radius: 10px;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      width: 100%;
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function () {
 
@@ -17,15 +157,13 @@
 		$('#roleId').change(function () {
 			let selectedRole = $(this).val();
 			let roleFieldsHtml = '';
-			if (selectedRole === '4') {	// 학부모는 자녀 ID 기입란 추가
+			if (selectedRole === '4') {
 				roleFieldsHtml = `
-					<tr>
-						<td>자녀 ID</td>
-						<td><input type="text" name="studentId" id="studentId" /></td>
-					</tr>`;
+				  <div class="form-group">
+				    <label class="form-label">자녀 ID</label>
+				    <input type="text" name="studentId" id="studentId" />
+				  </div>`;
 			}
-	
-			// 기존 내용 지우고 새로 추가
 			$('#roleFieldsArea').html(roleFieldsHtml);
 		});
 		
@@ -108,85 +246,68 @@
 </script>
 </head>
 <body>
-	<h1>관리자 회원 추가 페이지</h1>
-	<form:form action="userInsert" method="post" modelAttribute="user">
-		<table border="1">
-			<tr>
-				<td>역할</td>
-				<td>
-					<form:select path="roleId" id="roleId" cssClass="role-select">
+
+<main class="main-content">
+  <div class="container">
+    <h1>회원 추가</h1>
+        <form:form action="userInsert" method="post" modelAttribute="user">
+      <div class="form-group">
+        <label class="form-label">역할</label>
+        <form:select path="roleId" id="roleId" cssClass="role-select">
 					    <form:options items="${roleList}" itemValue="roleId" itemLabel="roleName" />
 					</form:select>
 					<form:errors path="roleId" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>이메일</td>
-				<td>
-					<form:input path="email" />
-					<button type="button" id="checkEmailBtn">중복 검사</button>
-			        <span id="checkResult" style="color:red; margin-left:10px;"></span>
-					<form:errors path="email" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>아이디</td>
-				<td>
-					<form:input path="userId" />
-			        <form:errors path="userId" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>비밀번호</td>
-				<td>
-					<form:password path="password" value="${uuid}"/>
-					<form:errors path="password" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>이름</td>
-				<td>
-					<form:input path="userName" />
-					<form:errors path="userName" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>전화번호</td>
-				<td>
-					<form:input path="phone" />
-					<form:errors path="phone" cssClass="error" />
-					<span id="phoneError"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>주소</td>
-				<td>
-					<input type="text" name="postcode" id="postcode" placeholder="우편번호">
-					<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-					<input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
-					<input type="text" name="jibunAddress" id="jibunAddress" placeholder="지번주소">
-					<span id="guide" style="color:#999;display:none"></span>
-					<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소">
-					<input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목">
-					<input type="hidden" name="address" id="fullAddress">
-					<form:errors path="address" cssClass="error" />
-				</td>
-			</tr>
-			<tr>
-				<td>생년월일</td>
-				<td>
-					<form:input type="date" path="birth" />
-					<form:errors path="birth" cssClass="error" />
-				</td>
-			</tr>
-			<tbody id="roleFieldsArea"></tbody>
-		</table>
-		<button type="submit" id="insertBtn" name="insertBtn">추가</button>
-	</form:form>
-	<a href="userManagement">뒤로</a>
-	
-	
-	<!-- 카카오 주소API 호출을 위한 CDN주소 -->
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">이메일</label>
+        <div class="email-input-group">
+          <form:input path="email" cssClass="form-control" id="email" />
+          <button type="button" id="checkEmailBtn">중복 검사</button>
+        </div>
+        <span id="checkResult"></span>
+        <form:errors path="email" cssClass="error" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">아이디</label>
+        <form:input path="userId" cssClass="form-control" />
+        <form:errors path="userId" cssClass="error" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">비밀번호</label>
+        <form:password path="password" cssClass="form-control" value="${uuid}" />
+        <form:errors path="password" cssClass="error" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">이름</label>
+        <form:input path="userName" cssClass="form-control" />
+        <form:errors path="userName" cssClass="error" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">전화번호</label>
+        <form:input path="phone" id="phone" cssClass="form-control" />
+        <form:errors path="phone" cssClass="error" />
+        <span id="phoneError" class="error"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">주소</label>
+		<input type="text" name="postcode" id="postcode" placeholder="우편번호">
+		<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+		<input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
+		<input type="text" name="jibunAddress" id="jibunAddress" placeholder="지번주소">
+		<span id="guide" style="color:#999;display:none"></span>
+		<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소">
+		<input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목">
+		<input type="hidden" name="address" id="fullAddress">
+		<form:errors path="address" cssClass="error" />
+      </div>
+
+		<!-- 카카오 주소API 호출을 위한 CDN주소 -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
 	    //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
@@ -245,5 +366,22 @@
 	        }).open();
 	    }
 	</script>
+
+      <div class="form-group">
+        <label class="form-label">생년월일</label>
+        <form:input path="birth" type="date" cssClass="form-control" />
+        <form:errors path="birth" cssClass="error" />
+      </div>
+
+      <div id="roleFieldsArea"></div>
+
+      <div class="text-center">
+        <button type="submit" id="insertBtn" class="btn btn-primary">추가</button>
+      </div>
+    </form:form>
+    <a class="back-link" href="userManagement">뒤로가기</a>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

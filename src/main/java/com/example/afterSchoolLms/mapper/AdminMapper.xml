@@ -10,21 +10,24 @@
 			u.role_id AS roleId,
 			r.role_name AS roleName,
 			u.NAME AS userName,
-			u.email, phone, address,
-			u.created_at AS createdAt,
+			u.email,
+			u.phone,
+			u.address,
+			DATE_FORMAT(u.created_at, '%Y-%m-%d') AS createdAt,
 			u.birth
-		FROM (SELECT * FROM user
+		FROM (
+			SELECT * FROM user
 			<where>
-			    <if test="searchType != 'all'">
-			        role_id = #{roleType}
-			    </if>
-			    <if test="searchWord != ''">
-			        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
-			    </if>
+			  <if test="searchType != null and searchType != 'all'">
+			    role_id = #{roleType}
+			  </if>
+			  <if test="searchWord != null and searchWord != ''">
+			    AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+			  </if>
 			</where>
 		) u
 		INNER JOIN role r ON u.role_id = r.role_id
-		ORDER BY u.role_Id
+		ORDER BY u.role_id
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
@@ -140,12 +143,12 @@
 		SELECT COUNT(*) 
 		FROM user
 		<where>
-		    <if test="searchType != 'all'">
-		        role_id = #{roleType}
-		    </if>
-		    <if test="searchWord != ''">
-		        AND NAME LIKE CONCAT('%', #{searchWord}, '%')
-		    </if>
+			<if test="searchType != null and searchType != 'all'">
+				role_id = #{roleType}
+			</if>
+			<if test="searchWord != null and searchWord != ''">
+				AND NAME LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
 		</where>
 	</select>
 	

@@ -1,40 +1,60 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>공지사항 상세</title>
-<!-- jQuery CDN (페이지에 없으면 추가) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8" />
+  <title>공지사항 상세</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 </head>
 <body>
-	<h1>공지사항 상세</h1>
-	<table border="1">
-			<tr>
-				<th>제목</th>
-				<td>${notice.title}</td>
-			</tr>
-			<tr>
-				<th>작성 관리자</th>
-				<td>${notice.adminName}</td>
-			</tr>
-			<tr>
-				<th>공지 대상</th>
-				<td>${notice.roleName}</td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td><textarea name="content" id="content" rows="5" cols="50" readonly>${notice.content}</textarea></td>
-			</tr>
-			<tr>
-				<th>작성일</th>
-				<td>${notice.createdAt}</td>
-			</tr>
-		</table>
-	<a href="/admin/noticeModify?noticeId=${notice.noticeId}">수정</a>
-	<a href="/admin/noticeManagement">뒤로</a>
+
+  <main class="main-content">
+    <section class="mb-4">
+      <h2 class="fw-bold text-center">📌 공지사항 상세</h2>
+    </section>
+
+    <section class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="fw-semibold">제목</label>
+          <div class="form-control bg-light">${notice.title}</div>
+        </div>
+
+        <div class="mb-3 row">
+          <div class="col-md-6">
+            <label class="fw-semibold">작성자</label>
+            <div class="form-control bg-light">${notice.adminName}</div>
+          </div>
+          <div class="col-md-6">
+            <label class="fw-semibold">공지 대상</label>
+            <div class="form-control bg-light">${notice.roleName}</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-semibold">내용</label>
+          <textarea class="form-control" rows="6" readonly>${notice.content}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-semibold">작성일</label>
+          <div class="form-control bg-light">${notice.createdAt}</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-flex justify-content-end gap-2">
+      <a href="/admin/noticeModify?noticeId=${notice.noticeId}" class="btn btn-outline-primary">
+        <i class="bi bi-pencil-square"></i> 수정
+      </a>
+      <a href="/admin/noticeManagement" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> 목록으로
+      </a>
+    </div>
+  </main>
+
 </body>
 </html>
