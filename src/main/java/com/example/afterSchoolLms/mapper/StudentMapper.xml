@@ -262,6 +262,7 @@
 		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
 		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
 		WHERE ab.title LIKE CONCAT('%', #{searchWord}, '%')
+		ORDER BY album_id DESC
 		LIMIT #{beginRow}, #{size}
 	</select>
 	

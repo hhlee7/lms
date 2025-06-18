@@ -354,7 +354,7 @@
 			description,
 			created_at AS createdAt
 		FROM subject
-		ORDER BY createdAT DESC
+		ORDER BY subjectId
 	</select>
 	
 	<!-- 과목 추가 -->
