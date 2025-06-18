@@ -524,10 +524,10 @@
 			album_id AS albumId,
 			file_path AS filePath
 		FROM album_photo
-		WHERE album_id = #{albumId};
+		WHERE album_id = #{albumId}
 	</select>
 	
-	<!-- 3일 미 결제시 CANCEL처리 -->
+	<!-- 3일 미 결제시 CANCEL처리(스케줄러) -->
 	<update id="autoCancelLectures">
 		UPDATE student_enrollment
 	    SET status = 'CANCEL'

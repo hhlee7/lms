@@ -5,7 +5,86 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>공지사항</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fb;
+    margin: 0;
+    padding: 120px 0 40px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+
+  table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  th, td {
+    padding: 14px 18px;
+    text-align: center;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 16px;
+  }
+
+  th {
+    background-color: #f0f4ff;
+    color: #333;
+    font-weight: 600;
+  }
+
+  tr:hover td {
+    background-color: #f9fbff;
+  }
+
+  td a {
+    color: #0077cc;
+    text-decoration: none;
+  }
+
+  td a:hover {
+    text-decoration: underline;
+  }
+
+  .page {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .page a {
+    margin: 0 4px;
+    padding: 6px 12px;
+    text-decoration: none;
+    color: #0077cc;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: all 0.2s ease;
+  }
+
+  .page a:hover {
+    background-color: #e6f0ff;
+  }
+
+  .page strong {
+    margin: 0 4px;
+    padding: 6px 12px;
+    background-color: #0077cc;
+    color: white;
+    border-radius: 6px;
+  }
+</style>
 </head>
 <body>
 	<h1>공지사항</h1>

@@ -9,9 +9,13 @@
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f9f9f9;
+    padding-top: 120px;
   }
 
   .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background: linear-gradient(to right, #ffcc70, #ffefa0);
     padding: 20px;
     display: flex;
@@ -20,6 +24,7 @@
     justify-content: space-around;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 0 0 12px 12px;
+    z-index: 1000;
   }
 
   .header div {
