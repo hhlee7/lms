@@ -136,7 +136,14 @@ $(function() {
 			, type: 'get'
 			, success: function(data) {
 				if (data == true) {
-					$('#updateForm').submit();
+					const confirmChange = confirm("개인정보를 변경하시겠습니까?");
+                    if (confirmChange) {
+                        $('#updateForm').submit();  // 예 -> 전송
+                    } else {
+                        alert("개인정보 변경이 취소되었습니다.");  // 아니오 -> 메시지 출력만 하고 멈춤
+                        $('#password').val('');
+                        return;
+                    }
 				} else {
 					alert('현재 비밀번호가 틀렸습니다.');
 					$('#password').val('');

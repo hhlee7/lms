@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.afterSchoolLms.dto.Notice;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.mapper.DriverMapper;
 
@@ -31,6 +32,21 @@ public class DriverService {
 		return driverMapper.updatePw(id, currentPw, updatePw);
 	}
 	
+	// 공지사항 총 개수
+	public int totalCount() {
+		return driverMapper.totalCount();
+	}
+	
+	// 전체 공지사항
+	public List<Notice> notice(int beginRow, int size) {
+		return driverMapper.selectNotice(beginRow, size);
+	}
+	
+	// 공지사항 하나
+	public Notice noticeOne(int noticeId) {
+		return driverMapper.selectNoticeOne(noticeId);
+	}
+		
 	// 배차조회
 	public List<Map<String, Object>> dispatch(String userId) {
 		return driverMapper.selectDispatch(userId);

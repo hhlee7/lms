@@ -6,52 +6,74 @@
 <head>
 <meta charset="UTF-8">
 <title>내 배차 조회</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
         font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f4f8;
         margin: 0;
-        background-color: #f5f6fa;
-        color: #333;
+        padding: 0;
     }
 
     .container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     h1 {
-        font-size: 28px;
-        color: #007acc;
-        margin-bottom: 30px;
         text-align: center;
+        color: #28a745;
+        margin-bottom: 40px;
+        font-weight: 600;
     }
 
     .dispatch-card {
-        background-color: #f0f4f8;
-        padding: 20px;
+        border: 1px solid #dfe6e9;
+        border-left: 5px solid #28a745;
         border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease;
+        padding: 20px 25px;
+        margin-bottom: 25px;
+        background-color: #fefefe;
+        transition: box-shadow 0.2s ease;
     }
 
     .dispatch-card:hover {
-        transform: translateY(-3px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    .dispatch-card h2 {
-        margin-top: 0;
-        color: #007acc;
-        font-size: 22px;
+    .section-title {
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 10px;
+        font-weight: 600;
     }
 
     .dispatch-info p {
         margin: 6px 0;
-        line-height: 1.4;
+        font-size: 15px;
+        color: #444;
+    }
+
+    .icon {
+        margin-right: 6px;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .info-block {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eaecef;
+    }
+
+    h2 {
+        font-size: 20px;
+        color: #28a745;
+        margin-bottom: 10px;
     }
 </style>
 </head>
@@ -61,20 +83,26 @@
         <h1>내 배차 조회</h1>
 
         <c:forEach var="dispatch" items="${dispatchList}">
-            <div class="dispatch-card">
-                <h2>${dispatch.subjectName}</h2>
-                <div class="dispatch-info">
-                    <p><strong>강사명:</strong> ${dispatch.teacherName}</p>
-                    <p><strong>요일:</strong> ${dispatch.dayOfWeek}</p>
-                    <p><strong>시간:</strong> ${dispatch.startTime} ~ ${dispatch.endTime}</p>
-                    <p><strong>수업 기간:</strong> ${dispatch.startDate} ~ ${dispatch.endDate}</p>
-                    <p><strong>기사님:</strong> ${dispatch.driverName}</p>
-                    <p><strong>주차 장소:</strong> ${dispatch.location}</p>
-                    <p><strong>차량 번호:</strong> ${dispatch.vehicleNo}</p>
-                    <p><strong>기사 연락처:</strong> ${dispatch.driverPhone}</p>
-                </div>
-            </div>
-        </c:forEach>
+	        <div class="dispatch-card">
+	            <h2>${dispatch.subjectName}</h2>
+	
+	            <div class="dispatch-info">
+	                <div class="section-title">🧑‍🏫 수업 정보</div>
+	                <p><span class="icon">👨‍🏫</span>강사명: ${dispatch.teacherName}</p>
+	                <p><span class="icon">📅</span>요일: ${dispatch.dayOfWeek}</p>
+	                <p><span class="icon">⏰</span>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
+	                <p><span class="icon">📆</span>수업 기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
+	
+	                <div class="info-block">
+	                    <div class="section-title">🚐 배차 정보</div>
+	                    <p><span class="icon">👨‍✈️</span>기사님: ${dispatch.driverName}</p>
+	                    <p><span class="icon">📞</span>기사 연락처: ${dispatch.driverPhone}</p>
+	                    <p><span class="icon">🚘</span>차량 번호: ${dispatch.vehicleNo}</p>
+	                    <p><span class="icon">📍</span>주차 장소: ${dispatch.location}</p>
+	                </div>
+	            </div>
+	        </div>
+	    </c:forEach>
     </div>
 </body>
 </html>

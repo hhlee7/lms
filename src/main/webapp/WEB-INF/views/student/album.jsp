@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>사진첩</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
         font-family: 'Segoe UI', sans-serif;
@@ -142,34 +143,49 @@
             </tbody>
         </table>
 
-        <div class="pagination">
-            <c:set var="startPage" value="${page - 2 < 1 ? 1 : page - 2}" />
-            <c:set var="endPage" value="${page + 2 > totalPage ? totalPage : page + 2}" />
+          <!-- 페이지네이션 계산 -->
+  <c:if test="${totalPage <= 5}">
+    <c:set var="startPage" value="1"/>
+    <c:set var="endPage" value="${totalPage}"/>
+  </c:if>
+  <c:if test="${totalPage > 5}">
+    <c:set var="startPage" value="${page - 2}"/>
+    <c:set var="endPage" value="${page + 2}"/>
+    <c:if test="${startPage < 1}">
+      <c:set var="startPage" value="1"/>
+      <c:set var="endPage" value="5"/>
+    </c:if>
+    <c:if test="${endPage > totalPage}">
+      <c:set var="endPage" value="${totalPage}"/>
+      <c:set var="startPage" value="${totalPage - 4 < 1 ? 1 : totalPage - 4}"/>
+    </c:if>
+  </c:if>
 
-            <!-- 처음 / 이전 -->
-            <c:if test="${page > 1}">
-                <a href="?page=1&size=${size}&searchWord=${searchWord}">처음</a>
-                <a href="?page=${page - 1}&size=${size}&searchWord=${searchWord}">이전</a>
-            </c:if>
+  <!-- Bootstrap 페이지네이션 UI -->
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item ${page == 1 ? 'disabled' : ''}">
+        <a class="page-link" href="?page=1&size=${size}&searchWord=${searchWord}">처음</a>
+      </li>
+      <li class="page-item ${page == 1 ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${page - 1}&size=${size}&searchWord=${searchWord}">이전</a>
+      </li>
+      <c:forEach var="i" begin="${startPage}" end="${endPage}">
+        <li class="page-item ${i == page ? 'active' : ''}">
+          <a class="page-link" href="?page=${i}&size=${size}&searchWord=${searchWord}">${i}</a>
+        </li>
+      </c:forEach>
+      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${page + 1}&size=${size}&searchWord=${searchWord}">다음</a>
+      </li>
+      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+        <a class="page-link" href="?page=${totalPage}&size=${size}&searchWord=${searchWord}">끝</a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
-            <!-- 페이지 번호들 -->
-            <c:forEach var="i" begin="${startPage}" end="${endPage}">
-                <c:choose>
-                    <c:when test="${i == page}">
-                        <strong>${i}</strong>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="?page=${i}&size=${size}&searchWord=${searchWord}">${i}</a>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-            <!-- 다음 / 끝 -->
-            <c:if test="${page < totalPage}">
-                <a href="?page=${page + 1}&size=${size}&searchWord=${searchWord}">다음</a>
-                <a href="?page=${totalPage}&size=${size}&searchWord=${searchWord}">끝</a>
-            </c:if>
-        </div>
-    </div>
 </body>
 </html>

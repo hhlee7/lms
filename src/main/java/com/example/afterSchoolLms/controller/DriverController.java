@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.afterSchoolLms.dto.Notice;
+import com.example.afterSchoolLms.dto.Page;
 import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.service.DriverService;
 
@@ -93,6 +95,36 @@ public class DriverController {
 		return "redirect:/driver/logout";
 	}
 
+	// 전체 공지사항 조회
+	@GetMapping("/driver/notice")
+	public String notice(Model model
+			,@RequestParam(defaultValue = "1") int page
+			,@RequestParam(defaultValue = "4") int size) {
+		
+		Page paging = new Page(size, page, 0);
+		int totalCount = driverService.totalCount();
+		//log.info("totalCount" + totalCount);
+		
+		List<Notice> noticeList = driverService.notice(paging.getBeginRow(), size);
+		//log.info("noticeList" + noticeList.toString());
+		int totalPage = (int) Math.ceil((double) totalCount / size);
+		model.addAttribute("noticeList", noticeList);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		return "/driver/notice";
+	}
+	
+	// 공지사항 상세보기
+	@GetMapping("/driver/noticeOne")
+	public String noticeOne(Model model
+			, @RequestParam int noticeId) {
+		Notice notice = driverService.noticeOne(noticeId);
+		model.addAttribute("notice", notice);
+		return "/driver/noticeOne";
+	}
+		
 	// 기사 배차 조회
 	@GetMapping("/driver/dispatch")
 	public String dispatch(HttpSession session, Model model) {
