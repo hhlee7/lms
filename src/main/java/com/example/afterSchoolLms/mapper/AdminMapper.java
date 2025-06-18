@@ -50,6 +50,7 @@ public interface AdminMapper {
 	List<Map<String,Object>> selectAlbumList(Page page);	// 앨범 검색 조회
 	List<AlbumPhoto> selectAlbumPhotoList(int albumId);		// 앨범 사진들 조회
 	Map<String,Object> selectAlbumOne(int albumId);			// 앨범 상세 조회
+	int albumCount(Page page);
 	
 	List<Qna> selectQnaList(Page page);						// Qna 리스트 조회
 	int qnaTotalCount(Page page);							// Qna 전체 데이터 수 조회
