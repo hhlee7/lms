@@ -62,7 +62,7 @@
   <section class="table-responsive mb-4">
     <c:choose>
       <c:when test="${empty enrollmentCancelList}">
-        <p class="text-center text-muted fst-italic">조회된 수강 신청 취소 내역이 없습니다.</p>
+        <p class="text-center text-muted fst-italic">조회된 수강 취소 내역이 없습니다.</p>
       </c:when>
       <c:otherwise>
         <table class="table table-bordered bg-white text-center">

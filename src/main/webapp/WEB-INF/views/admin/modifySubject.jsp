@@ -68,7 +68,7 @@
             <i class="bi bi-arrow-left"></i> 목록으로
           </a>
           <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check-circle"></i> 수정 완료
+            <i class="bi bi-check-circle"></i> 수정
           </button>
         </div>
       </form>

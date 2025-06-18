@@ -149,8 +149,11 @@
       <div class="submenu">
         <a href="/admin/subjectManagement">과목 관리</a>
         <a href="/admin/lectureManagement">수업 관리</a>
+        <a href="/admin/attendanceManagement">출결 관리</a>
         <a href="/admin/albumManagement">수업 사진첩</a>
         <a href="/admin/classroomManagement">강의실 관리</a>
+        <a href="/admin/materialManagement">교보재 관리</a>
+        <a href="/admin/materialRequestManagement">교보재 요청 관리</a>
       </div>
     </div>
 

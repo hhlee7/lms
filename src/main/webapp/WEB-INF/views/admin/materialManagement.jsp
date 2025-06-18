@@ -55,7 +55,7 @@
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-search"></i></span>
           <input type="text" name="searchWord" id="searchWord" class="form-control"
-                 value="${page.searchWord != null ? page.searchWord : ''}" placeholder="품목명 입력" />
+                 value="${page.searchWord != null ? page.searchWord : ''}" placeholder="품목명을 입력하세요" />
           <button type="button" class="btn btn-primary" id="searchBtn">검색</button>
         </div>
       </div>
@@ -76,7 +76,7 @@
               <th>품목</th>
               <th>개수</th>
               <th>요일</th>
-              <th>시작 시간</th>
+              <th>수업 시작 시간</th>
               <th>수정</th>
               <th>삭제</th>
             </tr>
