@@ -194,26 +194,52 @@
 		INNER JOIN user u ON n.admin_id = u.user_id
 	</select>
 	
-	<!-- 앨범 리스트 조회 -->
+	<!-- 앨범 리스트 조회 (썸네일 포함) -->
 	<select id="selectAlbumList" parameterType="com.example.afterSchoolLms.dto.Page" resultType="map">
-		SELECT
-		    ab.album_id AS albumId,
-		    ab.lecture_id AS lectureId,
-		    sb.name AS subjectName,
-		    ab.title AS title,
-		    ab.description,
-		    DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt,
-		    ap.photo_id AS photoId,
-		    ap.file_path AS filePath
-		FROM album ab
-		INNER JOIN (
-		    SELECT album_id, MIN(photo_id) AS max_photo_id
-		    FROM album_photo
-		    GROUP BY album_id
-		) latest_photo ON ab.album_id = latest_photo.album_id
-		INNER JOIN album_photo ap ON ap.photo_id = latest_photo.max_photo_id
-		INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
-		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	  SELECT
+	    ab.album_id AS albumId,
+	    ab.lecture_id AS lectureId,
+	    sb.name AS subjectName,
+	    ab.title AS title,
+	    ab.description,
+	    DATE_FORMAT(ab.created_at, '%Y-%m-%d') AS createdAt,
+	    ap.photo_id AS photoId,
+	    ap.file_path AS filePath
+	  FROM album ab
+	  INNER JOIN (
+	    SELECT album_id, MIN(photo_id) AS max_photo_id
+	    FROM album_photo
+	    GROUP BY album_id
+	  ) latest_photo ON ab.album_id = latest_photo.album_id
+	  INNER JOIN album_photo ap ON ap.photo_id = latest_photo.max_photo_id
+	  INNER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
+	  INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	  <where>
+	    <if test="searchType != null and searchType != 'all'">
+		  ab.lecture_id = CAST(#{searchType} AS UNSIGNED)
+		</if>
+	    <if test="searchWord != null and searchWord != ''">
+	      AND ab.title LIKE CONCAT('%', #{searchWord}, '%')
+	    </if>
+	  </where>
+	  ORDER BY ab.album_id DESC
+	  LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+	<!-- 앨범 수 카운트 -->
+	<select id="albumCount" parameterType="com.example.afterSchoolLms.dto.Page" resultType="int">
+	  SELECT COUNT(*) 
+	  FROM album ab
+	  INNER JOIN lecture lt ON ab.lecture_id = lt.lecture_id
+	  INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+	  <where>
+		<if test="searchType != null and searchType != 'all'">
+		  ab.lecture_id = CAST(#{searchType} AS UNSIGNED)
+		</if>
+	    <if test="searchWord != null and searchWord != ''">
+	      AND ab.title LIKE CONCAT('%', #{searchWord}, '%')
+	    </if>
+	  </where>
 	</select>
 	
 	<!-- 앨범 상세 조회 -->
