@@ -97,4 +97,11 @@ public class Page {
 		this.searchType = searchType;
 		this.beginRow = (currentPage - 1) * rowPerPage;
 	}
+    public Page(int rowPerPage, int currentPage, int totalCount, String searchWord) {
+	      this.rowPerPage = rowPerPage;
+	      this.currentPage = currentPage;
+	      this.totalCount = totalCount;
+	      this.beginRow = (currentPage - 1) * rowPerPage;
+	      this.searchWord= searchWord;
+	   }
 }

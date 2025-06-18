@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.example.afterSchoolLms.dto.VehiclePassenger;
 import com.example.afterSchoolLms.mapper.AttendanceMapper;
 import com.example.afterSchoolLms.service.AdminService;
+import com.example.afterSchoolLms.mapper.ParentMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class Schedule {
 
 	private final AttendanceMapper attendanceMapper;
+	private final ParentMapper parentMapper;
 	@Autowired AdminService adminService;
 
 	// 매일 자정에 오늘 수업 있는 강의만 출결 초기화
@@ -83,5 +85,13 @@ public class Schedule {
 			adminService.insertPassenger(vp);
 		}
 	}
+	
+	//[장정수] 수강신청 후 3일이내 미 결제시 pending -> cancel로 변경 
+	@Scheduled(cron = "0 0 0 * * ?")
+    public void cancelExpiredPendingLectures() {
+        parentMapper.autoCancelLectures();
+        System.out.println("3일 미결제 PENDING -> CANCEL로 수강 자동 취소 완료");
+    }
+	
 }
 

@@ -5,15 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>과목 소개</title>
+<title>강사 소개</title>
 </head>
 <body>
-	<h1>과목 소개</h1>
-	<c:forEach var="subject" items="${subjectList}">
+	<h1>강사 소개</h1>
+	<c:forEach var="teacher" items="${teacherList}">
 		<div>
-			<a href="/parent/subjectOne?subjectName=${subject.subjectName}">
-				<img src="/images/${subject.subjectName}.jpeg" alt="${subject.subjectName}수업" style="width:150px; height:150px;">
-			</a>
+			<a href="/parent/teacherOne?teacherId=${teacher.userId}">${teacher.userName}</a>
 		</div>
 	</c:forEach>
 </body>
