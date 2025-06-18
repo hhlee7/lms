@@ -130,7 +130,8 @@ import lombok.extern.slf4j.Slf4j;
 	        String currentPw = (String) paramMap.get("currentPassword");
 	        String newPw = (String) paramMap.get("newPassword");
 	        String confirmPw = (String) paramMap.get("confirmPassword");
-
+	        String fullAddress = (String) paramMap.get("fullAddress");
+	        
 	        // 현재 비밀번호 검증
 	        if (currentPw == null || !loginUser.getPassword().equals(currentPw)) {
 	            ra.addFlashAttribute("error", "❌ 현재 비밀번호가 일치하지 않습니다.");
@@ -148,10 +149,17 @@ import lombok.extern.slf4j.Slf4j;
 	            paramMap.remove("password"); // 변경 없으면 제외
 	        }
 
+	        if(!fullAddress.isEmpty() || fullAddress != "") {
+	        	paramMap.put("address", fullAddress);
+	        }
+	        else {
+	        	paramMap.put("address", loginUser.getAddress());
+	        }
+	        
 	        paramMap.put("teacherId", teacherId);
 	        teacherMapper.updateTeacherProfile(paramMap);
 	        ra.addFlashAttribute("success", "✅ 개인정보가 성공적으로 수정되었습니다.");
-	        return "redirect:/teacher/profile";
+	        return "redirect:/logout";
 	    }
 
 	 // 교보제 조회

@@ -15,14 +15,12 @@
 	
 	<table border="1">
 		<tr>
-			<th>번호</th>
 			<th>과목</th>
 			<th>수정</th>
 			<th>삭제</th>
 		</tr>
 	<c:forEach var="subject" items="${subjectList}">
 		<tr>
-			<td>${subject.subjectId}</td>
 			<td>${subject.subjectName}</td>
 			<td><a href="/admin/modifySubject?subjectId=${subject.subjectId}">수정</a></td>
 			<td>

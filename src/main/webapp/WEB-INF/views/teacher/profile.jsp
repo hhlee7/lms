@@ -87,8 +87,8 @@
       <p>생년월일: ${loginUser.birth}</p>
       <p>전화번호: ${loginUser.phone}</p>
       <p>주소: ${loginUser.address}</p>
-      <p>학력: </p>
-      <p>이력: </p>
+      <p>학력: ${teacher.lastEducation}</p>
+      <p>이력: ${teacher.personalHistory}</p>
     </div>
     <div class="btn-group">
       <a href="/teacher/profile/edit" class="btn">✏️ 수정하기</a>

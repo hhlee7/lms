@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,8 +63,8 @@
   <div class="notice-container">
     <h2>${notice.title}</h2>
     <div class="notice-meta">
-      <p><strong>작성자:</strong> ${notice.admin_id}</p>
-      <p><strong>작성일:</strong> ${notice.created_at}</p>
+      <p><strong>작성자:</strong> 관리자</p>
+      <p><strong>작성일:</strong> ${fn:substring(notice.created_at, 0, 10)}</p>
     </div>
     <hr>
     <div class="notice-content">

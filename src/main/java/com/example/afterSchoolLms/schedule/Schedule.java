@@ -15,10 +15,12 @@ import com.example.afterSchoolLms.service.AdminService;
 import com.example.afterSchoolLms.mapper.ParentMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 // 조서진 강사 출석 체크 스케줄러 필요해서 만듬
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Schedule {
 
 	private final AttendanceMapper attendanceMapper;
@@ -29,6 +31,7 @@ public class Schedule {
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 00:00
     public void initDailyAttendance() {
         List<Integer> lectureIds = attendanceMapper.selectLectureIdsForToday();
+        log.info(lectureIds.toString());
         if (!lectureIds.isEmpty()) {
             attendanceMapper.insertDailyAttendanceByLectureIds(lectureIds);
             System.out.println("출석 초기화 완료 (대상 수업 수: " + lectureIds.size() + ")");

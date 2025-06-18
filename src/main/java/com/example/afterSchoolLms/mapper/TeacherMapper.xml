@@ -129,9 +129,11 @@
 <!-- 개인정보수정-->
 <update id="updateTeacherProfile">
     UPDATE user
-    SET phone = #{phone},
-        address = #{address},
-        password = #{password}
+	<set>
+        <if test="phone != null">phone = #{phone},</if>
+        <if test="address != null || address != ''">address = #{address},</if>
+        <if test="password != null">password = #{password},</if>
+    </set>
     WHERE user_id = #{teacherId}
 </update>
 
