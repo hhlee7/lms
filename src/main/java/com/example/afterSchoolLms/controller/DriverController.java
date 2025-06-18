@@ -107,7 +107,7 @@ public class DriverController {
 	public String dispatchStudent(HttpSession session, Model model) {
 		User loginUser = (User) session.getAttribute("loginUser");
 		List<Map<String, Object>> dispatchStudentList = driverService.dispatchStudent(loginUser.getUserId());
-		log.info(dispatchStudentList.toString());
+		//log.info(dispatchStudentList.toString());
 		
 	    // 고유한 시간(endTime) 추출
 	    Set<String> timeSet = new LinkedHashSet<>();

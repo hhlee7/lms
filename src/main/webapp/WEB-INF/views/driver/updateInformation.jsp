@@ -6,6 +6,90 @@
 <meta charset="UTF-8">
 <title>기사 개인정보 수정 페이지</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f3f6fb;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="button"],
+    .form-group input[type="hidden"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[readonly] {
+        background-color: #f9f9f9;
+        color: #666;
+    }
+
+    .form-group span#guide {
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    #updateBtn {
+        padding: 12px 24px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #updateBtn:hover {
+        background-color: #45a049;
+    }
+
+    .readonly-info {
+        background-color: #f0f0f0;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: #333;
+    }
+
+</style>
 <script>
 $(function() {
 	$("#updateBtn").click(function() {
@@ -67,27 +151,54 @@ $(function() {
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
 
-	<form id="updateForm" method="post" action="/driver/updateInformation">
-		<input type="hidden" value="${user.userId}" id="userId" name="userId"> 
-		이름 : <input type="text" value="${user.userName}" readonly="readonly"><br>
-		생년월일 : <input type="text" value="${user.birth}" readonly="readonly"><br>
-		이메일 : <input type="text" id="email" name="email" value="${user.email}"><br>
-		주소 : ${user.address}<br>
-			<input type="text" name="postcode" id="postcode" placeholder="우편번호">
-			<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-			<input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
-			<input type="text" name="jibunAddress" id="jibunAddress" placeholder="지번주소">
-			<span id="guide" style="color:#999;display:none"></span>
-			<input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소">
-			<input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목">
-			<input type="hidden" name="address" id="fullAddress">
-			<br>
-		
-		전화번호 : <input type="text" id="phone" name="phone" value="${user.phone}"><br>
-		비밀번호: <input type="password" id="password" name="password"><br>
-		
-		<button type="button" id="updateBtn">개인정보 수정</button>
-	</form>
+	<div class="container">
+	    <h2>✏️ 개인정보 수정</h2>
+	    <form id="updateForm" method="post" action="/driver/updateInformation">
+	        <input type="hidden" value="${user.userId}" id="userId" name="userId"> 
+
+	        <div class="form-group">
+	            <label>이름</label>
+	            <div class="readonly-info">${user.userName}</div>
+	        </div>
+
+	        <div class="form-group">
+	            <label>생년월일</label>
+	            <div class="readonly-info">${user.birth}</div>
+	        </div>
+
+	        <div class="form-group">
+	            <label for="email">이메일</label>
+	            <input type="text" id="email" name="email" value="${user.email}">
+	        </div>
+
+	        <div class="form-group">
+	            <label>주소</label>
+	            <div class="readonly-info">${user.address}</div>
+	            <input type="text" name="postcode" id="postcode" placeholder="우편번호">
+	            <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br><br>
+	            <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소">
+	            <input type="text" name="jibunAddress" id="jibunAddress" placeholder="지번주소">
+	            <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소">
+	            <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목">
+	            <input type="hidden" name="address" id="fullAddress">
+	            <span id="guide"></span>
+	        </div>
+
+	        <div class="form-group">
+	            <label for="phone">전화번호</label>
+	            <input type="text" id="phone" name="phone" value="${user.phone}">
+	        </div>
+
+	        <div class="form-group">
+	            <label for="password">현재 비밀번호</label>
+	            <input type="password" id="password" name="password">
+	        </div>
+
+	        <div class="form-actions">
+	            <button type="button" id="updateBtn">개인정보 수정</button>
+	        </div>
+	    </form>
+	</div>
 	
 	<!-- 카카오 주소API 호출을 위한 CDN주소 -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

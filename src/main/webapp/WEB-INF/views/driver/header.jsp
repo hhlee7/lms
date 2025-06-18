@@ -3,77 +3,88 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!-- 아이콘용 CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-	/* 💎 헤더 */
-	  header {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    padding: 20px 60px;
-	    background: linear-gradient(to right, #ffffff, #f0f4f9);
-	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-	    position: sticky;
-	    top: 0;
-	    z-index: 100;
-	    overflow-x: auto; /* ✅ 넘칠 경우 스크롤 허용 */
-	  }
-	
-	  nav {
-	    display: flex;
-	    justify-content: center;
-	    gap: 24px;
-	    white-space: nowrap;         /* ✅ 줄바꿈 방지 */
-	    overflow-x: auto;
-	    flex-wrap: nowrap !important; /* ✅ 무조건 한 줄 유지 */
-	    max-width: 100%;
-	  }
-	
-	  .topnav {
-	    text-decoration: none;
-	    color: #333;
-	    font-size: 15px;
-	    font-weight: 500;
-	    padding: 6px 12px;
-	    border-radius: 6px;
-	    transition: all 0.2s ease;
-	    position: relative;
-	    white-space: nowrap;
-	  }
-	
-	  .topnav:hover {
-	    color: #0077cc;
-	    background-color: #e6f4ff;
-	  }
-	
-	  .topnav.active {
-	    color: #0077cc;
-	    font-weight: 600;
-	  }
-	
-	  .topnav::after {
-	    content: "";
-	    display: block;
-	    width: 0%;
-	    height: 2px;
-	    background-color: #0077cc;
-	    transition: width 0.3s;
-	    margin-top: 2px;
-	  }
-	
-	  .topnav:hover::after {
-	    width: 100%;
-	  }
+	body {
+	        margin: 0;
+	        padding: 0;
+	        background-color: #f9f9f9;
+	        font-family: 'Segoe UI', sans-serif;
+	    }
+    
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .left-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+
+    .main-link {
+        font-size: 15px;
+        font-weight: 500;
+        text-decoration: none;
+        color: #333;
+        transition: 0.2s;
+    }
+
+    .main-link:hover {
+        color: #0077cc;
+    }
+
+    .logout {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 15px;
+    }
+
+    .logout i {
+        color: #1ec9d8;
+    }
 </style>
+
 </head>
 <body>
-	<header>
-		<nav>
-			<a href="/driver/main" class="topnav">메인페이지</a>
-			<a href="/driver/dispatch" class="topnav">배차조회</a>
-			<a href="/driver/dispatchStudent" class="topnav">배차 학생 조회</a>
-			<a href="/driver/personalInformation" class="topnav">개인정보</a>
-			<a href="/driver/logout" class="topnav">로그아웃</a>
-		</nav>
-	</header>
+	 <header>
+		<div class="left-section">
+			<div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" alt="로고" />
+                방과후 교육
+            </div>
+            <a href="/driver/main" class="main-link">메인페이지</a>
+        </div>
+
+        <a href="/driver/logout" class="logout">
+            <i class="fas fa-right-from-bracket"></i> 로그아웃
+        </a>
+    </header>
 </body>
 </html>
