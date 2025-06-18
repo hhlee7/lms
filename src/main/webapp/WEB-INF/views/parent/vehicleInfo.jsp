@@ -25,7 +25,6 @@
 	    </c:when>
 	
 	    <c:otherwise>
-	    	<h1>${vehicleInfo.studentName}의 탑승 차량 정보</h1>
 	        <p>배차 정보가 없습니다.</p>
 	    </c:otherwise>
 	</c:choose>

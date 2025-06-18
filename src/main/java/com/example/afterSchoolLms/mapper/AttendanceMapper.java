@@ -22,6 +22,8 @@ public interface AttendanceMapper {
     
     // 수업있는 날만 출석체크
     List<Integer> selectLectureIdsForToday(); // 오늘 수업 있는 lecture_id 조회
+    
+    
     void insertDailyAttendanceByLectureIds(List<Integer> lectureIds);
     
     // 출석 상태 카운트 (검색 + 날짜 포함)

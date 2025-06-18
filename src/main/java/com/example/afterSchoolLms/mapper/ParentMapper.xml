@@ -104,39 +104,34 @@
 	<!-- 자녀 탑승 차량 조회 -->
 	<select id="vehicleInfo" parameterType="String" resultType="map">
 		SELECT DISTINCT
-			v.vehicle_no AS vehicleNo,
-			u.name AS studentName,
-			t1.name AS driverName,
-			t1.phone,
-			va.assignment_id,
-			p.payment_id,
-			vc.decided_at,
-			CASE 
-				WHEN DATE_FORMAT(vc.decided_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN 1 
-		      ELSE 0 
-		   END AS isCancelledToday,
-			l.end_time AS endTime
-		FROM vehicle_passenger vp
-		LEFT JOIN payment p ON vp.payment_id = p.payment_id
-		LEFT JOIN student_enrollment se ON se.enrollment_id = p.enrollment_id
-				AND se.status = 'PAID'     
-		LEFT JOIN lecture l ON se.lecture_id = l.lecture_id
-		LEFT JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
+		    v.vehicle_no AS vehicleNo,
+		    u.name AS studentName,
+		    t1.name AS driverName,
+		    t1.phone,
+		    va.assignment_id,
+		    NULL AS payment_id,
+		    vc.decided_at,
+		    CASE 
+		        WHEN DATE_FORMAT(vc.decided_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN 1
+		        ELSE 0
+		    END AS isCancelledToday,
+		    l.end_time AS endTime
+		FROM student_parent sp
+		INNER JOIN user u ON sp.student_id = u.user_id AND sp.parent_id = #{userId}
+		INNER JOIN student_enrollment se ON se.student_id = u.user_id AND se.status = 'PAID'
+		INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+		INNER JOIN vehicle_assignment va ON va.lecture_id = l.lecture_id
 		LEFT JOIN vehicle v ON va.vehicle_id = v.vehicle_id
-		LEFT JOIN user u ON se.student_id = u.user_id
-		INNER JOIN student_parent sp ON u.user_id = sp.student_id
-			AND sp.parent_id = 'par001' 
 		LEFT JOIN (
-			SELECT va.assignment_id, va.driver_id, u.name, u.phone
-			FROM vehicle_assignment va
-			INNER JOIN user u ON va.driver_id = u.user_id
+		    SELECT va.assignment_id, va.driver_id, u.name, u.phone
+		    FROM vehicle_assignment va
+		    INNER JOIN user u ON va.driver_id = u.user_id
 		) t1 ON t1.assignment_id = va.assignment_id
 		LEFT JOIN (
-			SELECT *
-			FROM vehicle_cancel
-			WHERE DATE(decided_at) = CURDATE()
-		) vc ON vc.payment_id = p.payment_id 
-			AND vc.assignment_id = va.assignment_id
+		    SELECT assignment_id, decided_at
+		    FROM vehicle_cancel
+		    WHERE DATE(decided_at) = CURDATE()
+		) vc ON vc.assignment_id = va.assignment_id
 		LIMIT 10
 	</select>
 	
@@ -327,16 +322,17 @@
 	
 	<!-- FK키 payment_id, assignment_id 조회 -->
 	<select id="findPaymentAndAssignmentByParentId" parameterType="String" resultType="map">
-	    SELECT p.payment_id AS paymentId, va.assignment_id AS assignmentId
-	    FROM user parent
-	    JOIN student_parent sp ON parent.user_id = sp.parent_id
-	    JOIN user student ON sp.student_id = student.user_id
-	    JOIN student_enrollment se ON student.user_id = se.student_id
-	    JOIN payment p ON se.enrollment_id = p.enrollment_id
-	    JOIN vehicle_passenger vp ON p.payment_id = vp.payment_id
-	    JOIN vehicle_assignment va ON vp.assignment_id = va.assignment_id
-	    WHERE parent.user_id = #{parentId}
-	    LIMIT 1
+	    SELECT 
+		    p.payment_id AS paymentId,
+		    va.assignment_id AS assignmentId
+		FROM user parent
+		JOIN student_parent sp ON parent.user_id = sp.parent_id
+		JOIN user student ON sp.student_id = student.user_id
+		JOIN student_enrollment se ON student.user_id = se.student_id
+		JOIN payment p ON se.enrollment_id = p.enrollment_id
+		JOIN vehicle_assignment va ON se.lecture_id = va.lecture_id
+		WHERE parent.user_id = #{userId}
+		LIMIT 1
 	</select>
 	
 	<!-- 차량 탑승 취소 신청 INSERT -->
