@@ -28,7 +28,7 @@
 			<td>
 				<form method="post" action="/admin/removeSubject">
 					<input type="hidden" name="subjectId" value="${subject.subjectId}">
-					<button type="submit">삭제</button>
+					<button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
 				</form>
 			</td>
 		</tr>

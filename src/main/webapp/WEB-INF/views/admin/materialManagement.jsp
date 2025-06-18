@@ -93,7 +93,7 @@
 					<td>
 						<form method="post" action="/admin/removeMaterial">
 							<input type="hidden" name="materialId" value="${list.materialId}">
-							<button type="submit">삭제</button>
+							<button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
 						</form>
 					</td>
 				</tr>
