@@ -181,9 +181,8 @@
   <div class="album-gallery">
     <c:forEach var="album" items="${albumList}">
       <div class="album-card">
-        <img src="/upload/${album.file_path}" alt="앨범 썸네일"
-             onclick="openModal(this.src)"
-             onerror="this.src='/images/soccerteacher.png'" />
+      	<img src="/images/${album.filePath}" alt="썸네일" onclick="openModal(this.src)"
+                     class="thumb-img" />
         <div class="album-info">
           <h4>${album.title}</h4>
           <p>${album.description}</p>
