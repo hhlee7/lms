@@ -64,7 +64,7 @@
 
     if (hasEmpty) return;
 
-    const newInput = $('<input type="file" name="photoFiles[]" class="form-control photoFile">');
+    const newInput = $('<input type="file" name="photoFiles" class="form-control photoFile">');
     $('#fileDiv').append(newInput);
   });
 

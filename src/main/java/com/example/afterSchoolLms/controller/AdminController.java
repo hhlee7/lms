@@ -195,6 +195,9 @@ public class AdminController {
 	@PostMapping("/admin/albumInsert")
 	public String albumInsert(Album album, @RequestParam("photoFiles") List<MultipartFile> photoFiles) {
 	    adminService.insertAlbum(album, photoFiles);
+	    for(MultipartFile f : photoFiles) {
+	    	log.info("ssssssssssss"+f.toString());
+	    }
 	    return "redirect:/admin/albumManagement";
 	}
 	
@@ -216,43 +219,25 @@ public class AdminController {
 	
 	/** 앨범 관리 페이지 **/
 	@GetMapping("/admin/albumManagement")
-	public String albumManagement(Model model
-			,@RequestParam(defaultValue = "1") int page
-			,@RequestParam(defaultValue = "10") int size
-			,@RequestParam(defaultValue = "") String searchWord
-			,@RequestParam(defaultValue = "all") String searchType) {
+	public String albumManagement(Model model,
+	        @RequestParam(defaultValue = "1") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(defaultValue = "all") String searchType,  // lectureId 필터
+	        @RequestParam(defaultValue = "") String searchWord) {   // title 검색
 		
-		int roleType = 0;
-		switch(searchType) {
-		case "관리자":			// 관리자	
-			roleType = 1; break;
-		case "학생":				// 학생
-			roleType = 2; break;
-		case "강사":				// 강사
-			roleType = 3; break;
-		case "학부모":			// 학부모
-			roleType = 4; break;
-		case "운전기사":			// 운전기사
-			roleType = 5; break;
-		}
-		
-		// 페이징
-		Page paging = new Page(size, page, 0, searchWord, searchType, roleType);
-		
-		// 전체 데이터 수 구하기
-		// int totalCount = adminService.noticeTotalCount(paging);
-		// paging.setTotalCount(totalCount);
-		
-		List<Map<String,Object>> albumList = adminService.selectAlbumList(paging);
-		
-		// 역할 리스트
-		List<Role> roleList = adminService.selectRoleList();
+	    Page paging = new Page(size, page, 0, searchWord, searchType, null);
 
-		model.addAttribute("roleList",roleList);
-		model.addAttribute("page",paging);
-		model.addAttribute("albumList",albumList);
-		
-		return "admin/albumManagement";
+	    int totalCount = adminService.albumCount(paging);
+	    paging.setTotalCount(totalCount);
+
+	    List<Map<String, Object>> albumList = adminService.selectAlbumList(paging);
+	    List<Map<String, Object>> lectureList = adminService.selectLectureList();
+
+	    model.addAttribute("lectureList", lectureList);
+	    model.addAttribute("albumList", albumList);
+	    model.addAttribute("page", paging);
+
+	    return "admin/albumManagement";
 	}
 	
 	/** 공지사항 관리 페이지 **/

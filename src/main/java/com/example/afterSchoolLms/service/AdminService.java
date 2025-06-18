@@ -80,6 +80,11 @@ public class AdminService {
 		return adminMapper.selectAlbumList(page);
 	}
 	
+	/** 앨범 리스트 갯수 조회 **/
+	public int albumCount(Page page) {
+		return adminMapper.albumCount(page);
+	}
+	
 	/** 앨범 상세 조회 **/
 	public Map<String,Object> selectAlbumOne(int albumId){
 		return adminMapper.selectAlbumOne(albumId);

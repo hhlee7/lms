@@ -80,6 +80,7 @@
       max-height: 220px;
       object-fit: contain;
       background-color: #f8f8f8;
+      cursor: zoom-in;
     }
 
     .album-info {
@@ -146,6 +147,25 @@
     .btn-main:hover {
       background-color: #343a40;
     }
+
+    /* 모달 스타일 */
+    #imageModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #imageModal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+    }
   </style>
 </head>
 <body>
@@ -161,7 +181,8 @@
   <div class="album-gallery">
     <c:forEach var="album" items="${albumList}">
       <div class="album-card">
-        <img src="/upload/${album.file_path}" alt="앨범 썸네일" onerror="this.src='/images/soccerteacher.png'" />
+      	<img src="/images/${album.filePath}" alt="썸네일" onclick="openModal(this.src)"
+                     class="thumb-img" />
         <div class="album-info">
           <h4>${album.title}</h4>
           <p>${album.description}</p>
@@ -190,6 +211,33 @@
 
   <a href="/teacher/main"><button class="btn-main" type="button">메인으로</button></a>
 </div>
+
+<!-- 🖼️ 이미지 확대용 모달 -->
+<div id="imageModal">
+  <img id="modalImage" />
+</div>
+
+<script>
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+
+  function openModal(src) {
+    modal.style.display = 'flex';
+    modalImg.src = src;
+  }
+  
+  // ESC 키 누르면 닫기
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      modal.style.display = 'none';
+    }
+  });
+
+  // 마우스로 모달 클릭해도 닫기
+  modal.onclick = function () {
+    modal.style.display = 'none';
+  }
+</script>
 
 </body>
 </html>
