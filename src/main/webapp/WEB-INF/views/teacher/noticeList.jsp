@@ -128,7 +128,7 @@
 		    ${n.title}
 		  </a>
 		</td>
-        <td>${n.admin_id}</td>
+        <td>관리자</td>
          <td>${fn:substring(n.created_at, 0, 10)}</td>
       </tr>
     </c:forEach>

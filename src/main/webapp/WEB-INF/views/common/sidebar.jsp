@@ -136,7 +136,8 @@
       </div>
       <div class="submenu">
         <a href="/admin/userManagement">회원 관리</a>
-        <a href="/admin/satisfactionList">만족도 평가</a>
+        <a href="/admin/lectureSatisfactionList">수업 만족도 평가</a>
+        <a href="/admin/teacherSatisfactionList">강사 만족도 평가</a>
       </div>
     </div>
 

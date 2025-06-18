@@ -160,17 +160,19 @@
 <header>
   <nav>
     <a href="/" class="topnav ${menu eq 'home' ? 'active' : ''}">Home</a>
-    <a href="/parent/notice" class="topnav">공지사항</a>
-    <a href="/parent/subjectInfo" class="topnav">과목소개</a>
-    <a href="/parent/teacherInfo" class="topnav">강사소개</a>
-    <a href="/parent/lectureList" class="topnav">수강신청</a>
-    <a href="/parent/lectureLegistrationList" class="topnav">신청내역</a>
-    <a href="/parent/subject" class="topnav">자녀 수업</a>
-    <a href="/parent/attendance" class="topnav">출결조회</a>
-    <a href="/parent/vehicleInfo" class="topnav">배차조회</a>
-    <a href="/parent/album" class="topnav">사진첩</a>
-    <a href="/parent/qnaList" class="topnav">QnA</a>
-    <a href="/parent/modifyInfo" class="topnav">정보수정</a>
+   	<a href="/parent/index" class="topnav">방과후교육</a>
+	<a href="/parent/notice" class="topnav">공지사항</a>
+	<a href="/parent/subject" class="topnav">과목소개</a>
+	<a href="/parent/teacher" class="topnav">강사소개</a>
+	<a href="/parent/lectureList" class="topnav">수강신청</a>
+	<a href="/parent/lecturePayOrCancel" class="topnav">결제</a>
+	<a href="/parent/lectureLegistrationList" class="topnav">수강 신청내역</a>
+	<a href="/parent/studentSubject" class="topnav">자녀 수업조회</a>
+	<a href="/parent/attendance" class="topnav">자녀 출결조회</a>
+	<a href="/parent/vehicleInfo" class="topnav">자녀 배차조회</a>
+	<a href="/parent/album" class="topnav">사진첩</a>
+	<a href="/parent/qnaList" class="topnav">QnA</a>
+	<a href="/parent/modifyInfo" class="topnav">개인정보 수정</a>
     <a href="/logout" class="topnav">로그아웃</a>
   </nav>
 </header>

@@ -98,8 +98,8 @@
 		<c:forEach var="notice" items="${noticeList}">
 			  <tr>
 			    <td>${notice.noticeId}</td>
-			    <td><a href="/teacher/noticeOne?noticeId=${notice.noticeId}">${notice.title}</a></td>
-			    <td>${notice.writer}</td>
+			    <td><a href="/parent/noticeOne?noticeId=${notice.noticeId}">${notice.title}</a></td>
+			    <td>관리자</td>
 			    <td>${notice.createdAt}</td>
 			  </tr>
 		</c:forEach>

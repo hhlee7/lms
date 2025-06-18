@@ -227,10 +227,19 @@
         </div>
 
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="/admin/satisfactionList" class="text-decoration-none">
+            <a href="/admin/lectureSatisfactionList" class="text-decoration-none">
                 <div class="card shadow-sm h-100 text-center p-4">
                     <i class="fas fa-star card-icon mb-3"></i>
-                    <h5 class="card-title text-dark">만족도 평가</h5>
+                    <h5 class="card-title text-dark">수업 만족도 평가</h5>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="/admin/teacherSatisfactionList" class="text-decoration-none">
+                <div class="card shadow-sm h-100 text-center p-4">
+                    <i class="fas fa-star card-icon mb-3"></i>
+                    <h5 class="card-title text-dark">강사 만족도 평가</h5>
                 </div>
             </a>
         </div>
