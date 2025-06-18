@@ -134,9 +134,12 @@ public class ParentController {
 		}
 		String userId = loginUser.getUserId();
 		Map<String, Object> vehicleInfo = parentService.getVehicleInfo(userId);
+		// log.info("vehicleInfo = " + vehicleInfo);
+		
 		model.addAttribute("vehicleInfo", vehicleInfo);
-		model.addAttribute("isCancelledToday", vehicleInfo.get("isCancelledToday"));
-
+		if(vehicleInfo != null) {
+			model.addAttribute("isCancelledToday", vehicleInfo.get("isCancelledToday"));
+		}
 		return "/parent/vehicleInfo";
 	}
 	
@@ -402,7 +405,7 @@ public class ParentController {
 	public String modifyQna(HttpSession session, Model model
 						, @RequestParam("qnaId") int qnaId) {
 		User loginUser = (User) session.getAttribute("loginUser");
-		log.info("qnaId: {}", qnaId);
+		// log.info("qnaId: {}", qnaId);
 		if (loginUser == null) {
 			return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
 		} 

@@ -142,8 +142,10 @@ public class ParentService {
 	}
 	
 	// 배차 취소 신청
+	@Transactional
 	public void insertVehicleCancel(String parentId, String reason) {
 		Map<String, Object> map = parentMapper.findPaymentAndAssignmentByParentId(parentId);
+		//log.info("reason: " + reason);
 		if (map != null) {
 			int paymentId = (int) map.get("paymentId");
 			int assignmentId = (int) map.get("assignmentId");
@@ -153,9 +155,9 @@ public class ParentService {
 			param.put("assignmentId", assignmentId);
 			param.put("reason", reason);
 			
+			//log.info("param: " + param);
 			    parentMapper.insertVehicleCancel(param);
 			}
-		
 	}
 	
 	// 수강신청 내역
