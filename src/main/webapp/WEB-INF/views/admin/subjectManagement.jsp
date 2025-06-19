@@ -8,28 +8,6 @@
   <title>과목 관리</title>
 </head>
 <body>
-
-	<div><a href="/admin/createSubject">과목 등록</a></div>
-	
-	<table border="1">
-		<tr>
-			<th>과목</th>
-			<th>수정</th>
-			<th>삭제</th>
-		</tr>
-	<c:forEach var="subject" items="${subjectList}">
-		<tr>
-			<td>${subject.subjectName}</td>
-			<td><a href="/admin/modifySubject?subjectId=${subject.subjectId}">수정</a></td>
-			<td>
-				<form method="post" action="/admin/removeSubject">
-					<input type="hidden" name="subjectId" value="${subject.subjectId}">
-					<button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-				</form>
-			</td>
-		</tr>
-	</c:forEach>
-	</table>
 <main class="main-content">
 
   <section class="text-center mb-4">
@@ -84,7 +62,5 @@
   </section>
 
 </main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

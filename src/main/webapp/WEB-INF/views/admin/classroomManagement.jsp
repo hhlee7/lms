@@ -55,7 +55,7 @@
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-search"></i></span>
           <input type="text" name="searchWord" id="searchWord" class="form-control"
-                 value="${page.searchWord != null ? page.searchWord : ''}" placeholder="강사 이름 입력" />
+                 value="${page.searchWord != null ? page.searchWord : ''}" placeholder="강사 이름을 입력하세요" />
           <button type="button" class="btn btn-primary" id="searchBtn">검색</button>
         </div>
       </div>
@@ -75,8 +75,8 @@
               <th>이름</th>
               <th>위치</th>
               <th>수용 인원</th>
-              <th>배정 과목</th>
-              <th>배정 강사</th>
+              <th>현재 배정된 과목</th>
+              <th>현재 배정된 강사</th>
               <th>시작 시간</th>
               <th>종료 시간</th>
               <th>요일</th>

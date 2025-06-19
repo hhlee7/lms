@@ -59,7 +59,7 @@
   <section class="table-responsive">
     <c:choose>
       <c:when test="${empty materialRequestList}">
-        <p class="text-center text-muted fst-italic">조회된 교보재 요청이 없습니다.</p>
+        <p class="text-center text-muted fst-italic">조회된 교보재 요청 목록이 없습니다.</p>
       </c:when>
       <c:otherwise>
         <table class="table table-bordered text-center align-middle bg-white">
