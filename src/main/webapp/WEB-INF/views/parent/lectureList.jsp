@@ -7,6 +7,71 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	body {
+	font-family: 'Segoe UI', 'Arial', sans-serif;
+	background-color: #f4f7fb;
+	margin: 0;
+	padding: 120px 20px 40px;
+	color: #333;
+	}
+	
+	h1 {
+		text-align: center;
+		font-size: 28px;
+		color: #0b3c5d;
+		margin-bottom: 30px;
+	}
+	
+	table {
+		width: 90%;
+		margin: 0 auto 40px;
+		border-collapse: collapse;
+		background-color: #fff;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	}
+	
+	th, td {
+		padding: 14px 18px;
+		text-align: center;
+		border-bottom: 1px solid #eaeaea;
+		font-size: 15px;
+	}
+	
+	th {
+		background-color: #e6f0ff;
+		color: #0b3c5d;
+		font-weight: 600;
+	}
+	
+	tr:hover td {
+		background-color: #f9fbff;
+		transition: background-color 0.3s ease;
+	}
+	
+	button {
+		background-color: #007acc;
+		color: white;
+		border: none;
+		border-radius: 6px;
+		padding: 8px 16px;
+		font-size: 14px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	
+	button:hover {
+		background-color: #005f9e;
+	}
+	
+	div[style*="color: red"] {
+		text-align: center;
+		margin-bottom: 20px;
+		font-weight: bold;
+	}
+</style>
 </head>
 <body>
 	<h1>수업 목록</h1>
@@ -35,7 +100,14 @@
 		  <tr>
 		    <td>${lec.subjectName}</td>
 		    <td>${lec.teacherName != null ? lec.teacherName : '미정'}</td>
-		    <td>${lec.startTime} ~ ${lec.endTime}</td>
+		    <fmt:parseDate value="${lec.startTime}" pattern="HH:mm:ss" var="parsedStartTime"/>
+			<fmt:parseDate value="${lec.endTime}" pattern="HH:mm:ss" var="parsedEndTime"/>
+			<td>
+				<fmt:formatDate value="${parsedStartTime}" pattern="HH:mm" />
+				~
+				<fmt:formatDate value="${parsedEndTime}" pattern="HH:mm" />
+			</td>
+
 		    <td>${lec.dayOfWeek}</td>
 		    <td>${lec.startDate}</td>
 		    <td>${lec.endDate}</td>

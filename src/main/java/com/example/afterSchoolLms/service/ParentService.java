@@ -202,7 +202,7 @@ public class ParentService {
 	    LocalDate today = LocalDate.now();
 	    
 	    LocalDate refundDeadline  = start.minusDays(3); // 오늘 기준 일 전 날짜 계산
-	    
+	     
 	    log.info("오늘 날짜 : " + today);
 	    log.info("개강일 : " + start);
 	    log.info("환불 마감일 : " + refundDeadline);

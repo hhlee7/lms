@@ -4,17 +4,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>과목 소개</title>
+	<meta charset="UTF-8">
+	<title>과목 소개</title>
+	<style>
+		body {
+			font-family: 'Segoe UI', 'Arial', sans-serif;
+			background-color: #f4f7fb;
+			margin: 0;
+			padding: 120px 20px 40px;
+		}
+
+		h1 {
+			text-align: center;
+			color: #0b3c5d;
+			font-size: 2rem;
+			margin-bottom: 40px;
+		}
+
+		.subject-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 24px;
+			padding: 0 20px;
+		}
+
+		.subject-card {
+			background-color: #ffffff;
+			border-radius: 12px;
+			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+			transition: transform 0.2s ease, box-shadow 0.3s ease;
+			overflow: hidden;
+			text-align: center;
+		}
+
+		.subject-card:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+		}
+
+		.subject-card img {
+			width: 100%;
+			height: 180px;
+			object-fit: cover;
+			border-bottom: 1px solid #eee;
+		}
+
+		.subject-card-name {
+			padding: 14px;
+			font-size: 16px;
+			font-weight: 600;
+			color: #333;
+		}
+	</style>
 </head>
 <body>
 	<h1>과목 소개</h1>
-	<c:forEach var="subject" items="${subjectList}">
-		<div>
-			<a href="/parent/subjectOne?subjectName=${subject.subjectName}">
-				<img src="/images/${subject.subjectName}.jpeg" alt="${subject.subjectName}수업" style="width:150px; height:150px;">
-			</a>
-		</div>
-	</c:forEach>
+	<div class="subject-container">
+		<c:forEach var="subject" items="${subjectList}">
+			<div class="subject-card">
+				<a href="/parent/subjectOne?subjectName=${subject.subjectName}">
+					<img src="/images/${subject.subjectName}.jpg" alt="${subject.subjectName}수업">
+					<div class="subject-card-name">${subject.subjectName}</div>
+				</a>
+			</div>
+		</c:forEach>
+	</div>
 </body>
 </html>

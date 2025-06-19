@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file ="/WEB-INF/views/layout/header.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -91,7 +92,8 @@
 		</tr>
 		<tr>
 			<th>작성일</th>
-			<td>${notice.createdAt}</td>
+			<fmt:parseDate value="${notice.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+		    <td><fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd"/></td>
 		</tr>
 	</table>
 	
