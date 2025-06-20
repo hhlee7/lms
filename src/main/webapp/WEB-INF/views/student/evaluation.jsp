@@ -7,13 +7,19 @@
 <head>
 <meta charset="UTF-8">
 <title>수업 만족도 평가</title>
+
+<!-- 구글 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
         background: linear-gradient(to right, #e3f2fd, #f5f6fa);
         margin: 0;
         padding: 0;
         color: #333;
+        font-size: 18px;
     }
 
     .container {
@@ -25,17 +31,21 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     }
 
-    h1, h3 {
-        color: #007acc;
+    h1 {
+        color: #000; /* 검정색 */
         text-align: center;
         margin-bottom: 10px;
+        font-weight: 700;
+        font-family: 'Jua', 'Gowun Dodum', 'Noto Sans KR', sans-serif;
     }
 
     .info-text {
         margin-bottom: 40px;
         text-align: center;
         font-size: 18px;
-        color: #444;
+        color: #444; /* 기존 회색 유지 */
+        font-family: 'Segoe UI', sans-serif; /* 기존 폰트 유지 */
+        font-weight: normal;
     }
 
     .rating-section {
@@ -43,11 +53,12 @@
     }
 
     .rating-label {
-        font-weight: 600;
-        font-size: 16px;
+        font-weight: 700;
+        font-size: 18px; /* 글자 크기 약간 키움 */
         margin-bottom: 12px;
         display: block;
-        color: #333;
+        color: #000; /* 검정색 */
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     .rating-group {
@@ -86,15 +97,17 @@
         border: none;
         border-radius: 6px;
         font-size: 16px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     #submitBtn:hover {
         background-color: #005f99;
     }
 </style>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     $(function(){
@@ -109,7 +122,10 @@
                 return;
             }
 
-            $("#evaluateForm").submit();
+            const confirmed = confirm("정말 제출하시겠습니까?");
+            if (confirmed) {
+                $("#evaluateForm").submit();
+            }
         });
     });
 </script>

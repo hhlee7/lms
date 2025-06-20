@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>과목 소개</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
 <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -41,11 +43,17 @@
       transition: transform 0.2s ease;
       text-align: center;
     }
-
+    
     .subject-card:hover {
       transform: translateY(-6px);
     }
 
+	.subject-card p strong {
+	  font-family: 'Jua', sans-serif; /* 제목용 – 귀엽고 또렷 */
+	  font-size: 1.2rem;
+	  color: #333;
+	  }
+	
     .subject-card img {
       width: 100%;
       height: 180px;

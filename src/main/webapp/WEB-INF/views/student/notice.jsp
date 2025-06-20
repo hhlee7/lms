@@ -7,11 +7,16 @@
 <head>
 <meta charset="UTF-8">
 <title>공지사항</title>
+
+<!-- ✅ Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
   body {
     background-color: #f9f9fb;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
   .notice-section {
@@ -24,6 +29,7 @@
   }
 
   .notice-header h2 {
+    font-family: 'Jua', 'Noto Sans KR', sans-serif;
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 5px;
@@ -31,6 +37,7 @@
   }
 
   .notice-header p {
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
     font-size: 1rem;
     color: #666;
     margin-bottom: 30px;
@@ -40,6 +47,11 @@
     background-color: #f2f4f8;
     font-weight: 600;
     text-align: center;
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
+  }
+
+  .notice-table td {
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
   }
 
   .notice-table tbody tr:hover {
@@ -57,36 +69,38 @@
   }
 
   .pagination {
-        text-align: center;
-        margin-top: 30px;
-    }
+    text-align: center;
+    margin-top: 30px;
+  }
 
-    .pagination a, .pagination strong {
-        display: inline-block;
-        margin: 0 5px;
-        padding: 6px 12px;
-        color: #007acc;
-        text-decoration: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-weight: bold;
-    }
+  .pagination a, .pagination strong {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 6px 12px;
+    color: #007acc;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
+  }
 
-    .pagination a:hover {
-        background-color: #f0f0f0;
-    }
+  .pagination a:hover {
+    background-color: #f0f0f0;
+  }
 
-    .pagination strong {
-        background-color: #007acc;
-        color: white;
-        border-color: #007acc;
-    }
+  .pagination strong {
+    background-color: #007acc;
+    color: white;
+    border-color: #007acc;
+  }
 
   .total-count {
     text-align: right;
     margin-bottom: 10px;
     color: #555;
     font-size: 0.95rem;
+    font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
   }
 </style>
 </head>
@@ -104,32 +118,30 @@
     총 <strong>${totalCount}</strong>건
   </div>
 
-<table class="table table-hover notice-table align-middle">
-  <thead>
-    <tr>
-      <th style="width: 10%;">번호</th>
-      <th class="text-center">제목</th>
-      <th style="width: 15%;">작성자</th>
-      <th style="width: 20%;">작성일</th>
-    </tr>
-  </thead>
-  <tbody>
-    <c:forEach var="notice" items="${noticeList}">
+  <table class="table table-hover notice-table align-middle">
+    <thead>
       <tr>
-        <td class="text-center">${notice.noticeId}</td>
-        <td class="text-center">
-		  <a href="/student/noticeOne?noticeId=${notice.noticeId}" 
-		     class="fw-semibold text-dark text-decoration-none">
-		    ${notice.title}
-		  </a>
-		</td>
-        <td class="text-center">관리자</td>
-        <td class="text-center">${notice.createdAt}</td>
+        <th style="width: 10%;">번호</th>
+        <th class="text-center">제목</th>
+        <th style="width: 15%;">작성자</th>
+        <th style="width: 20%;">작성일</th>
       </tr>
-    </c:forEach>
-  </tbody>
-</table>
-
+    </thead>
+    <tbody>
+      <c:forEach var="notice" items="${noticeList}">
+        <tr>
+          <td class="text-center">${notice.noticeId}</td>
+          <td class="text-center">
+            <a href="/student/noticeOne?noticeId=${notice.noticeId}" class="fw-semibold text-dark text-decoration-none">
+              ${notice.title}
+            </a>
+          </td>
+          <td class="text-center">관리자</td>
+          <td class="text-center">${notice.createdAt}</td>
+        </tr>
+      </c:forEach>
+    </tbody>
+  </table>
 
   <!-- 페이지네이션 계산 -->
   <c:if test="${totalPage <= 5}">

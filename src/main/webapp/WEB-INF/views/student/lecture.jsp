@@ -6,10 +6,16 @@
 <head>
 <meta charset="UTF-8">
 <title>내 수업 조회</title>
+
+<!-- ✅ Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', sans-serif;
         background-color: #f2f5f9;
         margin: 0;
         padding: 0;
@@ -26,9 +32,11 @@
 
     h1 {
         text-align: center;
-        color: #007bff;
+        color: #000; /* 검정색으로 변경 */
         margin-bottom: 40px;
-        font-weight: 600;
+        font-weight: 700;
+        font-family: 'Jua', 'Noto Sans KR', sans-serif;
+        font-size: 2.5rem;
     }
 
     .lecture-card {
@@ -45,31 +53,28 @@
         box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    .lecture-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
     .lecture-header h2 {
         font-size: 22px;
         margin: 0;
-        color: #007bff;
+        color: #000;
+        font-weight: 600;
     }
 
-    .lecture-header .teacher {
-        font-size: 16px;
-        color: #555;
-    }
+    .teacher {
+	    font-size: 18px;
+	    font-weight: 600;
+	    color: #222;
+	    margin-top: 10px;
+	}
 
     .lecture-info {
-        font-size: 15px;
-        color: #444;
+        font-size: 17px;
+        color: #333;
+        margin-top: 15px;
     }
 
     .lecture-info p {
-        margin: 6px 0;
+        margin: 8px 0;
     }
 
     .icon {
@@ -88,8 +93,8 @@
 	        <div class="lecture-card">
 	            <div class="lecture-header">
 	                <h2>${lecture.subjectName}</h2>
-	                <div class="teacher">👨‍🏫 ${lecture.teacherName}</div>
 	            </div>
+                <div class="teacher">👨‍🏫 ${lecture.teacherName}</div>
 	            <div class="lecture-info">
 	                <p><span class="icon">📅</span>요일: ${lecture.dayOfWeek}</p>
 	                <p><span class="icon">⏰</span>시간: ${lecture.startTime} ~ ${lecture.endTime}</p>

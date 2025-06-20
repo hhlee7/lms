@@ -5,11 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <title>공지사항 상세 조회</title>
+
+<!-- 폰트 링크 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
   body {
     background-color: #f9f9fb;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
   .notice-detail-container {
@@ -22,8 +28,9 @@
   }
 
   .notice-title {
-    font-size: 2rem;
-    font-weight: bold;
+    font-family: 'Jua', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
     color: #222;
     text-align: center;
     margin-bottom: 40px;
@@ -39,6 +46,12 @@
     justify-content: space-between;
     border-bottom: 1px solid #eee;
     padding-bottom: 12px;
+  }
+
+  h4.fw-semibold {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 1.6rem;
+    color: #111;
   }
 
   .notice-content {

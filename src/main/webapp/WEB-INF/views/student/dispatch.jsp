@@ -6,10 +6,17 @@
 <head>
 <meta charset="UTF-8">
 <title>내 배차 조회</title>
+
+<!-- ✅ 폰트 적용 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+<!-- ✅ Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', sans-serif;
         background-color: #f0f4f8;
         margin: 0;
         padding: 0;
@@ -26,9 +33,11 @@
 
     h1 {
         text-align: center;
-        color: #28a745;
+        color: #000000;
+        font-family: 'Jua', sans-serif;
+        font-size: 2.4rem;
+        font-weight: 700;
         margin-bottom: 40px;
-        font-weight: 600;
     }
 
     .dispatch-card {
@@ -45,7 +54,15 @@
         box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
+    h2 {
+        font-family: 'Gowun Dodum', sans-serif;
+        font-size: 20px;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+
     .section-title {
+        font-family: 'Gowun Dodum', sans-serif;
         font-size: 18px;
         color: #444;
         margin-bottom: 10px;
@@ -56,6 +73,7 @@
         margin: 6px 0;
         font-size: 15px;
         color: #444;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     .icon {
@@ -69,40 +87,37 @@
         padding-top: 15px;
         border-top: 1px solid #eaecef;
     }
-
-    h2 {
-        font-size: 20px;
-        color: #28a745;
-        margin-bottom: 10px;
-    }
 </style>
 </head>
 <body>
-	<jsp:include page="header.jsp"></jsp:include>
-	<div class="container">
+
+    <jsp:include page="header.jsp"></jsp:include>
+
+    <div class="container">
         <h1>내 배차 조회</h1>
 
         <c:forEach var="dispatch" items="${dispatchList}">
-	        <div class="dispatch-card">
-	            <h2>${dispatch.subjectName}</h2>
-	
-	            <div class="dispatch-info">
-	                <div class="section-title">🧑‍🏫 수업 정보</div>
-	                <p><span class="icon">👨‍🏫</span>강사명: ${dispatch.teacherName}</p>
-	                <p><span class="icon">📅</span>요일: ${dispatch.dayOfWeek}</p>
-	                <p><span class="icon">⏰</span>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
-	                <p><span class="icon">📆</span>수업 기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
-	
-	                <div class="info-block">
-	                    <div class="section-title">🚐 배차 정보</div>
-	                    <p><span class="icon">👨‍✈️</span>기사님: ${dispatch.driverName}</p>
-	                    <p><span class="icon">📞</span>기사 연락처: ${dispatch.driverPhone}</p>
-	                    <p><span class="icon">🚘</span>차량 번호: ${dispatch.vehicleNo}</p>
-	                    <p><span class="icon">📍</span>주차 장소: ${dispatch.location}</p>
-	                </div>
-	            </div>
-	        </div>
-	    </c:forEach>
+            <div class="dispatch-card">
+                <h2>${dispatch.subjectName}</h2>
+
+                <div class="dispatch-info">
+                    <div class="section-title">🧑‍🏫 수업 정보</div>
+                    <p><span class="icon">👨‍🏫</span>강사명: ${dispatch.teacherName}</p>
+                    <p><span class="icon">📅</span>요일: ${dispatch.dayOfWeek}</p>
+                    <p><span class="icon">⏰</span>시간: ${dispatch.startTime} ~ ${dispatch.endTime}</p>
+                    <p><span class="icon">📆</span>수업 기간: ${dispatch.startDate} ~ ${dispatch.endDate}</p>
+
+                    <div class="info-block">
+                        <div class="section-title">🚐 배차 정보</div>
+                        <p><span class="icon">👨‍✈️</span>기사님: ${dispatch.driverName}</p>
+                        <p><span class="icon">📞</span>기사 연락처: ${dispatch.driverPhone}</p>
+                        <p><span class="icon">🚘</span>차량 번호: ${dispatch.vehicleNo}</p>
+                        <p><span class="icon">📍</span>주차 장소: ${dispatch.location}</p>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
     </div>
+
 </body>
 </html>

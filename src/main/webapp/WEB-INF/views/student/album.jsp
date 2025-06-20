@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -7,12 +6,15 @@
 <meta charset="UTF-8">
 <title>사진첩</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', sans-serif;
         margin: 0;
         background-color: #f5f6fa;
-        color: #333;
+        color: #222;
     }
 
     .container {
@@ -26,8 +28,10 @@
 
     h1 {
         text-align: center;
-        color: #007acc;
+        color: #222;
         margin-bottom: 30px;
+        font-weight: 700;
+        font-family: 'Jua', sans-serif;
     }
 
     #searchForm {
@@ -51,6 +55,7 @@
         border-radius: 5px;
         margin-left: 8px;
         cursor: pointer;
+        font-weight: 500;
     }
 
     #searchForm button:hover {
@@ -61,17 +66,19 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        font-size: 15px;
     }
 
     table th, table td {
         padding: 12px 15px;
         border: 1px solid #ddd;
         text-align: center;
+        color: #222;
     }
 
     table th {
         background-color: #f0f4f8;
-        color: #333;
+        font-weight: 600;
     }
 
     table tr:hover {
@@ -79,8 +86,9 @@
     }
 
     table a {
-        color: #007acc;
+        color: #222;
         text-decoration: none;
+        font-weight: 500;
     }
 
     table a:hover {
@@ -96,7 +104,7 @@
         display: inline-block;
         margin: 0 5px;
         padding: 6px 12px;
-        color: #007acc;
+        color: #444;
         text-decoration: none;
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -108,9 +116,9 @@
     }
 
     .pagination strong {
-        background-color: #007acc;
+        background-color: #444;
         color: white;
-        border-color: #007acc;
+        border-color: #444;
     }
 </style>
 </head>
@@ -143,49 +151,48 @@
             </tbody>
         </table>
 
-          <!-- 페이지네이션 계산 -->
-  <c:if test="${totalPage <= 5}">
-    <c:set var="startPage" value="1"/>
-    <c:set var="endPage" value="${totalPage}"/>
-  </c:if>
-  <c:if test="${totalPage > 5}">
-    <c:set var="startPage" value="${page - 2}"/>
-    <c:set var="endPage" value="${page + 2}"/>
-    <c:if test="${startPage < 1}">
-      <c:set var="startPage" value="1"/>
-      <c:set var="endPage" value="5"/>
-    </c:if>
-    <c:if test="${endPage > totalPage}">
-      <c:set var="endPage" value="${totalPage}"/>
-      <c:set var="startPage" value="${totalPage - 4 < 1 ? 1 : totalPage - 4}"/>
-    </c:if>
-  </c:if>
+        <!-- 페이지네이션 계산 -->
+        <c:if test="${totalPage <= 5}">
+            <c:set var="startPage" value="1"/>
+            <c:set var="endPage" value="${totalPage}"/>
+        </c:if>
+        <c:if test="${totalPage > 5}">
+            <c:set var="startPage" value="${page - 2}"/>
+            <c:set var="endPage" value="${page + 2}"/>
+            <c:if test="${startPage < 1}">
+                <c:set var="startPage" value="1"/>
+                <c:set var="endPage" value="5"/>
+            </c:if>
+            <c:if test="${endPage > totalPage}">
+                <c:set var="endPage" value="${totalPage}"/>
+                <c:set var="startPage" value="${totalPage - 4 < 1 ? 1 : totalPage - 4}"/>
+            </c:if>
+        </c:if>
 
-  <!-- Bootstrap 페이지네이션 UI -->
-  <nav aria-label="Page navigation" class="mt-4">
-    <ul class="pagination justify-content-center">
-      <li class="page-item ${page == 1 ? 'disabled' : ''}">
-        <a class="page-link" href="?page=1&size=${size}&searchWord=${searchWord}">처음</a>
-      </li>
-      <li class="page-item ${page == 1 ? 'disabled' : ''}">
-        <a class="page-link" href="?page=${page - 1}&size=${size}&searchWord=${searchWord}">이전</a>
-      </li>
-      <c:forEach var="i" begin="${startPage}" end="${endPage}">
-        <li class="page-item ${i == page ? 'active' : ''}">
-          <a class="page-link" href="?page=${i}&size=${size}&searchWord=${searchWord}">${i}</a>
-        </li>
-      </c:forEach>
-      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
-        <a class="page-link" href="?page=${page + 1}&size=${size}&searchWord=${searchWord}">다음</a>
-      </li>
-      <li class="page-item ${page == totalPage ? 'disabled' : ''}">
-        <a class="page-link" href="?page=${totalPage}&size=${size}&searchWord=${searchWord}">끝</a>
-      </li>
-    </ul>
-  </nav>
-</div>
+        <!-- 페이지네이션 UI -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item ${page == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=1&size=${size}&searchWord=${searchWord}">처음</a>
+                </li>
+                <li class="page-item ${page == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=${page - 1}&size=${size}&searchWord=${searchWord}">이전</a>
+                </li>
+                <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                    <li class="page-item ${i == page ? 'active' : ''}">
+                        <a class="page-link" href="?page=${i}&size=${size}&searchWord=${searchWord}">${i}</a>
+                    </li>
+                </c:forEach>
+                <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=${page + 1}&size=${size}&searchWord=${searchWord}">다음</a>
+                </li>
+                <li class="page-item ${page == totalPage ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=${totalPage}&size=${size}&searchWord=${searchWord}">끝</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

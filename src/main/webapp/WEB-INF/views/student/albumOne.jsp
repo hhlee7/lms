@@ -5,12 +5,18 @@
 <head>
 <meta charset="UTF-8">
 <title>앨범 상세</title>
+
+<!-- 구글 폰트 로드 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
         margin: 0;
         background-color: #f5f6fa;
-        color: #333;
+        color: #000; /* 글자색 검정 */
+        font-size: 18px; /* 본문 글자 크기 키움 */
     }
 
     .container {
@@ -24,8 +30,11 @@
 
     h1 {
         text-align: center;
-        color: #007acc;
+        color: #000; /* 제목 글자색 검정 */
         margin-bottom: 30px;
+        font-family: 'Jua', 'Gowun Dodum', sans-serif;
+        font-weight: 700;
+        font-size: 36px; /* 제목 좀 더 크게 */
     }
 
     .album-info {
@@ -33,15 +42,16 @@
     }
 
     .album-info div {
-        margin-bottom: 12px;
-        font-size: 16px;
+        margin-bottom: 14px;
+        font-size: 18px; /* 본문 글자 크기 */
+        color: #000; /* 본문도 검정색 */
     }
 
     .album-info span.label {
-        font-weight: bold;
+        font-weight: 700;
         display: inline-block;
         width: 100px;
-        color: #555;
+        color: #222;
     }
 
     .photo-gallery {
@@ -95,12 +105,12 @@
     }
 
     .modal-content img {
-	    width: 100%;
-	    max-height: 80vh;  /* 화면 높이의 80%로 제한 */
-	    height: auto;
-	    display: block;
-	    border-radius: 6px;
-	    object-fit: contain;  /* 비율 유지하며 전체 이미지 보이게 */
+        width: 100%;
+        max-height: 80vh;  /* 화면 높이의 80%로 제한 */
+        height: auto;
+        display: block;
+        border-radius: 6px;
+        object-fit: contain;  /* 비율 유지하며 전체 이미지 보이게 */
     }
 
     .close-btn {
@@ -118,48 +128,48 @@
 </style>
 </head>
 <body>
-	<jsp:include page="header.jsp"></jsp:include>
-	
-	<div class="container">
-	    <h1>앨범 상세 페이지</h1>
-	
-	    <c:if test="${album != null}">
-	        <div class="album-info">
-	            <div><span class="label">제목</span> ${album.title}</div>
-	            <div><span class="label">과목</span> ${album.subjectName}</div>
-	            <div><span class="label">설명</span> ${album.description}</div>
-	            <div><span class="label">작성일</span> ${album.createdAt}</div>
-	        </div>
-	    </c:if>
-	
-	    <c:if test="${photoList != null && not empty photoList}">
-	        <div class="photo-gallery">
-	            <c:forEach items="${photoList}" var="photo">
-	                <div class="photo-card">
-	                    <img src="${photo.filePath}" alt="사진" onclick="openModal('${photo.filePath}')" />
-	                </div>
-	            </c:forEach>
-	        </div>
-	    </c:if>
-	</div>
-	
-	<!-- 모달 영역 -->
-	<div id="photoModal" class="modal" onclick="closeModal()">
-	    <div class="modal-content" onclick="event.stopPropagation()">
-	        <span class="close-btn" onclick="closeModal()">✖</span>
-	        <img id="modalImage" src="" alt="확대 이미지">
-	    </div>
-	</div>
-	
-	<script>
-	    function openModal(imageSrc) {
-	        document.getElementById("modalImage").src = imageSrc;
-	        document.getElementById("photoModal").style.display = "block";
-	    }
-	
-	    function closeModal() {
-	        document.getElementById("photoModal").style.display = "none";
-	    }
-	</script>
+    <jsp:include page="header.jsp"></jsp:include>
+
+    <div class="container">
+        <h1>앨범 상세 페이지</h1>
+
+        <c:if test="${album != null}">
+            <div class="album-info">
+                <div><span class="label">제목</span> ${album.title}</div>
+                <div><span class="label">과목</span> ${album.subjectName}</div>
+                <div><span class="label">설명</span> ${album.description}</div>
+                <div><span class="label">작성일</span> ${album.createdAt}</div>
+            </div>
+        </c:if>
+
+        <c:if test="${photoList != null && not empty photoList}">
+            <div class="photo-gallery">
+                <c:forEach items="${photoList}" var="photo">
+                    <div class="photo-card">
+                        <img src="${photo.filePath}" alt="사진" onclick="openModal('${photo.filePath}')" />
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+
+    <!-- 모달 영역 -->
+    <div id="photoModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal()">✖</span>
+            <img id="modalImage" src="" alt="확대 이미지">
+        </div>
+    </div>
+
+    <script>
+        function openModal(imageSrc) {
+            document.getElementById("modalImage").src = imageSrc;
+            document.getElementById("photoModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("photoModal").style.display = "none";
+        }
+    </script>
 </body>
 </html>

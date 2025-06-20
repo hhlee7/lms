@@ -6,12 +6,21 @@
 <head>
 <meta charset="UTF-8">
 <title>출결 조회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
 <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       background-color: #f5f6fa;
       color: #333;
+    }
+    
+    h1 {
+      font-family: 'Jua', sans-serif;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-top: 30px;
     }
     
     table {

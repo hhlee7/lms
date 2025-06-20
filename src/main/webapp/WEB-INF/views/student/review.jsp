@@ -5,13 +5,19 @@
 <head>
 <meta charset="UTF-8">
 <title>리뷰 작성</title>
+
+<!-- 구글 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
         background-color: #f5f6fa;
         margin: 0;
         padding: 0;
         color: #333;
+        font-size: 22px;  /* 기본 글자 크기 키움 */
     }
 
     .container {
@@ -25,20 +31,25 @@
 
     h1 {
         text-align: center;
-        color: #007acc;
-        font-size: 28px;
+        color: #000; /* 검정색 */
+        font-size: 34px;  /* 크게 */
         margin-bottom: 20px;
+        font-weight: 700;
+        font-family: 'Jua', 'Gowun Dodum', 'Noto Sans KR', sans-serif;
     }
 
     .info-text {
         text-align: center;
         margin-bottom: 35px;
-        color: #555;
+        color: #555; /* 기존 회색 유지 */
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: normal;
+        font-size: 20px; /* 키움 */
     }
 
     .info-text h3 {
         margin: 5px 0;
-        font-size: 18px;
+        font-size: 20px;
     }
 
     .form-group {
@@ -47,22 +58,26 @@
 
     label {
         display: block;
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 8px;
-        color: #333;
+        color: #000; /* 검정색 */
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 20px;  /* 키움 */
     }
 
     textarea {
         width: 100%;
         height: 160px;
         padding: 14px;
-        font-size: 16px;
+        font-size: 20px;  /* 키움 */
+        font-family: 'Noto Sans KR', sans-serif;
         border: 1px solid #ccc;
         border-radius: 8px;
         resize: vertical;
         box-sizing: border-box;
         background-color: #fdfdfd;
         transition: border 0.2s ease-in-out;
+        color: #333;
     }
 
     textarea:focus {
@@ -74,13 +89,15 @@
         padding: 12px 30px;
         background-color: #007acc;
         color: #fff;
-        font-size: 16px;
+        font-size: 18px;  /* 키움 */
+        font-weight: 700;
         border: none;
         border-radius: 6px;
         cursor: pointer;
         display: block;
         margin: 0 auto;
         transition: background-color 0.2s ease;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     #submitBtn:hover {
@@ -89,9 +106,10 @@
 
     .note {
         text-align: center;
-        font-size: 14px;
+        font-size: 16px;  /* 키움 */
         color: #999;
         margin-top: 10px;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 </style>
 
@@ -103,7 +121,11 @@
                 alert('후기를 작성해주세요.');
                 return;
             }
-            $("#reviewForm").submit();
+
+            const confirmed = confirm("정말 제출하시겠습니까?");
+            if (confirmed) {
+                $("#reviewForm").submit();
+            }
         });
     });
 </script>

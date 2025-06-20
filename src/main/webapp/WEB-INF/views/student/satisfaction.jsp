@@ -6,10 +6,17 @@
 <head>
 <meta charset="UTF-8">
 <title>수업 만족도 평가</title>
+
+<!-- ✅ 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+<!-- ✅ Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Noto Sans KR', sans-serif;
         background-color: #f5f6fa;
         margin: 0;
     }
@@ -25,9 +32,11 @@
 
     h1 {
         text-align: center;
-        color: #007acc;
+        font-family: 'Jua', sans-serif;
+        color: #000;
         margin-bottom: 40px;
         font-weight: bold;
+        font-size: 2.4rem;
     }
 
     .evaluation-card {
@@ -54,6 +63,7 @@
         font-size: 20px;
         color: #007acc;
         margin: 0;
+        font-family: 'Gowun Dodum', sans-serif;
     }
 
     .status-badge {
@@ -73,28 +83,23 @@
         color: #721c24;
     }
 
-    .lecture-info p {
-        margin: 5px 0;
-        font-size: 14px;
-        color: #444;
+    .lecture-info {
+        margin-bottom: 20px;
     }
-    
-    lecture-info {
-	    margin-bottom: 20px;
-	}
-	
-	.lecture-info p {
+
+    .lecture-info p {
 	    margin: 10px 0;
-	    font-size: 14px;
+	    font-size: 16px; /* 기존 14px → 16px */
 	    color: #444;
+	    font-family: 'Noto Sans KR', sans-serif;
 	}
-	
-	.actions {
-	    display: flex;
-	    flex-wrap: wrap;
-	    gap: 10px;
-	    margin-top: 10px;
-	}
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
     .actions a {
         margin-right: 10px;
@@ -121,6 +126,7 @@
     .actions span {
         font-size: 14px;
         margin-right: 10px;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 </style>
 </head>
