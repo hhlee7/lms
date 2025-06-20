@@ -68,7 +68,6 @@
         <table class="table table-bordered bg-white text-center">
           <thead>
             <tr>
-              <th>번호</th>
               <th>과목</th>
               <th>이름</th>
               <th>수강 신청 일시</th>
@@ -78,9 +77,8 @@
           <tbody>
             <c:forEach var="list" items="${studentEnrollmentList}">
               <tr>
-                <td>${list.enrollmentId}</td>
                 <td>${list.subjectName}</td>
-                <td>${list.studentName}</td>
+                <td><a href="/admin/userOne?userId=${list.studentId}">${list.studentName}</a></td>
                 <td>${list.enrolledAt}</td>
                 <td>${list.status}</td>
               </tr>

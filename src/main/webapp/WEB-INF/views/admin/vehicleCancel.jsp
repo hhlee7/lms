@@ -33,7 +33,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">❌ 배차 취소 관리</h2>
+      <h2 class="fw-bold">배차 취소 관리</h2>
     </section>
 
     <!-- 검색 필터 -->
@@ -74,7 +74,7 @@
           <tbody>
             <c:forEach var="can" items="${cancelList}">
               <tr>
-                <td>${can.studentName}</td>
+                <td><a href="/admin/userOne?userId=${can.studentId}">${can.studentName}</a></td>
                 <td>${can.subjectName}</td>
                 <td>${can.cancelReason}</td>
                 <td>${can.dayOfWeek}</td>

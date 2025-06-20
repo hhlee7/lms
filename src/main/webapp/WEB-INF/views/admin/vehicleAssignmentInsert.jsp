@@ -13,7 +13,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">🧭 차량 배정</h2>
+      <h2 class="fw-bold">차량 배정</h2>
     </section>
 
     <section class="card shadow-sm mx-auto" style="max-width: 700px;">

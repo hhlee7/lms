@@ -71,11 +71,11 @@
       </form>
 
       <h4 class="mt-5">수업 정보</h4>
-      <a href="lectureInsert?userId=${selectedUser.userId}" class="btn btn-outline-secondary mb-2">수업 등록</a>
+      <a href="/admin/createLecture" class="btn btn-outline-secondary mb-2">수업 등록</a>
       <c:forEach var="lec" items="${lectureList}">
         <table class="table">
           <tr>
-            <th>과목</th><th>강사</th><th>요일</th><th>시간</th><th>강의실</th><th>개강일</th><th>종강일</th><th>정정</th>
+            <th>과목</th><th>강사</th><th>요일</th><th>시간</th><th>강의실</th><th>개강일</th><th>종강일</th>
           </tr>
           <tr>
             <td>${lec.subjectName}</td>
@@ -85,7 +85,6 @@
             <td>${lec.classroomName}</td>
             <td>${lec.startDate}</td>
             <td>${lec.endDate}</td>
-            <td><a href="#">수정</a></td>
           </tr>
         </table>
       </c:forEach>
@@ -96,7 +95,7 @@
       <c:forEach var="parent" items="${parentUser}">
         <table class="table">
           <tr><th>아이디</th><td>${parent.userId}</td></tr>
-          <tr><th>이름</th><td>${parent.userName}</td></tr>
+          <tr><th>이름</th><td><a href="/admin/userOne?userId=${parent.userId}">${parent.userName}</a></td></tr>
           <tr><th>전화번호</th><td>${parent.phone}</td></tr>
         </table>
       </c:forEach>
@@ -107,7 +106,7 @@
       <c:forEach var="student" items="${studentUser}">
         <table class="table">
           <tr><th>아이디</th><td>${student.userId}</td></tr>
-          <tr><th>이름</th><td>${student.userName}</td></tr>
+          <tr><th>이름</th><td><a href="/admin/userOne?userId=${student.userId}">${student.userName}</a></td></tr>
           <tr><th>전화번호</th><td>${student.phone}</td></tr>
         </table>
       </c:forEach>
@@ -132,7 +131,7 @@
       </c:forEach>
     </c:if>
 
-    <a href="userManagement" class="btn btn-secondary mt-3">뒤로</a>
+    <a href="userManagement" class="btn btn-secondary">뒤로</a>
   </div>
 </body>
 </html>

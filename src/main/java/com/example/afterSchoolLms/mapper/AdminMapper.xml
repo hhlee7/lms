@@ -43,7 +43,7 @@
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
 		LEFT JOIN vehicle_cancel vc 
-		       ON vc.assignment_id = va.assignment_id 
+		       ON vc.payment_id = p.payment_id 
 		      AND DATE(vc.decided_at) = CURDATE()
 		WHERE lt.end_date >= CURDATE()
 		  AND vc.assignment_id IS NULL
@@ -60,11 +60,12 @@
 	<!-- 배차 취소 리스트 조회 -->
 	<select id="selectCancelList" resultType="map" parameterType="com.example.afterSchoolLms.dto.Page">
 		SELECT
+			u.user_id AS studentId,
 			u.name AS studentName,
 			sb.name AS subjectName,
 			lt.day_of_week AS dayOfWeek,
 			vc.cancel_reason AS cancelReason,
-			vc.decided_at AS decidedAt
+			DATE_FORMAT(vc.decided_at, '%Y-%m-%d %H:%i') AS decidedAt
 		FROM vehicle_cancel vc
 		INNER JOIN payment p ON vc.payment_id = p.payment_id
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
@@ -107,12 +108,13 @@
 		SELECT
 			st.user_id AS studentId,
 			st.name AS studentName,
+			st.birth,
 			vc.vehicle_no AS vehicleNo,
 			dr.user_id AS driverId,
 			dr.name AS driverName,
 			sb.name AS subjectName,
 			lt.day_of_week AS dayOfWeek,
-			lt.end_time AS endTime
+			DATE_FORMAT(lt.end_time, '%H:%i') AS endTime
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN (
@@ -334,8 +336,8 @@
 		       cr.name AS classroomName,
 		       cr.location AS location,
 		       lt.lecture_id AS lectureId,
-		       lt.start_time AS startTime,
-		       lt.end_time AS endTime,
+		       DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+  			   DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
 		       lt.day_of_week AS 'dayOfWeek',
 		       lt.start_date AS startDate,
 		       lt.end_date AS endDate
@@ -344,6 +346,24 @@
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user u ON ta.teacher_id = u.user_id
+	</select>
+	
+	<!-- 강사 아이디로 수업 조회 -->
+	<select id="selectLectureByTeacherId" parameterType="String" resultType="map">
+		SELECT
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+		    DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
+			cl.name AS classroomName,
+			lt.start_date AS startDate,
+			lt.end_date AS endDate
+		FROM
+		(SELECT * FROM user WHERE user_id = #{teacherId}) t
+		INNER JOIN teacher_assignment ta ON t.user_id = ta.teacher_id
+		INNER JOIN lecture lt ON ta.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN classroom cl ON cl.classroom_id = lt.classroom_id
 	</select>
 	
 	<!-- 과목 조회 -->
@@ -442,7 +462,8 @@
 			sb.name AS subjectName,
 			st.name AS studentName,
 			p.amount,
-			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt
+			DATE_FORMAT(p.paid_at, '%Y-%m-%d %H:%i') AS paidAt,
+			st.user_id AS studentId
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
@@ -485,7 +506,8 @@
 			sb.name AS subjectName,
 			st.name AS studentName,
 			st.phone,
-			se.enrolled_at AS enrolledAt
+			DATE_FORMAT(se.enrolled_at, '%Y-%m-%d %H:%i') AS enrolledAt,
+			se.student_id AS studentId
 		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCEL') se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
@@ -529,7 +551,8 @@
 				WHEN 'REFUNDWAIT' THEN '환불 대기'
 				WHEN 'REFUND' THEN '환불 완료'
 			END AS status,
-			se.enrolled_at AS enrolledAt
+			se.enrolled_at AS enrolledAt,
+			se.student_id AS studentId
 		FROM (SELECT * FROM student_enrollment WHERE status IN ('REFUNDWAIT', 'REFUND')) se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
@@ -588,10 +611,16 @@
 			lt.day_of_week AS 'dayOfWeek',
 			lt.start_date AS startDate,
 			lt.end_date AS endDate,
+			CASE
+			  WHEN CURDATE() &lt; lt.start_date THEN '예정'
+			  WHEN CURDATE() BETWEEN lt.start_date AND lt.end_date THEN '진행중'
+			ELSE '종료'
+			END AS lectureStatus,
 			va.assignment_id AS assignmentId,
 			v.vehicle_no AS vehicleNo,
 			d.name AS driverName,
-			va.location AS vehicleLocation
+			va.location AS vehicleLocation,
+			ta.teacher_id AS teacherId
 		FROM lecture lt
 		INNER JOIN subject sb ON lt.subject_id = sb.subject_id
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
@@ -939,13 +968,16 @@
 		FROM classroom
 	</select>
 	
-	<!-- 강사 리스트 조회 -->
-	<select id="selectTeacherList" resultType="com.example.afterSchoolLms.dto.User">
+	<!-- 강사 + 강사에 배정된 과목 리스트 조회 -->
+	<select id="selectTeacherList" resultType="map">
 		SELECT
-			user_id AS userId,
-			NAME AS userName
-		FROM user
-		WHERE role_id = 3
+			t.user_id AS userId,
+			t.name AS userName,
+			IFNULL (sb.name, '미배정') AS subjectName
+		FROM (SELECT user_id, name FROM user WHERE role_id = 3) t
+		LEFT JOIN teacher_assignment ta ON t.user_id = ta.teacher_id
+		LEFT JOIN lecture lt ON ta.lecture_id = lt.lecture_id
+		LEFT JOIN subject sb ON lt.subject_id = sb.subject_id
 	</select>
 	
 	<!-- 해당 수업의 강사 배정 등록 -->
@@ -1060,7 +1092,8 @@
 			END AS endTime,
 			IFNULL(lt.day_of_week, '없음') AS dayOfWeek,
 			IFNULL(lt.start_date, '없음') AS startDate,
-			IFNULL(lt.end_date, '없음') AS endDate
+			IFNULL(lt.end_date, '없음') AS endDate,
+			ta.teacher_id AS teacherId
 		FROM classroom cr
 		LEFT OUTER JOIN (SELECT * FROM lecture WHERE end_date >= CURDATE()) lt ON cr.classroom_id = lt.classroom_id
 		LEFT OUTER JOIN subject sb ON lt.subject_id = sb.subject_id
@@ -1211,7 +1244,8 @@
 			s.name AS subjectName,
 			DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
 			l.day_of_week AS dayOfWeek,
-			mr.status
+			mr.status,
+			ta.teacher_id AS teacherId
 		FROM material_request mr
 		INNER JOIN lecture l ON mr.lecture_id = l.lecture_id
 		INNER JOIN teacher_assignment ta ON l.lecture_id = ta.lecture_id
@@ -1259,20 +1293,22 @@
 		SELECT
 			a.attendance_id AS attendanceId,
 			u.name AS studentName,
+			se.student_id AS studentId,
 			a.attend_date AS attendDate,
 			a.status,
 			s.name AS subjectName,
 			DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
 			l.day_of_week AS dayOfWeek,
 			c.name AS classroomName,
-			t1.teacherName
+			t1.teacherName,
+			t1.teacher_id AS teacherId
 		FROM attendance a INNER JOIN payment p ON a.payment_id = p.payment_id
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN user u ON u.user_id = se.student_id
 		INNER JOIN lecture l ON l.lecture_id = se.lecture_id
 		INNER JOIN subject s ON s.subject_id = l.subject_id
 		INNER JOIN classroom c ON l.classroom_id = c.classroom_id
-		INNER JOIN (SELECT l.lecture_id, u.name teacherName FROM user u
+		INNER JOIN (SELECT l.lecture_id, u.name teacherName, ta.teacher_id FROM user u
 					INNER JOIN teacher_assignment ta ON u.user_id = ta.teacher_id
 					INNER JOIN lecture l ON l.lecture_id = ta.lecture_id) t1 ON l.lecture_id = t1.lecture_id
 		<where>

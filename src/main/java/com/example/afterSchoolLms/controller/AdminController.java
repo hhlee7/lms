@@ -1,5 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.afterSchoolLms.dto.Album;
 import com.example.afterSchoolLms.dto.AlbumPhoto;
@@ -105,6 +108,44 @@ public class AdminController {
     	target.put("lectureId", lectureId);
     	target.put("searchName", searchName);
     	List<Map<String,Object>> dispatchList = adminService.selectPassengerList(target);
+    	
+
+    	int currentYear = LocalDate.now().getYear();
+
+    	for (Map<String, Object> dp : dispatchList) {
+    	    Object birthObj = dp.get("birth");
+
+    	    int birthYear = 0;
+
+    	    if (birthObj instanceof java.sql.Date) {
+    	        // java.sql.Date는 toLocalDate()를 제공하므로 아래처럼 처리
+    	        birthYear = ((java.sql.Date) birthObj).toLocalDate().getYear();
+
+    	    } else if (birthObj instanceof java.util.Date) {
+    	        birthYear = ((java.util.Date) birthObj).toInstant()
+    	                        .atZone(ZoneId.systemDefault())
+    	                        .toLocalDate()
+    	                        .getYear();
+
+    	    } else if (birthObj instanceof String) {
+    	        // 형식이 "1991-08-20"이면 substring 가능
+    	        birthYear = Integer.parseInt(((String) birthObj).substring(0, 4));
+    	    } else {
+    	        // 예외 상황 처리
+    	        log.warn("Unsupported birth format: {}", birthObj);
+    	        dp.put("grade", "-");
+    	        continue;
+    	    }
+
+    	    int grade = currentYear - birthYear - 6;
+
+    	    if (grade >= 1 && grade <= 6) {
+    	        dp.put("grade", grade + "학년");
+    	    } else {
+    	        dp.put("grade", "-");
+    	    }
+    	}
+    	
     	model.addAttribute("dispatchList",dispatchList);
     	
     	// 수업 아이디, 검색 이름 저장
@@ -346,14 +387,27 @@ public class AdminController {
 	
 	/** 차량 등록 기능 **/
 	@PostMapping("/admin/vehicleInsert")
-	public String vehicleInsert(Vehicle vc) {
-		int row = adminService.insertVehicle(vc);
-		
-		if(row != 1) {	// 삽입 이상
-			
-		}
-		
-		return "redirect:/admin/vehicleManagement";
+	public String vehicleInsert(Vehicle vc, RedirectAttributes ra) {
+	    // 유효성 검사
+	    if (vc.getVehicleNo() == null || !vc.getVehicleNo().matches("^[0-9]{2,3}[가-힣][0-9]{4}$")) {
+	        ra.addFlashAttribute("msg", "차량 번호 형식이 올바르지 않습니다.");
+	        return "redirect:/admin/vehicleForm";
+	    }
+
+	    if (vc.getCapacity() < 1 || vc.getCapacity() > 1000) {
+	        ra.addFlashAttribute("msg", "최대 수용 인원은 1~1000명 사이여야 합니다.");
+	        return "redirect:/admin/vehicleForm";
+	    }
+
+	    int row = adminService.insertVehicle(vc);
+
+	    if (row != 1) {
+	        ra.addFlashAttribute("msg", "차량 등록에 실패했습니다. 다시 시도해주세요.");
+	        return "redirect:/admin/vehicleForm";
+	    }
+
+	    ra.addFlashAttribute("msg", "차량이 성공적으로 등록되었습니다.");
+	    return "redirect:/admin/vehicleManagement";
 	}
 	
 	/** 차량 수정 페이지 **/
@@ -532,7 +586,7 @@ public class AdminController {
 			case 3:				// 강사
 				List<Map<String,Object>> lectureList = new ArrayList<>();
 				TeacherHistory historyList = new TeacherHistory();
-				lectureList = teacherMapper.selectLectureListByTeacher((String)selectedUser.get("userId"));
+				lectureList = adminService.selectLectureByTeacherId((String)selectedUser.get("userId"));
 				historyList = adminService.selectTeacherHistoryListByTeacherId((String)selectedUser.get("userId"));
 				model.addAttribute("lectureList",lectureList);
 				model.addAttribute("historyList", historyList);
@@ -866,7 +920,7 @@ public class AdminController {
 		model.addAttribute("classroomList", classroomList);
 		
 		// 등록된 강사 조회
-		List<User> teacherList = adminService.getTeacherList();
+		List<Map<String, Object>> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
 		// 등록된 배차 정보 조회 (이미 수업에 배정된 배차 정보는 제외)
@@ -934,7 +988,7 @@ public class AdminController {
 		model.addAttribute("classroomList", classroomList);
 		
 		// 등록된 강사 조회
-		List<User> teacherList = adminService.getTeacherList();
+		List<Map<String, Object>> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
 		// 등록된 배차 정보 조회 (현재 수업에 배정된 배차 정보 포함 / 다른 수업에 배정된 배차 정보는 제외)

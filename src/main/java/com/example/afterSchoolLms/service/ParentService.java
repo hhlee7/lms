@@ -201,11 +201,15 @@ public class ParentService {
 		LocalDate start = LocalDate.parse(startDate);  // "yyyy-MM-dd" 형식
 	    LocalDate today = LocalDate.now();
 	    
-	    LocalDate refundDeadline  = start.minusDays(3); // 오늘 기준 일 전 날짜 계산
+	    LocalDate refundDeadline  = start.minusDays(2); // 오늘 기준 일 전 날짜 계산
 	     
 	    log.info("오늘 날짜 : " + today);
 	    log.info("개강일 : " + start);
 	    log.info("환불 마감일 : " + refundDeadline);
+	    
+	    if (today.isAfter(refundDeadline)) {
+			throw new IllegalArgumentException("환불 불가: 개강일 전 2일까지만 환불이 가능합니다.");
+		}
 	    
 	    Map<String, Object> param = new HashMap<>();
 	    param.put("lectureId", lectureId);

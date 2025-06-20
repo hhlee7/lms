@@ -31,7 +31,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">🧒 학생 배차 관리</h2>
+      <h2 class="fw-bold">학생 배차 관리</h2>
     </section>
 
     <!-- 필터 -->

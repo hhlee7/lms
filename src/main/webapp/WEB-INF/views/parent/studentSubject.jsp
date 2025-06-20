@@ -49,7 +49,7 @@
 	<div class="content-area">
 		<c:if test="${not empty subject}">
 			<c:forEach var="s" items="${subject}">
-				<h1>${s.studentName}의 수강 정보</h1>
+				<h1>'${s.studentName}' 학생의 수강 정보</h1>
 				<div>과목 : ${s.subjectName}</div>
 				<div>강사 : ${s.teacherName}</div>
 				<div>요일 : ${s.dayOfWeeK}요일</div>

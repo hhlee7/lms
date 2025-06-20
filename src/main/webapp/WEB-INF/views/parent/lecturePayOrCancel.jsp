@@ -81,6 +81,18 @@
 		margin-bottom: 20px;
 	}
 	
+	.center-text {
+	text-align: center;
+	}
+	
+	.error-message {
+	color: red;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	}
+	
 	@media (max-width: 768px) {
 		table, th, td {
 			font-size: 0.85rem;
@@ -94,9 +106,11 @@
 </style>
 </head>
 <body>
-	<h1>결제</h1>
+	<h1 class="center-text">결제</h1>
 	<c:if test="${not empty errorMessage}">
-  		<div style="color: red; font-weight: bold;">${errorMessage}</div>
+	<div style="color: red; font-weight: bold; text-align: center; margin-top: 10px; margin-bottom: 20px;">
+		${errorMessage}
+	</div>
 	</c:if>
 
 		<table border="1">

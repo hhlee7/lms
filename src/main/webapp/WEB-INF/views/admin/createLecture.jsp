@@ -81,7 +81,7 @@
           <label for="teacherId" class="form-label fw-semibold">강사</label>
           <select name="teacherId" id="teacherId" class="form-select">
             <c:forEach var="teacher" items="${teacherList}">
-              <option value="${teacher.userId}">${teacher.userName}</option>
+              <option value="${teacher.userId}">${teacher.userName}(${teacher.subjectName})</option>
             </c:forEach>
           </select>
         </div>

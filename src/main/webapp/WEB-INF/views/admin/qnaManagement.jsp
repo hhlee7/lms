@@ -30,8 +30,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">📨 Q&A 관리</h2>
-      <p class="text-danger">미응답 Q&A : <strong>${qnaCount}</strong> 개</p>
+      <h2 class="fw-bold">Q&A 관리</h2>
     </section>
 
     <!-- 검색 바 -->

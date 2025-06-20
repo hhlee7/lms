@@ -57,6 +57,7 @@ public interface AdminMapper {
 	int qnaCount();											// 미응답 Qna 수
 	Qna selectQnaOne(int qnaId);							// Qna 상세 조회
 	
+	List<Map<String,Object>> selectLectureByTeacherId(String teacherId);		// 강사 아이디로 수업 조회
 	List<Map<String,Object>> selectUserByParentId(String parentId);				// 부모 아이디로 자식 조회
 	List<Map<String,Object>> selectUserByStudentId(String studentId);			// 자식 아이디로 부모 조회
 	List<Map<String,Object>> selectVehicleByDriverId(String driverId);			// 기사 아이디로 차량 조회
@@ -148,7 +149,7 @@ public interface AdminMapper {
 	List<Classroom> selectClassroomList();
 
 	// 강사 리스트 조회
-	List<User> selectTeacherList();
+	List<Map<String, Object>> selectTeacherList();
 
 	// 해당 수업의 강사 배정
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);

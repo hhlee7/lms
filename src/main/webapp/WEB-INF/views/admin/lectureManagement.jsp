@@ -74,7 +74,6 @@
         <table class="table table-bordered bg-white text-center align-middle">
           <thead class="table-light">
             <tr>
-              <th>번호</th>
               <th>과목</th>
               <th>강사</th>
               <th>강의실</th>
@@ -84,6 +83,7 @@
               <th>요일</th>
               <th>개강일</th>
               <th>종강일</th>
+              <th>상태</th>
               <th>배차 정보</th>
               <th>수정</th>
             </tr>
@@ -91,9 +91,8 @@
           <tbody>
             <c:forEach var="list" items="${lectureList}">
               <tr>
-                <td>${list.lectureId}</td>
                 <td>${list.subjectName}</td>
-                <td>${list.teacherName}</td>
+                <td><a href="/admin/userOne?userId=${list.teacherId}">${list.teacherName}</a></td>
                 <td>${list.classroomName}</td>
                 <td>${list.location}</td>
                 <td>${list.startTime}</td>
@@ -101,6 +100,7 @@
                 <td>${list.dayOfWeek}</td>
                 <td>${list.startDate}</td>
                 <td>${list.endDate}</td>
+                <td>${list.lectureStatus}</td>
                 <td>
                   <c:choose>
                     <c:when test="${empty list.assignmentId}">

@@ -133,6 +133,7 @@
 	  background: white;
 	  border-radius: 12px;
 	  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+	  text-align: center;
 	  transition: all 0.3s;
 	}
 	.card:hover {
@@ -149,6 +150,12 @@
       font-size: 14px;
       color: #444;
     }
+    
+    .card strong {
+	color: #000;
+	font-weight: 900; /* 더 두껍게 */
+	font-size: 1.1em;  /* 크기 약간 키우기 (선택 사항) */
+	}
   </style>
 </head>
 <body>

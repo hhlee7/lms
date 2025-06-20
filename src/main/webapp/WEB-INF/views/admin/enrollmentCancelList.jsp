@@ -68,7 +68,6 @@
         <table class="table table-bordered bg-white text-center">
           <thead>
             <tr>
-              <th>번호</th>
               <th>과목</th>
               <th>이름</th>
               <th>전화번호</th>
@@ -77,9 +76,8 @@
           <tbody>
             <c:forEach var="list" items="${enrollmentCancelList}">
               <tr>
-                <td>${list.enrollmentId}</td>
                 <td>${list.subjectName}</td>
-                <td>${list.studentName}</td>
+                <td><a href="/admin/userOne?userId=${list.studentId}">${list.studentName}</a></td>
                 <td>${list.phone}</td>
               </tr>
             </c:forEach>

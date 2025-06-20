@@ -54,7 +54,6 @@ public class Schedule {
 	
 	
 	public void init(String time) {
-		System.out.println("배차 리스트 등록 합니다.");
 
 		LocalDate today = LocalDate.now(); // 오늘 날짜
 		String todayWeek = "";
@@ -76,6 +75,7 @@ public class Schedule {
 		// 조회
 		List<Map<String,Object>> passengerList = adminService.getPassengerList(param);
 		
+		System.out.println(todayWeek+"요일" + time+"시간 배차 리스트 등록 합니다.");
 		for(Map<String,Object> ps : passengerList) {
 			// 디버깅
 			System.out.println(ps.toString());

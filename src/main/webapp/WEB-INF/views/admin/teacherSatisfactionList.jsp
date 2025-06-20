@@ -11,11 +11,18 @@
 </head>
 <body>
 <main class="main-content">
-  <section class="text-center mb-4">
+  <!-- 차트 영역 -->
+  <section class="text-center">
+    <h2 class="fw-bold mb-4">강사별 평균 만족도 통계</h2>
+    <canvas id="teacherSatisfactionChart" style="width:100%; max-width:600px; height:300px; margin: auto;"></canvas>
+  </section>
+
+
+  <section class="text-center mb-4 mt-4">
     <h2 class="fw-bold">강사 만족도 평가</h2>
   </section>
 
-  <section class="search-section mb-4">
+  <section class="search-section mb-4 mt-4">
     <form class="row gy-2 gx-3 align-items-center justify-content-center" onsubmit="return false;">
       <div class="col-md-auto">
         <label for="targetSubject" class="form-label fw-semibold">과목 선택</label>
@@ -50,11 +57,6 @@
     </div>
   </section>
 
-  <!-- 차트 영역 -->
-  <section class="text-center">
-    <h4 class="fw-bold mb-3">강사별 평균 만족도 통계</h4>
-    <canvas id="teacherSatisfactionChart" style="width:100%; max-width:600px; height:300px; margin: auto;"></canvas>
-  </section>
 </main>
 
 <script>
@@ -89,7 +91,7 @@ function drawChart() {
         xValues.push(e.teacherName + "(" + e.subjectName + ")");
         yValues.push(e.ratingTeacher);
         const hue = (i * 360 / data.length) % 360;
-        barColors.push("hsla(" + hue + ", 90%, 40%, 0.7)");
+        barColors.push("hsla(" + hue + ", 60%, 40%, 0.7)");
       });
 
       new Chart("teacherSatisfactionChart", {

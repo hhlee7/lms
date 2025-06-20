@@ -24,7 +24,6 @@
     <table class="table table-bordered text-center mb-0">
       <thead class="table-light">
         <tr>
-          <th>번호</th>
           <th>과목</th>
           <th>수정</th>
           <th>삭제</th>
@@ -34,7 +33,6 @@
         <c:if test="${not empty subjectList}">
           <c:forEach var="subject" items="${subjectList}">
             <tr>
-              <td>${subject.subjectId}</td>
               <td>${subject.subjectName}</td>
               <td>
                 <a href="/admin/modifySubject?subjectId=${subject.subjectId}" class="btn btn-outline-primary btn-sm">

@@ -68,7 +68,7 @@
               <th>번호</th>
               <th>요청사항</th>
               <th>요청 일시</th>
-              <th>신청자</th>
+              <th>신청 강사</th>
               <th>과목</th>
               <th>수업 시작 시간</th>
               <th>요일</th>
@@ -82,7 +82,7 @@
                 <td>${list.requestId}</td>
                 <td class="text-start">${list.content}</td>
                 <td>${list.requestedAt}</td>
-                <td>${list.teacherName}</td>
+                <td><a href="/admin/userOne?userId=${list.teacherId}">${list.teacherName}</a></td>
                 <td>${list.subjectName}</td>
                 <td>${list.startTime}</td>
                 <td>${list.dayOfWeek}</td>

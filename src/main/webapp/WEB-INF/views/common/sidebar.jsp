@@ -16,10 +16,12 @@
 
     .sidebar {
 	  width: 240px;
+	  min-height: 100vh; /* 화면보다 작을 땐 최소 보장 */
 	  height: 100vh;
 	  background-color: #1f1f2e;
 	  color: #f1f1f1;
 	  padding: 20px;
+	  overflow-y: auto; /* ★추가 */
 	  position: relative; /* 중요! 하단 요소 위치를 위해 */
 	  display: flex;
 	  flex-direction: column;
@@ -30,7 +32,8 @@
 	}
 	
 	.sidebar-footer {
-	  position: absolute;
+	  margin-top: auto;
+	  top: 20px;
 	  bottom: 20px;
 	  left: 20px;
 	  right: 20px;
@@ -123,7 +126,7 @@
 	<div class="sidebar-header mb-4 d-flex align-items-center gap-2">
 	  <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" 
 	       alt="로고" width="28" height="28" class="rounded-circle" />
-	  <span class="fw-bold fs-6">방과후 교육 관리자</span>
+	  <span class="fw-bold fs-6"><a href="/admin/main" style="text-decoration: none; color: white;">방과후 교육 관리자</a></span>
 	</div>
 
   
@@ -172,7 +175,7 @@
 
     <div class="menu-group">
       <div class="menu-header">
-        <span>교통 관리</span>
+        <span>배차 관리</span>
         <i class="bi bi-chevron-down"></i>
       </div>
       <div class="submenu">
@@ -194,7 +197,8 @@
     </div>
     
     <!-- 사이드바 하단 로그아웃 -->
-	<div class="sidebar-footer mt-auto" style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+    
+	<div class="sidebar-footer mt-auto">
 	  <a href="/logout" class="btn btn-sm btn-danger w-100 d-flex align-items-center justify-content-center gap-2">
 	    <i class="fas fa-right-from-bracket"></i> 로그아웃
 	  </a>
