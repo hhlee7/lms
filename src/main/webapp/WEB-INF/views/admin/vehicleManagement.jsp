@@ -13,7 +13,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">🚌 차량 관리</h2>
+      <h2 class="fw-bold">차량 관리</h2>
     </section>
 
     <!-- 차량 등록 버튼 -->

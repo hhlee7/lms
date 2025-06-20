@@ -112,7 +112,7 @@
 			dr.name AS driverName,
 			sb.name AS subjectName,
 			lt.day_of_week AS dayOfWeek,
-			lt.end_time AS endTime
+			DATE_FORMAT(lt.end_time, '%H:%i') AS endTime
 		FROM payment p
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
 		INNER JOIN (
@@ -334,8 +334,8 @@
 		       cr.name AS classroomName,
 		       cr.location AS location,
 		       lt.lecture_id AS lectureId,
-		       lt.start_time AS startTime,
-		       lt.end_time AS endTime,
+		       DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+  			   DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
 		       lt.day_of_week AS 'dayOfWeek',
 		       lt.start_date AS startDate,
 		       lt.end_date AS endDate
