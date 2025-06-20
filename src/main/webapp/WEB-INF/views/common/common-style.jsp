@@ -14,7 +14,7 @@
     margin: 0;
     padding: 0;
     font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
-    background-color: #f3f4f6;
+    background-color: #ffffff;
     color: #212529;
   }
 

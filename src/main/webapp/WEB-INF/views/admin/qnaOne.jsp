@@ -13,7 +13,7 @@
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">💬 Q&A 상세</h2>
+      <h2 class="fw-bold">Q&A 상세</h2>
     </section>
 
     <section class="card shadow-sm mb-4">

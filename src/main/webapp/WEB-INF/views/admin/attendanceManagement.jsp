@@ -65,7 +65,6 @@
         <table class="table table-bordered text-center align-middle bg-white">
           <thead class="table-light">
             <tr>
-              <th>번호</th>
               <th>이름</th>
               <th>날짜</th>
               <th>상태</th>
@@ -80,15 +79,14 @@
           <tbody>
             <c:forEach var="list" items="${attendanceList}">
               <tr>
-                <td>${list.attendanceId}</td>
-                <td>${list.studentName}</td>
+              	<td><a href="/admin/userOne?userId=${list.studentId}">${list.studentName}</a></td>
                 <td>${list.attendDate}</td>
                 <td>${list.status}</td>
                 <td>${list.subjectName}</td>
                 <td>${list.startTime}</td>
                 <td>${list.dayOfWeek}</td>
                 <td>${list.classroomName}</td>
-                <td>${list.teacherName}</td>
+                <td><a href="/admin/userOne?userId=${list.teacherId}">${list.teacherName}</a></td>
                 <td>
                   <a href="/admin/modifyAttendance?attendanceId=${list.attendanceId}" class="btn btn-outline-primary btn-sm">
                     <i class="bi bi-pencil-square"></i> 수정

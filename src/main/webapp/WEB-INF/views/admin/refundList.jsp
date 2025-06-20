@@ -68,7 +68,6 @@
         <table class="table table-bordered bg-white text-center">
           <thead>
             <tr>
-              <th>번호</th>
               <th>이름</th>
               <th>과목</th>
               <th>환불 상태</th>
@@ -78,8 +77,7 @@
           <tbody>
             <c:forEach var="list" items="${refundList}">
               <tr>
-                <td>${list.enrollmentId}</td>
-                <td>${list.studentName}</td>
+                <td><a href="/admin/userOne?userId=${list.studentId}">${list.studentName}</a></td>
                 <td>${list.subjectName}</td>
                 <td>${list.status}</td>
                 <td>

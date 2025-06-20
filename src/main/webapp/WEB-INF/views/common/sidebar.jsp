@@ -123,7 +123,7 @@
 	<div class="sidebar-header mb-4 d-flex align-items-center gap-2">
 	  <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" 
 	       alt="로고" width="28" height="28" class="rounded-circle" />
-	  <span class="fw-bold fs-6">방과후 교육 관리자</span>
+	  <span class="fw-bold fs-6"><a href="/admin/main" style="text-decoration: none; color: white;">방과후 교육 관리자</a></span>
 	</div>
 
   
@@ -172,7 +172,7 @@
 
     <div class="menu-group">
       <div class="menu-header">
-        <span>교통 관리</span>
+        <span>배차 관리</span>
         <i class="bi bi-chevron-down"></i>
       </div>
       <div class="submenu">

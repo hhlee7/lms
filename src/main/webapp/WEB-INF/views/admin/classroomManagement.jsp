@@ -71,12 +71,11 @@
         <table class="table table-bordered text-center align-middle bg-white">
           <thead class="table-light">
             <tr>
-              <th>번호</th>
               <th>이름</th>
               <th>위치</th>
               <th>수용 인원</th>
-              <th>현재 배정된 과목</th>
-              <th>현재 배정된 강사</th>
+              <th>배정 과목</th>
+              <th>배정 강사</th>
               <th>시작 시간</th>
               <th>종료 시간</th>
               <th>요일</th>
@@ -88,12 +87,20 @@
           <tbody>
             <c:forEach var="list" items="${classroomList}">
               <tr>
-                <td>${list.classroomId}</td>
                 <td>${list.classroomName}</td>
                 <td>${list.location}</td>
                 <td>${list.capacity}</td>
                 <td>${list.subjectName}</td>
-                <td>${list.teacherName}</td>
+                <td>
+				  <c:choose>
+				    <c:when test="${empty list.teacherId}">
+				      <span class="text-muted">없음</span>
+				    </c:when>
+				    <c:otherwise>
+				      <a href="/admin/userOne?userId=${list.teacherId}">${list.teacherName}</a>
+				    </c:otherwise>
+				  </c:choose>
+				</td>
                 <td>${list.startTime}</td>
                 <td>${list.endTime}</td>
                 <td>${list.dayOfWeek}</td>

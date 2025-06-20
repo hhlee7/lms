@@ -8,12 +8,37 @@
   <title>차량 등록</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <%@ include file="/WEB-INF/views/common/common-style.jsp" %>
+  
+	  <script>
+	  $(document).ready(function () {
+	    $('#vehicle').on('submit', function (e) {
+	      const vehicleNo = $('#vehicleNo').val().trim();
+	      const capacity = parseInt($('#capacity').val(), 10);
+	
+	      const vehicleNoRegex = /^[0-9]{2,3}[가-힣][0-9]{4}$/;  // 예: 12가3456
+	
+	      if (!vehicleNoRegex.test(vehicleNo)) {
+	        alert('차량 번호 형식이 올바르지 않습니다. 예: 12가3456');
+	        $('#vehicleNo').focus();
+	        e.preventDefault();
+	        return;
+	      }
+	
+	      if (isNaN(capacity) || capacity < 1 || capacity > 1000) {
+	        alert('최대 수용 인원은 1명 이상 1000명 이하로 입력해주세요.');
+	        $('#capacity').focus();
+	        e.preventDefault();
+	        return;
+	      }
+	    });
+	  });
+	</script>
 </head>
 <body>
 
   <main class="main-content">
     <section class="mb-4 text-center">
-      <h2 class="fw-bold">🚐 차량 등록</h2>
+      <h2 class="fw-bold">차량 등록</h2>
     </section>
 
     <section class="card shadow-sm mx-auto" style="max-width: 600px;">

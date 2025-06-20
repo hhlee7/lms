@@ -390,7 +390,7 @@ public class AdminService {
 	}
 
 	// 강사 리스트 조회
-	public List<User> getTeacherList() {
+	public List<Map<String, Object>> getTeacherList() {
 		return adminMapper.selectTeacherList();
 	}
 

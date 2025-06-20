@@ -11,7 +11,14 @@
 </head>
 <body>
 <main class="main-content">
+	
+  <!-- 차트 영역 -->
   <section class="text-center mb-4">
+    <h2 class="fw-bold mb-3">수업별 평균 만족도 통계</h2>
+    <canvas id="lectureSatisfactionChart" style="width:100%; max-width:600px; height:300px; margin: auto;"></canvas>
+  </section>
+	
+  <section class="text-center mb-4 mt-4">
     <h2 class="fw-bold">수업 만족도 평가 및 리뷰</h2>
   </section>
 
@@ -50,11 +57,6 @@
     </div>
   </section>
 
-  <!-- 차트 영역 -->
-  <section class="text-center">
-    <h4 class="fw-bold mb-3">수업별 평균 만족도 통계</h4>
-    <canvas id="lectureSatisfactionChart" style="width:100%; max-width:600px; height:300px; margin: auto;"></canvas>
-  </section>
 </main>
 
 <script>
@@ -86,10 +88,10 @@ function drawChart() {
       const barColors = [];
 
       data.forEach(function(e, i) {
-        xValues.push(e.lectureId + "(" + e.subjectName + ")");
+        xValues.push(e.subjectName + " " + e.lectureId + "기");
         yValues.push(e.avgRating);
         const hue = (i * 360 / data.length) % 360;
-        barColors.push("hsla(" + hue + ", 90%, 40%, 0.7)");
+        barColors.push("hsla(" + hue + ", 60%, 40%, 0.7)");
       });
 
       new Chart("lectureSatisfactionChart", {
