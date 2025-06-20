@@ -107,6 +107,7 @@
 		SELECT
 			st.user_id AS studentId,
 			st.name AS studentName,
+			st.birth,
 			vc.vehicle_no AS vehicleNo,
 			dr.user_id AS driverId,
 			dr.name AS driverName,

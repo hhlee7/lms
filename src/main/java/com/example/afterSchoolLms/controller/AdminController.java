@@ -1,5 +1,7 @@
 package com.example.afterSchoolLms.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +108,44 @@ public class AdminController {
     	target.put("lectureId", lectureId);
     	target.put("searchName", searchName);
     	List<Map<String,Object>> dispatchList = adminService.selectPassengerList(target);
+    	
+
+    	int currentYear = LocalDate.now().getYear();
+
+    	for (Map<String, Object> dp : dispatchList) {
+    	    Object birthObj = dp.get("birth");
+
+    	    int birthYear = 0;
+
+    	    if (birthObj instanceof java.sql.Date) {
+    	        // java.sql.Date는 toLocalDate()를 제공하므로 아래처럼 처리
+    	        birthYear = ((java.sql.Date) birthObj).toLocalDate().getYear();
+
+    	    } else if (birthObj instanceof java.util.Date) {
+    	        birthYear = ((java.util.Date) birthObj).toInstant()
+    	                        .atZone(ZoneId.systemDefault())
+    	                        .toLocalDate()
+    	                        .getYear();
+
+    	    } else if (birthObj instanceof String) {
+    	        // 형식이 "1991-08-20"이면 substring 가능
+    	        birthYear = Integer.parseInt(((String) birthObj).substring(0, 4));
+    	    } else {
+    	        // 예외 상황 처리
+    	        log.warn("Unsupported birth format: {}", birthObj);
+    	        dp.put("grade", "-");
+    	        continue;
+    	    }
+
+    	    int grade = currentYear - birthYear - 6;
+
+    	    if (grade >= 1 && grade <= 6) {
+    	        dp.put("grade", grade + "학년");
+    	    } else {
+    	        dp.put("grade", "-");
+    	    }
+    	}
+    	
     	model.addAttribute("dispatchList",dispatchList);
     	
     	// 수업 아이디, 검색 이름 저장

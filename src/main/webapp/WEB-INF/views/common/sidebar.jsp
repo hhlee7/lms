@@ -172,7 +172,7 @@
 
     <div class="menu-group">
       <div class="menu-header">
-        <span>교통 관리</span>
+        <span>배차 관리</span>
         <i class="bi bi-chevron-down"></i>
       </div>
       <div class="submenu">
