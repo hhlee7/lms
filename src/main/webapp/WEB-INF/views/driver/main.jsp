@@ -125,6 +125,7 @@
         <p>안전하고 편안한 등하교를 위한 하루를 시작해보세요</p>
 
         <div class="btn-wrap">
+        	<a class="btn-menu" href="/driver/notice"><i class="fas fa-bullhorn"></i> 공지사항</a>
             <a class="btn-menu" href="/driver/dispatch"><i class="fas fa-route"></i> 배차 조회</a>
             <a class="btn-menu" href="/driver/dispatchStudent"><i class="fas fa-users"></i> 배차 학생 조회</a>
             <a class="btn-menu" href="/driver/personalInformation"><i class="fas fa-id-card"></i> 개인정보</a>

@@ -13,7 +13,6 @@
       color: #111;
     }
 
-    /* 💎 헤더 */
     header {
       display: flex;
       justify-content: space-between;
@@ -43,7 +42,7 @@
     }
    nav {
 	  display: flex;
-	  justify-content: center; /* 중앙 정렬 */
+	  justify-content: center;
 	  gap: 24px;
 	  flex-wrap: wrap;
 	  margin: 0 auto;
@@ -82,7 +81,6 @@
 	  width: 100%;
 	}
 
-    /* 🎥 영상 + 소개 */
     .main {
       display: flex;
       justify-content: center;
@@ -117,7 +115,6 @@
       background-color: #005f9e;
     }
 
-    /* 📦 추천 프로그램 */
     .cards {
       max-width: 1200px;
       margin: 0 auto 60px;
@@ -156,7 +153,6 @@
 </head>
 <body>
 
-<!-- ✅ 헤더: 로고 + 메뉴 -->
 <header>
   <nav>
     <a href="/" class="topnav ${menu eq 'home' ? 'active' : ''}">Home</a>
@@ -177,7 +173,7 @@
   </nav>
 </header>
 
-<!-- ✅ HERO 배너 -->
+<!-- 메인중앙 배너 -->
 <div class="hero" style="
   background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
               url('https://postfiles.pstatic.net/MjAyNTA2MTZfMjU4/MDAxNzUwMDM5NDU1Mzk4.jMKDgxoq4lLb_mbIDoTPJwl-eAeqbvZNvKH_AW1pwBwg.JPX1Be5bgNfpz5Zny8nGoEUg7v0dCR6QLJvu8T2Ukvkg.PNG/ChatGPT_Image_2025%EB%85%84_6%EC%9B%94_16%EC%9D%BC_%EC%98%A4%EC%A0%84_11_04_04.png?type=w773') 
@@ -205,7 +201,7 @@
 
 
 
-<!-- 🎬 영상 + 소개 -->
+<!-- 영상 + 소개 -->
 <div class="main">
   <iframe src="https://www.youtube.com/embed/biEWXCO1G4U?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   <div class="info">
@@ -215,29 +211,29 @@
   </div>
 </div>
 
-<!-- 🧩 추천 프로그램 -->
+<!-- 프로그램 -->
 <div class="cards">
-  <h3>추천 프로그램</h3>
-  <div class="card-grid">
-    <div class="card">
-      <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMjAw%2FMDAxNzMzODY4NDI4MzMy.h6FJXqvvoiAB6UmKzB3bj_udg6VzJfbCE7Sx6vsdHygg.5jtNe_ugT8pUng4ZZ6htObgG-C6vJ6J5GrtLYb2czb4g.JPEG%2F900%25A3%25DFScreenshot%25A3%25DF20241209%25A3%25AD203850.jpg&type=a340" alt="피아노">
-      <p><strong>피아노</strong></p>
-      <p>음악성과 표현력을 키워요</p>
-    </div>
-    <div class="card">
-      <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfMTE1%2FMDAxNzQ0MDgwMjIwNjk2.QTNRxjtKpNexOG8WROhWXlP0XqhhAlhgjJjyWIw0HqUg.5Z-_AUcbz4-wyuVLH8ft7Idsy0TFVuEgCnUXAUj0j9Eg.PNG%2Fimage.png&type=sc960_832" alt="코딩">
-      <p><strong>코딩</strong></p>
-      <p>창의력을 자극하는 메이커 교육</p>
-    </div>
-          <div class="card">
-        <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA1MDhfNTIg%2FMDAxNzQ2NjczMzM1MDY1.xW5rPdTyyPQLbAZ5C_H9DcfayWic4Jr3WQMpfWOa_REg.SRLrxHvGhFiPNkW-4t-Qk3IAbs493-cTssOr8qbZl1gg.PNG%2F20250507151630.png&type=sc960_832" alt="축구">
-        <div class="text">
-          <p><strong>축구</strong></p>
-          <p>체력과 협동심을 기르는 스포츠</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <h3>프로그램</h3>
+	  <div class="card-grid">
+	    <div class="card">
+	      <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMjAw%2FMDAxNzMzODY4NDI4MzMy.h6FJXqvvoiAB6UmKzB3bj_udg6VzJfbCE7Sx6vsdHygg.5jtNe_ugT8pUng4ZZ6htObgG-C6vJ6J5GrtLYb2czb4g.JPEG%2F900%25A3%25DFScreenshot%25A3%25DF20241209%25A3%25AD203850.jpg&type=a340" alt="피아노">
+	      <p><strong>피아노</strong></p>
+	      <p>음악성과 표현력을 키워요</p>
+	    </div>
+	    <div class="card">
+	      <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfMTE1%2FMDAxNzQ0MDgwMjIwNjk2.QTNRxjtKpNexOG8WROhWXlP0XqhhAlhgjJjyWIw0HqUg.5Z-_AUcbz4-wyuVLH8ft7Idsy0TFVuEgCnUXAUj0j9Eg.PNG%2Fimage.png&type=sc960_832" alt="코딩">
+	      <p><strong>코딩</strong></p>
+	      <p>창의력을 자극하는 메이커 교육</p>
+	    </div>
+	      <div class="card">
+	        <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA1MDhfNTIg%2FMDAxNzQ2NjczMzM1MDY1.xW5rPdTyyPQLbAZ5C_H9DcfayWic4Jr3WQMpfWOa_REg.SRLrxHvGhFiPNkW-4t-Qk3IAbs493-cTssOr8qbZl1gg.PNG%2F20250507151630.png&type=sc960_832" alt="축구">
+	        <div class="text">
+	          <p><strong>축구</strong></p>
+	          <p>체력과 협동심을 기르는 스포츠</p>
+	        </div>
+	      </div>
+	   </div>
+</div>
 
 </body>
 </html>

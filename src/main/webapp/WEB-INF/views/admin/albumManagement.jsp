@@ -92,6 +92,7 @@
           <c:forEach items="${albumList}" var="ab">
             <tr>
               <td class="text-center">${ab.albumId}</td>
+              <td>${ab.filePath}</td>
               <td class="text-center">
                 <img src="/images/${ab.filePath}" alt="썸네일"
                      class="thumb-img" />

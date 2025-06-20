@@ -104,7 +104,7 @@ public interface ParentMapper {
 	void updateToCancel(int lectureId, String studentId, String status);
 	
 	// 환불처리 
-	void refundLeture(int lectureId, String studentId, String status, String startDate);
+	int refundLeture(Map<String, Object> param);
 
 	// 수강 신청 리스트 -> 결제 및 취소 진행
 	List<Map<String, Object>> getLecturePayOrCancel(String userId);

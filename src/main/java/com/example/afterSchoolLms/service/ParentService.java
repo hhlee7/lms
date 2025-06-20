@@ -142,8 +142,10 @@ public class ParentService {
 	}
 	
 	// 배차 취소 신청
+	@Transactional
 	public void insertVehicleCancel(String parentId, String reason) {
 		Map<String, Object> map = parentMapper.findPaymentAndAssignmentByParentId(parentId);
+		//log.info("reason: " + reason);
 		if (map != null) {
 			int paymentId = (int) map.get("paymentId");
 			int assignmentId = (int) map.get("assignmentId");
@@ -153,9 +155,9 @@ public class ParentService {
 			param.put("assignmentId", assignmentId);
 			param.put("reason", reason);
 			
+			//log.info("param: " + param);
 			    parentMapper.insertVehicleCancel(param);
 			}
-		
 	}
 	
 	// 수강신청 내역
@@ -199,13 +201,22 @@ public class ParentService {
 		LocalDate start = LocalDate.parse(startDate);  // "yyyy-MM-dd" 형식
 	    LocalDate today = LocalDate.now();
 	    
-	    LocalDate limitDate = today.plusDays(3); // 오늘 기준 일 전 날짜 계산
+	    LocalDate refundDeadline  = start.minusDays(3); // 오늘 기준 일 전 날짜 계산
+	     
+	    log.info("오늘 날짜 : " + today);
+	    log.info("개강일 : " + start);
+	    log.info("환불 마감일 : " + refundDeadline);
 	    
-	    if (start.isBefore(limitDate)) {
-	        throw new IllegalArgumentException("개강일 3일 전까지만 환불 신청이 가능합니다.");
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("lectureId", lectureId);
+	    param.put("studentId", studentId);
+	    param.put("status", status);
+	    
+	    int updated = parentMapper.refundLeture(param);
+	    
+	    if (updated == 0) {
+	        throw new IllegalArgumentException("환불 요청 처리 실패: 해당 조건의 수강 신청이 존재하지 않습니다.");
 	    }
-	    
-		parentMapper.refundLeture(lectureId, studentId, status, startDate);	
 	}
 
 	// 강사 전체 검색

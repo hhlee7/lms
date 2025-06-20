@@ -354,7 +354,7 @@
 			description,
 			created_at AS createdAt
 		FROM subject
-		ORDER BY createdAT DESC
+		ORDER BY subjectId
 	</select>
 	
 	<!-- 과목 추가 -->
@@ -1129,7 +1129,7 @@
 			m.total_count AS totalCount,
 			m.used_count AS usedCount,
 			l.day_of_week AS dayOfWeek,
-			DATE_FORMAT(l.start_time, '%H:%I') AS startTime
+			DATE_FORMAT(l.start_time, '%H:%i') AS startTime
 		FROM material m
 		INNER JOIN lecture l ON m.lecture_id = l.lecture_id
 		INNER JOIN subject s ON l.subject_id = s.subject_id
@@ -1206,10 +1206,10 @@
 		SELECT
 			mr.request_id AS requestId,
 			mr.content,
-			DATE_FORMAT(mr.requested_at, '%Y-%m-%d %H:%I') AS requestedAt,
+			DATE_FORMAT(mr.requested_at, '%Y-%m-%d %H:%i') AS requestedAt,
 			u.name AS teacherName,
 			s.name AS subjectName,
-			DATE_FORMAT(l.start_time, '%H:%I') AS startTime,
+			DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
 			l.day_of_week AS dayOfWeek,
 			mr.status
 		FROM material_request mr
@@ -1262,7 +1262,7 @@
 			a.attend_date AS attendDate,
 			a.status,
 			s.name AS subjectName,
-			DATE_FORMAT(l.start_time, '%H:%I') AS startTime,
+			DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
 			l.day_of_week AS dayOfWeek,
 			c.name AS classroomName,
 			t1.teacherName
@@ -1283,7 +1283,7 @@
 		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
-		ORDER BY attendDate DESC, startTime DESC
+		ORDER BY attendDate DESC, startTime DESC, attendanceId DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	
@@ -1317,7 +1317,7 @@
 			a.attend_date AS attendDate,
 			a.status,
 			s.name AS subjectName,
-			DATE_FORMAT(l.start_time, '%H:%I') AS startTime,
+			DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
 			l.day_of_week AS dayOfWeek,
 			c.name AS classroomName,
 			t1.teacherName
@@ -1348,7 +1348,7 @@
 			sb.name AS subjectName,
 			u.name AS studentName,
 			sf.rating_lecture AS ratingLecture,
-			DATE_FORMAT(sf.created_at, '%Y-%m-%d %H:%I') AS createAt,
+			DATE_FORMAT(sf.created_at, '%Y-%m-%d %H:%i') AS createAt,
 			ifnull(r.content, '리뷰 작성 전') AS content,
 			CASE
 				WHEN r.created_at IS NULL THEN '리뷰 작성 전'
@@ -1401,7 +1401,7 @@
 			u.name AS studentName,
 			t.name AS teacherName,
 			sf.rating_teacher AS ratingTeacher,
-			DATE_FORMAT(sf.created_at, '%Y-%m-%d %H:%I') AS createAt
+			DATE_FORMAT(sf.created_at, '%Y-%m-%d %H:%i') AS createAt
 		FROM satisfaction sf
 		INNER JOIN payment p ON sf.payment_id = p.payment_id
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
@@ -1415,7 +1415,7 @@
 				sb.name = #{searchType}
 		    </if>
 		    <if test="searchWord != ''">
-		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		        AND t.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
 		ORDER BY createAt DESC, satisfactionId DESC
@@ -1438,7 +1438,7 @@
 				sb.name = #{searchType}
 		    </if>
 		    <if test="searchWord != ''">
-		        AND u.name LIKE CONCAT('%', #{searchWord}, '%')
+		        AND t.name LIKE CONCAT('%', #{searchWord}, '%')
 		    </if>
 		</where>
 	</select>

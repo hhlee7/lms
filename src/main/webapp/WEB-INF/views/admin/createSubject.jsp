@@ -1,61 +1,78 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>createSubject</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function() {
-		$('#subjectName').on('input', function() {
-			// 입력값이 비어 있지 않으면 에러 메시지 제거
-			if($(this).val().trim() != '') {
-				$('#checkSubject').text('');
-			}
-		});
-		
-		$('#description').on('input', function() {
-			// 입력값이 비어 있지 않으면 에러 메시지 제거
-			if($(this).val().trim() != '') {
-				$('#checkDescription').text('');
-			}
-		});
-		
-		// 폼 제출되기 전 유효성 검사 수행
-		$('#subjectForm').submit(function(e) {
-			// 입력값 가져오기 (공백 제거)
-			const subjectName = $('#subjectName').val().trim();
-			const description = $('#description').val().trim();
-			
-			// 과목 이름 유효성 검사
-			if(subjectName == '') {
-				$('#checkSubject').css('color', 'red').text('과목 이름을 입력하세요.');
-				e.preventDefault();
-				return;
-			}
-			
-			// 과목 소개 유효성 검사
-			if(description == '') {
-				$('#checkDescription').css('color', 'red').text('과목 소개를 입력하세요.');
-				e.preventDefault();
-				return;
-			}
-		});
-	});
-</script>
+  <meta charset="UTF-8">
+  <title>과목 등록</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('#subjectName').on('input', function () {
+        if ($(this).val().trim() !== '') {
+          $('#checkSubject').text('');
+        }
+      });
+
+      $('#description').on('input', function () {
+        if ($(this).val().trim() !== '') {
+          $('#checkDescription').text('');
+        }
+      });
+
+      $('#subjectForm').submit(function (e) {
+        const subjectName = $('#subjectName').val().trim();
+        const description = $('#description').val().trim();
+
+        if (subjectName === '') {
+          $('#checkSubject').css('color', 'red').text('과목 이름을 입력하세요.');
+          e.preventDefault();
+        }
+
+        if (description === '') {
+          $('#checkDescription').css('color', 'red').text('과목 소개를 입력하세요.');
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
 </head>
 <body>
-	<h1>과목 등록</h1>
-	<form method="post" name="subjectForm" id="subjectForm" action="/admin/createSubject">
-		<div>
-			과목 이름 : <input type="text" name="subjectName" id="subjectName">
-			<span id="checkSubject" style="color:red; margin-left:10px;"></span>
-		</div>
-		<div>
-			과목 소개 : <textarea rows="5" cols="30" name="description" id="description"></textarea>
-			<span id="checkDescription" style="color:red; margin-left:10px;"></span>
-		</div>
-		<button type="submit">등록</button>
-	</form>
+
+<main class="main-content">
+  <section class="mb-4 text-center">
+    <h2 class="fw-bold">과목 등록</h2>
+  </section>
+
+  <section class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+      <form method="post" id="subjectForm" action="/admin/createSubject">
+        <div class="mb-3">
+          <label for="subjectName" class="form-label fw-semibold">과목 이름</label>
+          <input type="text" class="form-control" name="subjectName" id="subjectName" />
+          <div id="checkSubject" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="mb-4">
+          <label for="description" class="form-label fw-semibold">과목 소개</label>
+          <textarea rows="5" class="form-control" name="description" id="description"></textarea>
+          <div id="checkDescription" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a href="/admin/subjectManagement" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> 목록으로
+          </a>
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> 등록
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

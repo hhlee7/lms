@@ -52,6 +52,32 @@
 		ORDER BY l.end_time;
 	</select>
 	
+	<select id="totalCount">
+		SELECT COUNT(*)
+		FROM notice
+		WHERE target_role_id=5
+	</select>
+	
+	<select id="selectNotice" resultType="com.example.afterSchoolLms.dto.Notice">
+		SELECT notice_id AS noticeId,
+			title,
+			content,
+			DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
+		FROM notice
+		WHERE target_role_id = 5
+		ORDER BY notice_id desc
+		LIMIT #{beginRow}, #{size}
+	</select>
+	
+	<select id="selectNoticeOne" resultType="com.example.afterSchoolLms.dto.Notice">
+		SELECT notice_id AS noticeId,
+			title,
+			content,
+			DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
+		FROM notice
+		WHERE notice_id = #{noticeId}
+	</select>
+	
 	<update id="updateInformation" parameterType="com.example.afterSchoolLms.dto.User">
 		UPDATE user SET
 			email = #{email}, 

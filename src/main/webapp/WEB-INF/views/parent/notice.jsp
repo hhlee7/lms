@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file ="/WEB-INF/views/layout/header.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,7 +101,8 @@
 			    <td>${notice.noticeId}</td>
 			    <td><a href="/parent/noticeOne?noticeId=${notice.noticeId}">${notice.title}</a></td>
 			    <td>관리자</td>
-			    <td>${notice.createdAt}</td>
+			    <fmt:parseDate value="${notice.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" var="parsedDate"/>
+			    <td><fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd"/></td>
 			  </tr>
 		</c:forEach>
 	</table>

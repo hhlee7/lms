@@ -1,83 +1,82 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>modifyClassroom</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function() {
-		$('#classroomName').on('input', function() {
-			// 입력값이 비어 있지 않으면 에러 메시지 제거
-			if($(this).val().trim() != '') {
-				$('#classroomNameCheck').text('');
-			}
-		});
-		
-		$('#location').on('input', function() {
-			// 입력값이 비어 있지 않으면 에러 메시지 제거
-			if($(this).val().trim() != '') {
-				$('#locationCheck').text('');
-			}
-		});
-		
-		$('#capacity').on('input', function() {
-			// 입력값이 비어 있지 않으면 에러 메시지 제거
-			if($(this).val().trim() != '') {
-				$('#capacityCheck').text('');
-			}
-		});
-		
-		// 폼 제출되기 전 유효성 검사 수행
-		$('#classroomForm').submit(function(e) {
-			const classroomName = $('#classroomName').val().trim();
-			const location = $('#location').val().trim();
-			const capacity = $('#capacity').val();
-			
-			// 강의실 이름 유효성 검사
-			if(classroomName == '') {
-				$('#classroomNameCheck').css('color', 'red').text('강의실 이름을 입력하세요.');
-				e.preventDefault();
-				return;
-			}
-			
-			// 강의실 위치 유효성 검사
-			if(location == '') {
-				$('#locationCheck').css('color', 'red').text('강의실 위치를 입력하세요.');
-				e.preventDefault();
-				return;
-			}
-			
-			// 강의실 수용 인원 유효성 검사
-			if(capacity == '' || isNaN(capacity) || capacity <= 4) {
-				$('#capacityCheck').css('color', 'red').text('수용 인원은 5명 이상이어야 합니다.');
-				e.preventDefault();
-				return;
-			}
-		});
-	});
-</script>
+  <meta charset="UTF-8">
+  <title>강의실 수정</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#classroomName, #location, #capacity').on('input', function() {
+        const id = $(this).attr('id');
+        $('#' + id + 'Check').text('');
+      });
+
+      $('#classroomForm').submit(function(e) {
+        const classroomName = $('#classroomName').val().trim();
+        const location = $('#location').val().trim();
+        const capacity = $('#capacity').val();
+
+        if (classroomName === '') {
+          $('#classroomNameCheck').text('강의실 이름을 입력하세요.');
+          e.preventDefault(); return;
+        }
+
+        if (location === '') {
+          $('#locationCheck').text('강의실 위치를 입력하세요.');
+          e.preventDefault(); return;
+        }
+
+        if (capacity === '' || isNaN(capacity) || capacity <= 4) {
+          $('#capacityCheck').text('수용 인원은 5명 이상이어야 합니다.');
+          e.preventDefault(); return;
+        }
+      });
+    });
+  </script>
 </head>
 <body>
-	<h1>강의실 관리</h1>
-	
-	<h2>강의실 수정</h2>
-	<form method="post" name="classroomForm" id="classroomForm" action="/admin/modifyClassroom">
-		<input type="hidden" name="classroomId" value="${classroom.classroomId}">
-		<div>
-			이름 : <input type="text" name="classroomName" id="classroomName" value="${classroom.classroomName}">
-			<span id="classroomNameCheck" style="color:red; margin-left:10px;"></span>
-		</div>
-		<div>
-			위치 : <input type="text" name="location" id="location" value="${classroom.location}">
-			<span id="locationCheck" style="color:red; margin-left:10px;"></span>
-		</div>
-		<div>
-			수용 인원 : <input type="number" name="capacity" id="capacity" value="${classroom.capacity}">
-			<span id="capacityCheck" style="color:red; margin-left:10px;"></span>
-		</div>
-		<button type="submit">수정</button>
-	</form>
+<main class="main-content">
+  <section class="mb-4 text-center">
+    <h2 class="fw-bold">강의실 수정</h2>
+  </section>
+
+  <section class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+      <form method="post" name="classroomForm" id="classroomForm" action="/admin/modifyClassroom">
+        <input type="hidden" name="classroomId" value="${classroom.classroomId}">
+
+        <div class="mb-3">
+          <label for="classroomName" class="form-label fw-semibold">이름</label>
+          <input type="text" name="classroomName" id="classroomName" value="${classroom.classroomName}" class="form-control">
+          <div id="classroomNameCheck" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="location" class="form-label fw-semibold">위치</label>
+          <input type="text" name="location" id="location" value="${classroom.location}" class="form-control">
+          <div id="locationCheck" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="mb-4">
+          <label for="capacity" class="form-label fw-semibold">수용 인원</label>
+          <input type="number" name="capacity" id="capacity" value="${classroom.capacity}" class="form-control">
+          <div id="capacityCheck" class="text-danger small mt-1"></div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a href="/admin/classroomManagement" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> 목록으로
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-circle"></i> 수정
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

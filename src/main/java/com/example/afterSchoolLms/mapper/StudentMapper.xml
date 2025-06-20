@@ -82,7 +82,7 @@
 		SELECT notice_id AS noticeId,
 			title,
 			content,
-			DATE_FORMAT(created_at, '%Y-%m-%d %H시 %i분') AS createdAt
+			DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
 		FROM notice
 		WHERE target_role_id = 2
 		ORDER BY notice_id desc
@@ -93,7 +93,7 @@
 		SELECT notice_id AS noticeId,
 			title,
 			content,
-			DATE_FORMAT(created_at, '%Y-%m-%d %H시 %i분') AS createdAt
+			DATE_FORMAT(created_at, '%Y-%m-%d') AS createdAt
 		FROM notice
 		WHERE notice_id = #{noticeId}
 	</select>
@@ -262,6 +262,7 @@
 		LEFT OUTER JOIN lecture lt ON lt.lecture_id = ab.lecture_id
 		LEFT OUTER JOIN subject sb ON sb.subject_id = lt.subject_id
 		WHERE ab.title LIKE CONCAT('%', #{searchWord}, '%')
+		ORDER BY album_id DESC
 		LIMIT #{beginRow}, #{size}
 	</select>
 	

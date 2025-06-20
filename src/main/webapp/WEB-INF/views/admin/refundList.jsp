@@ -1,126 +1,128 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/views/common/common-style.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>환불 관리</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-	$(document).ready(function() {
-		function targetSearch(){
-			const selectedSubject = $('#targetSubject').val();
-			const searchWord = $('#searchWord').val();
-			const url = new URL(window.location.href);
-			
-			// 검색 조건 설정
-			url.searchParams.set('searchType', selectedSubject);
-			url.searchParams.set("searchWord", searchWord);
-			url.searchParams.set('page', 1); // 페이지 리셋
+  <meta charset="UTF-8">
+  <title>환불 관리</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-			// 새 주소로 이동
-			location.href = url.toString();
-		}
+  <script>
+    $(document).ready(function () {
+      function targetSearch() {
+        const selectedSubject = $('#targetSubject').val();
+        const searchWord = $('#searchWord').val();
+        const url = new URL(window.location.href);
 
-		// 과목 select 박스 변경 시
-		$('#targetSubject').change(targetSearch);
-		
-		// 검색 버튼 클릭 시
-		$('#searchBtn').click(targetSearch);
-	});
-</script>
+        url.searchParams.set('searchType', selectedSubject);
+        url.searchParams.set('searchWord', searchWord);
+        url.searchParams.set('page', 1);
+
+        location.href = url.toString();
+      }
+
+      $('#targetSubject').change(targetSearch);
+      $('#searchBtn').click(targetSearch);
+    });
+  </script>
 </head>
 <body>
-	<h1>환불 관리</h1>
-	
-	<div><a href="/admin/main">[메인 페이지]</a></div>
-	
-	과목 선택 :
-	<select name="targetSubject" id="targetSubject">
-		<option value="all">전체</option>
-		<c:if test="${subjectList != null}">
-			<c:forEach var="subject" items="${subjectList}">
-				<c:choose>
-					<c:when test="${param.searchType == subject.subjectName}">
-						<option value="${subject.subjectName}" selected>
-							${subject.subjectName}
-						</option>
-					</c:when>
-					<c:otherwise>
-						<option value="${subject.subjectName}">
-							${subject.subjectName}
-						</option>
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-		</c:if>
-	</select>
-	
-	<br>
-	
-	<!-- 환불 목록 조회 -->
-	<c:choose>
-		<c:when test="${empty refundList}">
-			<p>조회된 환불 내역이 없습니다.</p>
-		</c:when>
-		<c:otherwise>
-			<table border="1">
-				<tr>
-					<th>번호</th>
-					<th>이름</th>
-					<th>과목</th>
-					<th>환불 상태</th>
-					<th>환불 처리</th>
-				</tr>
-			<c:forEach var="list" items="${refundList}">
-				<tr>
-					<td>${list.enrollmentId}</td>
-					<td>${list.studentName}</td>
-					<td>${list.subjectName}</td>
-					<td>${list.status}</td>
-					<td>
-						<c:if test="${list.status == '환불 대기'}">
-							<form method="post" action="/admin/changeRefund">
-								<input type="hidden" name="enrollmentId" value="${list.enrollmentId}">
-								<button type="submit">환불 처리</button>
-							</form>
-						</c:if>
-					</td>
-				</tr>
-			</c:forEach>
-			</table>
-		</c:otherwise>
-	</c:choose>
-	
-	<!-- 이름 검색 -->
-	<div>
-		이름 : <input type="text" name="searchWord" id="searchWord" value="${page.searchWord != null ? page.searchWord : ''}">
-		<button type="button" name="searchBtn" id="searchBtn">검색</button>
-	</div>
-	
-	<!-- 페이지 그룹 이동 및 번호 출력 -->
-	<div>
-		<!-- 이전 그룹 이동 -->
-		<c:if test="${page.prevGroup}">
-			<a href="/admin/refundList?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">«</a>
-		</c:if>
-	
-		<!-- 페이지 번호 리스트 -->
-		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-			<c:choose>
-				<c:when test="${i == page.currentPage}">
-					<strong>[${i}]</strong>
-				</c:when>
-				<c:otherwise>
-					<a href="/admin/refundList?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">[${i}]</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-	
-		<!-- 다음 그룹 이동 -->
-		<c:if test="${page.nextGroup}">
-			<a href="/admin/refundList?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">»</a>
-		</c:if>
-	</div>
+
+<main class="main-content">
+  <section class="text-center mb-4">
+    <h2 class="fw-bold">환불 관리</h2>
+  </section>
+
+  <section class="search-section">
+    <form class="row gy-2 gx-3 align-items-center" onsubmit="return false;">
+      <div class="col-md-auto">
+        <label for="targetSubject" class="form-label fw-semibold">과목 선택</label>
+        <select name="targetSubject" id="targetSubject" class="form-select">
+          <option value="all" ${param.searchType == 'all' ? 'selected' : ''}>전체</option>
+          <c:forEach var="subject" items="${subjectList}">
+            <option value="${subject.subjectName}" <c:if test="${param.searchType == subject.subjectName}">selected</c:if>>
+              ${subject.subjectName}
+            </option>
+          </c:forEach>
+        </select>
+      </div>
+      <div class="col-md">
+        <label for="searchWord" class="form-label fw-semibold">이름</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="text" id="searchWord" name="searchWord" class="form-control"
+            value="${page.searchWord != null ? page.searchWord : ''}" placeholder="이름을 입력하세요" />
+          <button type="button" class="btn btn-primary" id="searchBtn">검색</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="table-responsive mb-4">
+    <c:choose>
+      <c:when test="${empty refundList}">
+        <p class="text-center text-muted fst-italic">조회된 환불 내역이 없습니다.</p>
+      </c:when>
+      <c:otherwise>
+        <table class="table table-bordered bg-white text-center">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>이름</th>
+              <th>과목</th>
+              <th>환불 상태</th>
+              <th>환불 처리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <c:forEach var="list" items="${refundList}">
+              <tr>
+                <td>${list.enrollmentId}</td>
+                <td>${list.studentName}</td>
+                <td>${list.subjectName}</td>
+                <td>${list.status}</td>
+                <td>
+                  <c:if test="${list.status == '환불 대기'}">
+                    <form method="post" action="/admin/changeRefund" onsubmit="return confirm('환불을 처리하시겠습니까?')">
+                      <input type="hidden" name="enrollmentId" value="${list.enrollmentId}">
+                      <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-cash-coin me-1"></i>환불 처리
+                      </button>
+                    </form>
+                  </c:if>
+                </td>
+              </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+      </c:otherwise>
+    </c:choose>
+  </section>
+
+  <section class="d-flex justify-content-center mt-4">
+    <nav>
+      <ul class="pagination pagination-sm">
+        <c:if test="${page.prevGroup}">
+          <li class="page-item">
+            <a class="page-link" href="?page=${page.prevGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">&laquo;</a>
+          </li>
+        </c:if>
+        <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+          <li class="page-item <c:if test='${i == page.currentPage}'>active</c:if>">
+            <a class="page-link" href="?page=${i}&searchWord=${page.searchWord}&searchType=${page.searchType}">${i}</a>
+          </li>
+        </c:forEach>
+        <c:if test="${page.nextGroup}">
+          <li class="page-item">
+            <a class="page-link" href="?page=${page.nextGroupPage}&searchWord=${page.searchWord}&searchType=${page.searchType}">&raquo;</a>
+          </li>
+        </c:if>
+      </ul>
+    </nav>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
