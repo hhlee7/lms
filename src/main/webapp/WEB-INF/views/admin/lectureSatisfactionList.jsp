@@ -17,7 +17,7 @@
     <h2 class="fw-bold mb-3">수업별 평균 만족도 통계</h2>
     <canvas id="lectureSatisfactionChart" style="width:100%; max-width:600px; height:300px; margin: auto;"></canvas>
   </section>
-	
+  
   <section class="text-center mb-4 mt-4">
     <h2 class="fw-bold">수업 만족도 평가 및 리뷰</h2>
   </section>
@@ -31,7 +31,7 @@
           <c:if test="${lectureList != null}">
             <c:forEach var="lecture" items="${lectureList}">
               <option value="${lecture.lectureId}" <c:if test="${param.searchType == lecture.lectureId.toString()}">selected</c:if>>
-                ${lecture.lectureId}(${lecture.subjectName})
+                ${lecture.subjectName} ${lecture.lectureId}기
               </option>
             </c:forEach>
           </c:if>

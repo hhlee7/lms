@@ -506,7 +506,7 @@
 			sb.name AS subjectName,
 			st.name AS studentName,
 			st.phone,
-			se.enrolled_at AS enrolledAt,
+			DATE_FORMAT(se.enrolled_at, '%Y-%m-%d %H:%i') AS enrolledAt,
 			se.student_id AS studentId
 		FROM (SELECT * FROM student_enrollment WHERE STATUS = 'CANCEL') se
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
