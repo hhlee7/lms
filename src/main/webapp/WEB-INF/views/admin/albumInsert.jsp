@@ -27,7 +27,7 @@
       <select id="lectureId" name="lectureId" class="form-select">
         <c:forEach items="${lectureList}" var="lec">
           <option value="${lec.lectureId}">
-            [${lec.subjectName}] ${lec.dayOfWeek}요일 ${lec.startTime} ~ ${lec.endTime}
+            [${lec.subjectName} ${lec.lectureId}기] ${lec.dayOfWeek}요일 ${lec.startTime} ~ ${lec.endTime}
           </option>
         </c:forEach>
       </select>

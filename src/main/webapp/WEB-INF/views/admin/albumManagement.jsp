@@ -55,7 +55,7 @@
             <option value="all">전체</option>
             <c:forEach items="${lectureList}" var="lec">
               <option value="${lec.lectureId}" <c:if test="${page.searchType eq lec.lectureId.toString()}">selected</c:if>>
-				  [${lec.subjectName}] ${lec.dayOfWeek}요일 ${lec.startTime} ~ ${lec.endTime}
+				  [${lec.subjectName} ${lec.lectureId}기] ${lec.dayOfWeek}요일 ${lec.startTime} ~ ${lec.endTime}
 				</option>
             </c:forEach>
           </select>
