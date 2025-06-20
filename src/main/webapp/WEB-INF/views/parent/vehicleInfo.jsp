@@ -16,6 +16,7 @@
 		padding: 0 20px;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		background-color: #f4f7fb;
+		text-align: center;
 	}
 	
 	.vehicle-info-page h1 {
@@ -76,11 +77,15 @@
 	}
 	
 	.vehicle-info-page p.cancel-message {
-		color: #d32f2f;
-		font-weight: 700;
-		text-align: center;
-		margin-bottom: 20px;
+	color: #d32f2f !important;		
+	font-weight: 900 !important;	
+	font-size: 20px !important;		
+	text-align: center !important;
+	margin-bottom: 20px !important;
+	letter-spacing: 0.5px !important;	
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) !important;
 	}
+	
 	.btn-cancel {
 	  display: inline-block;      
 	  padding: 12px 28px;          
@@ -105,8 +110,8 @@
 	<div class="vehicle-info-page">
 		<c:choose>
 			<c:when test="${not empty vehicleInfo and vehicleInfo.isCancelledToday eq 1}">
-				<h1>${vehicleInfo.studentName}의 배차 정보</h1>
-				<p class="cancelled-message">금일 배차를 취소했습니다.</p>
+				<h1>'${vehicleInfo.studentName}' 학생의 배차 정보</h1>
+				<p class="cancel-message">금일 배차를 취소했습니다.</p>
 			</c:when>
 
 			<c:when test="${not empty vehicleInfo}">

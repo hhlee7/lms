@@ -149,7 +149,7 @@ public interface AdminMapper {
 	List<Classroom> selectClassroomList();
 
 	// 강사 리스트 조회
-	List<User> selectTeacherList();
+	List<Map<String, Object>> selectTeacherList();
 
 	// 해당 수업의 강사 배정
 	int createTeacherAssignment(TeacherAssignment teacherAssignment);
