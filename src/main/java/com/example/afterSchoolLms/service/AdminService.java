@@ -166,6 +166,11 @@ public class AdminService {
 		return adminMapper.selectTeacherHistoryListByTeacherId(teacherId);
 	}
 	
+	/** 강사 아이디로 수업 조회 **/
+	public List<Map<String,Object>> selectLectureByTeacherId(String teacherId){
+		return adminMapper.selectLectureByTeacherId(teacherId);
+	}
+	
 	/** 기사 아이디로 차량 조회 **/
 	public List<Map<String,Object>> selectVehicleByDriverId(String driverId){
 		return adminMapper.selectVehicleByDriverId(driverId);

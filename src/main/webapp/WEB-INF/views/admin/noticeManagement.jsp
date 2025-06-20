@@ -46,6 +46,13 @@
     <h2 class="fw-bold">공지사항 관리</h2>
   </section>
 
+  <section class="mb-4">
+    <a href="/admin/noticeInsert" class="btn btn-success">
+      <i class="bi bi-plus-circle me-1"></i> 공지사항 등록
+    </a>
+  </section>
+
+
   <!-- 검색 바 + 역할 선택 -->
   <section class="search-section mb-4">
     <form class="row gy-2 gx-3 align-items-center justify-content-center" onsubmit="return false;">

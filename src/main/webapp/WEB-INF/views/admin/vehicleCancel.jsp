@@ -74,7 +74,7 @@
           <tbody>
             <c:forEach var="can" items="${cancelList}">
               <tr>
-                <td>${can.studentName}</td>
+                <td><a href="/admin/userOne?userId=${can.studentId}">${can.studentName}</a></td>
                 <td>${can.subjectName}</td>
                 <td>${can.cancelReason}</td>
                 <td>${can.dayOfWeek}</td>

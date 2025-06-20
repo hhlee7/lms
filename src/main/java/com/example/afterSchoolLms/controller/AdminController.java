@@ -586,7 +586,7 @@ public class AdminController {
 			case 3:				// 강사
 				List<Map<String,Object>> lectureList = new ArrayList<>();
 				TeacherHistory historyList = new TeacherHistory();
-				lectureList = teacherMapper.selectLectureListByTeacher((String)selectedUser.get("userId"));
+				lectureList = adminService.selectLectureByTeacherId((String)selectedUser.get("userId"));
 				historyList = adminService.selectTeacherHistoryListByTeacherId((String)selectedUser.get("userId"));
 				model.addAttribute("lectureList",lectureList);
 				model.addAttribute("historyList", historyList);

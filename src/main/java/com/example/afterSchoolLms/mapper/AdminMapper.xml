@@ -60,11 +60,12 @@
 	<!-- 배차 취소 리스트 조회 -->
 	<select id="selectCancelList" resultType="map" parameterType="com.example.afterSchoolLms.dto.Page">
 		SELECT
+			u.user_id AS studentId,
 			u.name AS studentName,
 			sb.name AS subjectName,
 			lt.day_of_week AS dayOfWeek,
 			vc.cancel_reason AS cancelReason,
-			vc.decided_at AS decidedAt
+			DATE_FORMAT(vc.decided_at, '%Y-%m-%d %H:%i') AS decidedAt
 		FROM vehicle_cancel vc
 		INNER JOIN payment p ON vc.payment_id = p.payment_id
 		INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
@@ -345,6 +346,24 @@
 		INNER JOIN classroom cr ON lt.classroom_id = cr.classroom_id
 		INNER JOIN teacher_assignment ta ON lt.lecture_id = ta.lecture_id
 		INNER JOIN user u ON ta.teacher_id = u.user_id
+	</select>
+	
+	<!-- 강사 아이디로 수업 조회 -->
+	<select id="selectLectureByTeacherId" parameterType="String" resultType="map">
+		SELECT
+			sb.name AS subjectName,
+			lt.day_of_week AS dayOfWeek,
+			DATE_FORMAT(lt.start_time, '%H:%i') AS startTime,
+		    DATE_FORMAT(lt.end_time, '%H:%i') AS endTime,
+			cl.name AS classroomName,
+			lt.start_date AS startDate,
+			lt.end_date AS endDate
+		FROM
+		(SELECT * FROM user WHERE user_id = #{teacherId}) t
+		INNER JOIN teacher_assignment ta ON t.user_id = ta.teacher_id
+		INNER JOIN lecture lt ON ta.lecture_id = lt.lecture_id
+		INNER JOIN subject sb ON sb.subject_id = lt.subject_id
+		INNER JOIN classroom cl ON cl.classroom_id = lt.classroom_id
 	</select>
 	
 	<!-- 과목 조회 -->
