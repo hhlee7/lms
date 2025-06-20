@@ -12,7 +12,7 @@
         <thead class="table-light">
           <tr>
             <th>번호</th>
-            <th>수업(과목)</th>
+            <th>수업</th>
             <th>학생</th>
             <th>수업 평가 점수</th>
             <th>평가 일시</th>
@@ -24,7 +24,7 @@
           <c:forEach var="list" items="${LectureSatisfactionList}">
             <tr>
               <td>${list.satisfactionId}</td>
-              <td>${list.lectureId}(${list.subjectName})</td>
+              <td>${list.subjectName} ${list.lectureId}기</td>
               <td>${list.studentName}</td>
               <td>${list.ratingLecture}</td>
               <td>${list.createAt}</td>

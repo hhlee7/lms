@@ -69,7 +69,6 @@
         <table class="table table-bordered bg-white text-center">
           <thead>
             <tr>
-              <th>번호</th>
               <th>과목</th>
               <th>이름</th>
               <th>금액</th>
@@ -79,9 +78,8 @@
           <tbody>
             <c:forEach var="list" items="${paymentList}">
               <tr>
-                <td>${list.paymentId}</td>
                 <td>${list.subjectName}</td>
-                <td>${list.studentName}</td>
+                <td><a href="/admin/userOne?userId=${list.studentId}">${list.studentName}</a></td>
                 <td><fmt:formatNumber value="${list.amount}" type="number" />원</td>
                 <td>${list.paidAt}</td>
               </tr>

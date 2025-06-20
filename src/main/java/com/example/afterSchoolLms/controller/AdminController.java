@@ -920,7 +920,7 @@ public class AdminController {
 		model.addAttribute("classroomList", classroomList);
 		
 		// 등록된 강사 조회
-		List<User> teacherList = adminService.getTeacherList();
+		List<Map<String, Object>> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
 		// 등록된 배차 정보 조회 (이미 수업에 배정된 배차 정보는 제외)
@@ -988,7 +988,7 @@ public class AdminController {
 		model.addAttribute("classroomList", classroomList);
 		
 		// 등록된 강사 조회
-		List<User> teacherList = adminService.getTeacherList();
+		List<Map<String, Object>> teacherList = adminService.getTeacherList();
 		model.addAttribute("teacherList", teacherList);
 		
 		// 등록된 배차 정보 조회 (현재 수업에 배정된 배차 정보 포함 / 다른 수업에 배정된 배차 정보는 제외)
