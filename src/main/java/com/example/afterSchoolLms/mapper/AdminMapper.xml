@@ -43,7 +43,7 @@
 		INNER JOIN lecture lt ON se.lecture_id = lt.lecture_id
 		INNER JOIN vehicle_assignment va ON va.lecture_id = lt.lecture_id
 		LEFT JOIN vehicle_cancel vc 
-		       ON vc.assignment_id = va.assignment_id 
+		       ON vc.payment_id = p.payment_id 
 		      AND DATE(vc.decided_at) = CURDATE()
 		WHERE lt.end_date >= CURDATE()
 		  AND vc.assignment_id IS NULL
