@@ -59,6 +59,7 @@
       <div class="nav-item"><a href="/parent/album">사진첩</a></div>
       <div class="nav-item"><a href="/parent/qnaList">QnA</a></div>
       <div class="nav-item"><a href="/parent/modifyInfo">개인정보 수정</a></div>
+      <div class="nav-item"><a href="/logout">로그아웃</a></div>
     </div>
   </header>
 </body>

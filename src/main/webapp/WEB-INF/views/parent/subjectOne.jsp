@@ -98,6 +98,29 @@
 			content: "💬 리뷰:";
 			color: #0077cc;
 		}
+		.subject-image {
+			text-align: center; 
+			margin-top: 40px;
+		}
+		
+		.subject-image img {
+			width: 800px;
+			height: auto;
+			border-radius: 12px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+		
+		.subject-image-scroll {
+			margin-top: 40px;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+		
+		.scroll-wrapper {
+			width: max-content;
+			display: inline-block;
+		}
+		
 	</style>
 </head>
 <body>
@@ -106,6 +129,25 @@
 
 		<div class="subject-desc">
 			${subject.description}
+		</div>
+		
+		<div class="subject-image">
+			<c:choose>
+				<c:when test="${subject.subjectName eq '피아노'}">
+					<img src="/images/피아노트로피2.png" alt="피아노">
+					<img src="/images/피아노레슨3.png" alt="피아노">
+				</c:when>
+				<c:when test="${subject.subjectName eq '코딩'}">
+					<img src="/images/코딩1.jpg" alt="코딩">
+					<img src="/images/코딩수업.jpg" alt="코딩">
+				</c:when>
+				<c:when test="${subject.subjectName eq '축구'}">
+					<img src="/images/과목소개축구.png" alt="축구">
+				</c:when>
+				<c:otherwise>
+					<img src="/images/default.jpg" alt="기본 이미지">
+				</c:otherwise>
+			</c:choose>
 		</div>
 
 		<c:if test="${not empty rating}">
