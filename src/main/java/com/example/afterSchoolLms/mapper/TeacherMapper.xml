@@ -41,22 +41,13 @@
   FROM payment p
   INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
   INNER JOIN user u ON se.student_id = u.user_id
-  INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+  INNER JOIN (SELECT * FROM lecture WHERE end_date &gt; CURDATE()) l ON se.lecture_id = l.lecture_id
   INNER JOIN subject s ON s.subject_id = l.subject_id
   WHERE se.lecture_id IN (
       SELECT lecture_id
       FROM teacher_assignment 
       WHERE teacher_id = #{teacherId}
   )
-  AND l.day_of_week = CASE DATE_FORMAT(CURDATE(), '%w')
-    WHEN '0' THEN '일'
-    WHEN '1' THEN '월'
-    WHEN '2' THEN '화'
-    WHEN '3' THEN '수'
-    WHEN '4' THEN '목'
-    WHEN '5' THEN '금'
-    WHEN '6' THEN '토'
-  END
   <if test="keyword != null and keyword != ''">
     AND (u.name LIKE CONCAT('%', #{keyword}, '%')
          OR s.name LIKE CONCAT('%', #{keyword}, '%'))
@@ -70,7 +61,7 @@
   FROM payment p
   INNER JOIN student_enrollment se ON p.enrollment_id = se.enrollment_id
   INNER JOIN user u ON se.student_id = u.user_id
-  INNER JOIN lecture l ON se.lecture_id = l.lecture_id
+  INNER JOIN (SELECT * FROM lecture WHERE end_date &gt; CURDATE()) l ON se.lecture_id = l.lecture_id
   INNER JOIN subject s ON s.subject_id = l.subject_id
   WHERE se.lecture_id IN (
       SELECT lecture_id
@@ -164,7 +155,7 @@
 <!-- 공지사항 목록 조회 (검색 + 페이징) -->
 <select id="selectNoticeList" resultType="map">
   SELECT * FROM notice
-  WHERE title LIKE '%강사%'
+  WHERE target_role_id = 3
     <if test="keyword != null and keyword != ''">
       AND (
         title LIKE CONCAT('%', #{keyword}, '%')

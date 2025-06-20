@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>교보제 목록</title>
+  <title>교보재 목록</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -30,7 +30,7 @@
 <body>
 
 <div class="container">
-  <h2>교보제 목록</h2>
+  <h2>교보재 목록</h2>
 
   <table class="table table-bordered align-middle">
     <thead>

@@ -134,8 +134,8 @@
 	    <a class="btn-menu" href="/teacher/student/vehicle"><i class="fas fa-bus"></i> 배차 조회</a>
 	    <a class="btn-menu" href="/teacher/attendance/check"><i class="fas fa-clipboard-check"></i> 출석 체크</a>
 	    <a class="btn-menu" href="/teacher/attendance/list"><i class="fas fa-calendar-check"></i> 출결 조회</a>
-	    <a class="btn-menu" href="/teacher/material/list"><i class="fas fa-book"></i> 교보제 조회</a>
-	    <a class="btn-menu" href="/teacher/material/request"><i class="fas fa-plus-circle"></i> 교보제 요청</a>
+	    <a class="btn-menu" href="/teacher/material/list"><i class="fas fa-book"></i> 교보재 조회</a>
+	    <a class="btn-menu" href="/teacher/material/request"><i class="fas fa-plus-circle"></i> 교보재 요청</a>
 	    <a class="btn-menu" href="/teacher/album/list"><i class="fas fa-image"></i> 사진첩</a>
 	    <a class="btn-menu" href="/teacher/notice/list"><i class="fas fa-bullhorn"></i> 공지사항</a>
 	    <a class="btn-menu" href="/teacher/profile"><i class="fas fa-user-circle"></i> 개인정보</a>

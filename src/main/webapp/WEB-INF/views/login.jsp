@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>로그인 - 여의도초등학교</title>
+  <title>로그인 - 송린초등학교</title>
   <style>
     body {
       margin: 0;
