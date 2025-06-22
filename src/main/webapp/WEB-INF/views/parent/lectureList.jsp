@@ -12,7 +12,6 @@
 	font-family: 'Segoe UI', 'Arial', sans-serif;
 	background-color: #f4f7fb;
 	margin: 0;
-	padding: 120px 20px 40px;
 	color: #333;
 	}
 	

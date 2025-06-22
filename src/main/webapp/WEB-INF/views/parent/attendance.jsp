@@ -12,24 +12,24 @@
         margin: 30px auto;
         border-collapse: collapse;
         text-align: center;
-        table-layout: fixed; /* 셀 너비 균일하게 고정 */
+        table-layout: fixed; 
     }
 
     th, td {
         padding: 10px;
         border: 1px solid #ccc;
-        height: 80px;                /* 고정 높이로 셀 크기 일정하게 */
-        width: calc(100% / 7);       /* 7열 기준 균등 너비 */
-        vertical-align: top;         /* 내용이 위쪽 정렬되도록 */
-        box-sizing: border-box;      /* 패딩 포함한 고정 크기 유지 */
+        height: 80px;              
+        width: calc(100% / 7);      
+        vertical-align: top;        
+        box-sizing: border-box;      
     }
 
     th {
         background-color: #f0f0f0;
     }
 
-    th:first-child { color: red; }     /* 일요일 */
-    th:last-child { color: blue; }     /* 토요일 */
+    th:first-child { color: red; }     
+    th:last-child { color: blue; }    
 
     .nav {
         display: flex;
@@ -50,7 +50,7 @@
     .attendance-status {
         font-size: 0.75em;
         margin-top: 4px;
-        line-height: 1.2; /* 줄 간격 축소로 높이 영향 최소화 */
+        line-height: 1.2; 
         word-break: keep-all;
     }
 
@@ -61,7 +61,7 @@
 </head>
 <body>
 
-   <h1 style="text-align:center; margin-top: 100px;">
+   <h1 style="text-align:center; margin-top: 50px;">
        ${year}년 ${month + 1}월
    </h1>
    

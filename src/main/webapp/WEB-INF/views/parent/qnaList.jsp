@@ -9,7 +9,6 @@
 <title>QnA 목록</title>
 <style>
 	body {
-		margin: 120px 0 40px 0;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		background-color: #f9f9f9;
 		color: #333;

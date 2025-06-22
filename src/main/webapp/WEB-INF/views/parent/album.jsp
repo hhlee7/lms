@@ -8,7 +8,6 @@
     <title>사진첩</title>
     <style>
         body {
-            margin: 120px 20px 40px; /* header 고정 높이만큼 패딩 꼭 필요 */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9fafc;
             color: #333;

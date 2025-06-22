@@ -11,7 +11,7 @@
 	.content-area {
 		max-width: 900px;
 		margin: 0 auto;
-		padding: 120px 20px 40px;
+		padding: 50px 20px 40px;
 		background-color: #f9fafc;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		color: #222;

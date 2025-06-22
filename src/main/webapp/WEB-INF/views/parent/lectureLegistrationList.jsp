@@ -13,7 +13,6 @@
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	background-color: #f9fafc;
 	margin: 0;
-	padding: 120px 20px 40px;
 	color: #222;
 	}
 	

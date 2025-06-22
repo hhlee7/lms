@@ -8,7 +8,6 @@
 <style>
   body {
     margin: 0;
-    padding-top: 120px;
     font-family: 'Segoe UI', 'Arial', sans-serif;
     background-color: #f9fafc;
     color: #333;

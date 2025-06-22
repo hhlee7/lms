@@ -12,7 +12,7 @@
 <style>
 	.vehicle-info-page {
 		max-width: 480px;
-		margin: 120px auto 40px;
+		margin: 80px auto 40px;
 		padding: 0 20px;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		background-color: #f4f7fb;
