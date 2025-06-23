@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>afterSchoolLms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>afterSchoolLms</name>
 	<description>after-school management program</description>
 	<url/>
@@ -131,6 +131,19 @@
 	</dependencies>
 
 	<build>
+	<!-- xml -->
+	  <resources>
+	    <resource>
+	      <directory>src/main/java</directory>
+	      <includes>
+	        <include>**/*.xml</include>
+	      </includes>
+	    </resource>
+	    <resource>
+	      <directory>src/main/resources</directory>
+	    </resource>
+	  </resources>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

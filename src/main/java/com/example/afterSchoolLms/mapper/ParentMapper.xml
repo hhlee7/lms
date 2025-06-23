@@ -432,6 +432,7 @@
 	<select id="selectTeacherOne" parameterType="String" resultType="map">
 		SELECT 
 			u.name AS teacherName,
+			u.user_id AS userId,
 			th.last_education AS lastEducation,
 			th.personal_history AS personalHistory
 		FROM user u

@@ -9,7 +9,6 @@
 	<style>
 		body {
 			margin: 0;
-			padding-top: 120px;
 			background-color: #f9f9f9;
 			font-family: sans-serif;
 		}

@@ -250,7 +250,7 @@ public class AdminController {
 		
 		// 웹에 노출 가능한 경로로 변환
 	    for (AlbumPhoto photo : photoList) {
-	    	photo.setFilePath("/images/" + photo.getFilePath()); // static/images 폴더 기준
+	    	photo.setFilePath(photo.getFilePath()); // ubuntu 폴더 기준으로 변경
 	    }
 		
 		model.addAttribute("photoList",photoList);
