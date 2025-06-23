@@ -7,11 +7,16 @@
     <meta charset="UTF-8" />
     <title>사진첩</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fafc;
-            color: #333;
-        }
+         html, body {
+  background-color: #f4f7fb !important;
+	}
+  body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
+    margin: 0;
+  }
+
 
         h1 {
             text-align: center;

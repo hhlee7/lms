@@ -8,11 +8,16 @@
 <meta charset="UTF-8">
 <title>공지사항 상세 페이지</title>
 <style>
+   html, body {
+  background-color: #f4f7fb !important;
+	}
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f7fb;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
     margin: 0;
   }
+
 
   h1 {
     text-align: center;
