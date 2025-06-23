@@ -98,7 +98,7 @@
 
         <c:forEach var="dispatch" items="${dispatchList}">
             <div class="dispatch-card">
-                <h2>${dispatch.subjectName}</h2>
+                <h2>${dispatch.subjectName} ${dispatch.lectureId}기</h2>
 
                 <div class="dispatch-info">
                     <div class="section-title">🧑‍🏫 수업 정보</div>

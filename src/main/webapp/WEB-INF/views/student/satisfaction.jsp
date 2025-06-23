@@ -139,7 +139,7 @@
         <c:forEach var="lecture" items="${lectureDoneList}">
 	        <div class="evaluation-card">
 	            <div class="card-header">
-	                <h2>📘 ${lecture.subjectName}</h2>
+	                <h2>📘 ${lecture.subjectName} ${lecture.lectureId}기</h2>
 	                <c:choose>
 	                    <c:when test="${not empty lecture.satisfactionId}">
 	                        <span class="status-badge done">✅ 평가 완료</span>
@@ -163,7 +163,7 @@
 	                        <span>✔️ 만족도 평가 완료</span>
 	                    </c:when>
 	                    <c:otherwise>
-	                        <a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
+	                        <a href="/student/evaluation?paymentId=${lecture.paymentId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}&lectureId=${lecture.lectureId}">
 	                            ✍️ 평가하기
 	                        </a>
 	                    </c:otherwise>
@@ -176,7 +176,7 @@
 	                                <span>📝 리뷰 완료</span>
 	                            </c:when>
 	                            <c:otherwise>
-	                                <a href="/student/review?satisfactionId=${lecture.satisfactionId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}">
+	                                <a href="/student/review?satisfactionId=${lecture.satisfactionId}&subjectName=${lecture.subjectName}&teacherName=${lecture.teacherName}&lectureId=${lecture.lectureId}">
 	                                    💬 리뷰 쓰기
 	                                </a>
 	                            </c:otherwise>

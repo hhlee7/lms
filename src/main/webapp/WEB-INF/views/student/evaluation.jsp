@@ -135,7 +135,7 @@
     <div class="container">
         <h1>만족도 평가</h1>
         <div class="info-text">
-            <h3>📘 과목: ${subjectName}</h3>
+            <h3>📘 과목: ${subjectName} ${lectureId}기</h3>
             <h3>👨‍🏫 강사: ${teacherName}</h3>
         </div>
 

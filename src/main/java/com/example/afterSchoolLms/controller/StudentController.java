@@ -175,13 +175,15 @@ public class StudentController {
 	public String evaluation(Model model
 			, @RequestParam String paymentId
 			, @RequestParam String subjectName
-			, @RequestParam String teacherName) {
+			, @RequestParam String teacherName
+			, @RequestParam int lectureId) {
 		//log.info("paymentId: " + paymentId);
 		//log.info("subjectName: " + subjectName);
 		//log.info("teacherName: " + teacherName);
 		model.addAttribute("paymentId", paymentId);
 		model.addAttribute("subjectName", subjectName);
 		model.addAttribute("teacherName", teacherName);
+		model.addAttribute("lectureId", lectureId);
 		return "/student/evaluation";
 	}
 	
@@ -201,10 +203,12 @@ public class StudentController {
 	public String reveiw(Model model
 			, @RequestParam String satisfactionId
 			, @RequestParam String subjectName
-			, @RequestParam String teacherName) {
+			, @RequestParam String teacherName
+			, @RequestParam int lectureId) {
 		model.addAttribute("satisfactionId", satisfactionId);
 		model.addAttribute("subjectName", subjectName);
 		model.addAttribute("teacherName", teacherName);
+		model.addAttribute("lectureId", lectureId);
 		return "/student/review";
 	}
 	

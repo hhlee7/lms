@@ -92,7 +92,7 @@
         <c:forEach var="lecture" items="${lectureList}">
 	        <div class="lecture-card">
 	            <div class="lecture-header">
-	                <h2>${lecture.subjectName}</h2>
+	                <h2>${lecture.subjectName} ${lecture.lectureId}기</h2>
 	            </div>
                 <div class="teacher">👨‍🏫 ${lecture.teacherName}</div>
 	            <div class="lecture-info">

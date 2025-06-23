@@ -25,6 +25,7 @@
 		   sb.name AS subjectName,
 		   DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
 		   DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		   lt.lecture_id AS lectureId,
 		   lt.day_of_week AS dayOfWeek,
 		   lt.start_date AS startDate,
 		   lt.end_date AS endDate,
@@ -49,6 +50,7 @@
 			t1.name AS teacherName,
 			DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
 		    DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		    lt.lecture_id AS lectureId,
 		    lt.day_of_week AS dayOfWeek,
 		    lt.start_date AS startDate,
    			lt.end_date AS endDate,
@@ -145,6 +147,7 @@
 		   sb.name AS subjectName,
 		   DATE_FORMAT(start_time, '%H시 %i분') AS startTime,
 		   DATE_FORMAT(end_time, '%H시 %i분') AS endTime,
+		   lt.lecture_id AS lectureId,
 		   lt.day_of_week AS dayOfWeek,
 		   lt.start_date AS startDate,
 		   lt.end_date AS endDate,
@@ -167,7 +170,8 @@
 	
 	<select id="selectHistory" parameterType="String" resultType="map">
 		SELECT 
-			p.payment_id AS paymentId, 
+			p.payment_id AS paymentId,
+			l.lecture_id AS lectureId,
 			s.rating_lecture AS ratingLecture, 
 			s.rating_teacher AS ratingTeacher, 
 			r.content, 

@@ -128,7 +128,7 @@
                 <div class="info-row-top">
                     <div class="info-item">
                         <span class="label">📘 과목:</span>
-                        <span>${history.subjectName}</span>
+                        <span>${history.subjectName} ${history.lectureId}기</span>
                     </div>
                     <div class="info-item">
                         <span class="label">👨‍🏫 강사:</span>

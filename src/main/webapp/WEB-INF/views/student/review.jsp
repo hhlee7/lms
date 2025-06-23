@@ -137,7 +137,7 @@
         <h1>📝 리뷰 작성</h1>
 
         <div class="info-text">
-            <h3>📘 과목: ${subjectName}</h3>
+            <h3>📘 과목: ${subjectName} ${lectureId}기</h3>
             <h3>👨‍🏫 강사: ${teacherName}</h3>
         </div>
 
