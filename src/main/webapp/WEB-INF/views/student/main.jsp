@@ -104,7 +104,7 @@
 <!-- ✅ HERO 배너 -->
 <div class="hero" style="
   background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-              url('https://postfiles.pstatic.net/MjAyNTA2MTdfMjU1/MDAxNzUwMTQwMTcwMDc4.Ep_-60lPCwncPJmnutAueEvr4Aa_MMwm1qg_4kAChBsg.bSXHRDVzSoDzsc9DfN7SQJRtA3G1xawtBpeK_KRsU7og.PNG/final_banner_1920x600_(1).png?type=w3840') 
+              url('/images/studentmain.png')
               no-repeat center center / contain;
   background-color: #000;
   height: 650px;
