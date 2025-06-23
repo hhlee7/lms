@@ -93,7 +93,7 @@
             <tr>
               <td class="text-center">${ab.albumId}</td>
               <td class="text-center">
-                <img src="/images/${ab.filePath}" alt="썸네일"
+                <img src="/upload/${ab.filePath}" alt="썸네일"
                      class="thumb-img" />
               </td>
               <td class="text-center">${ab.subjectName}</td>

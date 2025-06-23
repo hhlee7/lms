@@ -42,7 +42,7 @@
         <c:forEach items="${photoList}" var="photo">
           <div class="col-6 col-md-4 col-lg-3">
             <div class="card h-100 shadow-sm">
-              <img src="${photo.filePath}" class="card-img-top" alt="앨범 이미지">
+              <img src="/upload/${photo.filePath}" class="card-img-top" alt="앨범 이미지">
             </div>
           </div>
         </c:forEach>

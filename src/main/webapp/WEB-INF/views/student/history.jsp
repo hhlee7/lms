@@ -16,7 +16,6 @@
         font-family: 'Noto Sans KR', sans-serif;
         background-color: #f0f2f5;
         margin: 0;
-        padding: 40px 20px;
         color: #000;
         font-size: 18px;
     }
@@ -116,7 +115,7 @@
 </style>
 </head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
+	<jsp:include page="header.jsp"></jsp:include>
 
     <div class="container">
         <div class="section-header">
