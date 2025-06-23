@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file ="/WEB-INF/views/layout/header.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,7 +106,7 @@
 	    <div  class="photo-gallery" style="display: flex; flex-wrap: wrap; gap: 10px;">
 	        <c:forEach items="${photoList}" var="photo">
 			    <div style="border: 1px solid #ccc; padding: 5px; margin: 10px;">
-			        <img src="${photo.filePath}" 
+			        <img src="/upload/${photo.filePath}" 
 			             alt="사진" 
 			             style="width: 200px; height: auto;">
 			    </div>

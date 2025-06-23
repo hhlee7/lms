@@ -340,12 +340,7 @@ public class StudentController {
 		
 		Map<String,Object> album = studentService.albumOne(Integer.parseInt(albumId));
 		List<AlbumPhoto> photoList = studentService.albumPhotoList(Integer.parseInt(albumId));
-		
-		// 웹에 노출 가능한 경로로 변환
-	    for (AlbumPhoto photo : photoList) {
-	        photo.setFilePath("/images/" + photo.getFilePath());
-	    }
-		
+
 		model.addAttribute("photoList",photoList);
 		model.addAttribute("album",album);
 		return "/student/albumOne";

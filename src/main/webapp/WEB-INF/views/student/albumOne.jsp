@@ -146,7 +146,7 @@
             <div class="photo-gallery">
                 <c:forEach items="${photoList}" var="photo">
                     <div class="photo-card">
-                        <img src="${photo.filePath}" alt="사진" onclick="openModal('${photo.filePath}')" />
+                        <img src="/upload/${photo.filePath}" alt="사진" onclick="openModal('/upload/${photo.filePath}')" />
                     </div>
                 </c:forEach>
             </div>
