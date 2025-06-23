@@ -260,7 +260,7 @@ public class AdminService {
 	// ------ 파일 등록 ------
 	public void insertAlbum(Album album, List<MultipartFile> photoFiles) {
 	    // 1. 앨범 등록
-	    int result = adminMapper.insertAlbum(album); // 이 시점에 album.getAlbumId()가 세팅돼야 함 (useGeneratedKeys=true)
+	    int result = adminMapper.insertAlbum(album); // albumId 세팅되어야 함
 	    if (result != 1) {
 	        throw new RuntimeException("앨범 등록 실패");
 	    }
@@ -272,25 +272,28 @@ public class AdminService {
 
 	            // 파일명 생성
 	            String uuidName = UUID.randomUUID().toString().replace("-", "");
-	            String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+	            String ext = file.getOriginalFilename()
+	                             .substring(file.getOriginalFilename().lastIndexOf("."));
 	            String fullName = uuidName + ext;
 
 	            // DB 저장용 DTO
 	            AlbumPhoto photo = new AlbumPhoto();
 	            photo.setAlbumId(album.getAlbumId());
-	            photo.setFilePath(fullName);
+	            photo.setFilePath(fullName); // DB에는 파일명만 저장
 
 	            int insertRow = adminMapper.insertAlbumPhoto(photo);
 	            if (insertRow != 1) {
 	                throw new RuntimeException("앨범 사진 DB 저장 실패");
 	            }
 
-	            // 프로젝트 루트 경로 동적으로 구하기 (실제 파일 저장)
-	            String projectPath = new File("").getAbsolutePath();
-	            String uploadPath = projectPath + "/src/main/resources/static/images/";
+	            // 리눅스 서버 파일 저장 경로
+	            String uploadPath = "/home/ubuntu/upload/";
+
 	            File targetFile = new File(uploadPath + fullName);
-	            
+
 	            try {
+	                // 디렉토리 없으면 생성
+	                targetFile.getParentFile().mkdirs();
 	                file.transferTo(targetFile);
 	            } catch (Exception e) {
 	                throw new RuntimeException("앨범 사진 파일 저장 실패", e);
@@ -298,6 +301,7 @@ public class AdminService {
 	        }
 	    }
 	}
+
 	
 	// 과목 조회
 	public List<Subject> getSubjectList() {

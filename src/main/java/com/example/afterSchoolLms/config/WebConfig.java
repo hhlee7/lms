@@ -16,9 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
 	// 서버 정적 리소스 매핑
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // /upload/**로 요청이 오면 C:/project/albumUpload/에서 파일을 찾는다
+        // /upload/** 요청이 오면 리눅스 경로 /home/ubuntu/upload/에서 파일을 찾는다
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:///C:/project/albumUpload/");
+                .addResourceLocations("file:/home/ubuntu/upload/");
     }
     
     // 사이드바 미응답 Q&A 갯수 알람 띄우려고 추가함

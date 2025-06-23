@@ -73,7 +73,7 @@
 
     <!-- 최근 앨범 -->
     <div class="mt-4">
-      <h4>📸 최근 등록된 앨범</h4>
+      <h4>최근 등록된 앨범</h4>
       <table class="table table-bordered mt-2">
         <thead class="table-light">
           <tr>
