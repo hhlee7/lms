@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,8 +75,8 @@
   <c:forEach var="v" items="${vehicleList}">
     <tr>
       <td>${v.studentName}</td>
-      <td>${v.startTime}</td>
-      <td>${v.endTime}</td>
+      <td><fmt:formatDate value="${s.startTime}" pattern="HH:mm" /></td>
+	  <td><fmt:formatDate value="${s.endTime}" pattern="HH:mm" /></td>
       <td>${v.dayOfWeek}</td>
       <td>${v.subjectName}</td>
       <td>${v.vehicleNo}</td>
