@@ -52,7 +52,7 @@
     AND (u.name LIKE CONCAT('%', #{keyword}, '%')
          OR s.name LIKE CONCAT('%', #{keyword}, '%'))
   </if>
-  ORDER BY u.name
+  ORDER BY FIELD(l.day_of_week, '월', '화', '수', '목', '금', '토', '일'), u.name
   LIMIT #{startRow}, #{rowPerPage}
 </select>
 
@@ -107,6 +107,7 @@
         WHEN '6' THEN '토'
     END
 </select>
+
 
 <!-- 개인정보조회-->
 <select id="selectTeacherProfile" resultType="map">

@@ -45,6 +45,7 @@
   WHEN '5' THEN '금'
   WHEN '6' THEN '토'
 END  <!-- 💡 오늘 요일과 일치하는 수업만 -->
+AND CURDATE() BETWEEN l.start_date AND l.end_date;
 </select>
 
  <!-- 출석 상태 카운트 (검색 + 날짜 포함) -->

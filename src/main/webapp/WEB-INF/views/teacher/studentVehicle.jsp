@@ -75,8 +75,8 @@
   <c:forEach var="v" items="${vehicleList}">
     <tr>
       <td>${v.studentName}</td>
-      <td><fmt:formatDate value="${s.startTime}" pattern="HH:mm" /></td>
-	  <td><fmt:formatDate value="${s.endTime}" pattern="HH:mm" /></td>
+      <td><fmt:formatDate value="${v.startTime}" pattern="HH:mm" /></td>
+	  <td><fmt:formatDate value="${v.endTime}" pattern="HH:mm" /></td>
       <td>${v.dayOfWeek}</td>
       <td>${v.subjectName}</td>
       <td>${v.vehicleNo}</td>
