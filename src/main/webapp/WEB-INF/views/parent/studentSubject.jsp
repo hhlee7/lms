@@ -8,6 +8,17 @@
 <meta charset="UTF-8">
 <title>수강중인 과목 조회</title>
 <style>
+	  html, body {
+  background-color: #f4f7fb !important;
+	}
+  body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
+    margin: 0;
+  }
+	
+
 	.content-area {
 		max-width: 900px;
 		margin: 0 auto;

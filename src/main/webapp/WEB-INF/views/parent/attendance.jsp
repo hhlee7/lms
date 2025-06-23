@@ -7,6 +7,17 @@
 <meta charset="UTF-8">
 <title>출결 조회</title>
 <style>
+	  html, body {
+  background-color: #f4f7fb !important;
+	}
+  body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
+    margin: 0;
+  }
+	
+
     table {
         width: 90%;
         margin: 30px auto;
