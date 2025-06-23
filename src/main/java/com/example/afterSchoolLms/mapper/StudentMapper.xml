@@ -207,7 +207,8 @@
 	</select>
 	
 	<select id="selectTeacherOne" parameterType="String" resultType="map">
-		SELECT 
+		SELECT
+			u.user_id AS userId,
 			u.name AS teacherName,
 			th.last_education AS lastEducation,
 			th.personal_history AS personalHistory
