@@ -16,7 +16,7 @@
 	<style>
 		body {
 			font-family: 'Segoe UI', 'Arial', sans-serif;
-			background-color: #f4f7fb;
+			background-color: #f9f9fb;
 			margin: 0;
 		}
 

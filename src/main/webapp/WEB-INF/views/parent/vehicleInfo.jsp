@@ -10,6 +10,16 @@
 <meta charset="UTF-8">
 <title>배차 정보</title>
 <style>
+	  html, body {
+  background-color: #f4f7fb !important;
+	}
+  body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
+    margin: 0;
+  }
+	
 	.vehicle-info-page {
 		max-width: 480px;
 		margin: 80px auto 40px;

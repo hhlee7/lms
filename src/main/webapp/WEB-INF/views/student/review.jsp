@@ -13,7 +13,7 @@
 <style>
     body {
         font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
-        background-color: #f5f6fa;
+        background-color: #f9f9fb;
         margin: 0;
         padding: 0;
         color: #333;

@@ -14,7 +14,7 @@
     body {
         font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
         margin: 0;
-        background-color: #f5f6fa;
+        background-color: #f9f9fb;
         color: #000; /* 글자색 검정 */
         font-size: 18px; /* 본문 글자 크기 키움 */
     }

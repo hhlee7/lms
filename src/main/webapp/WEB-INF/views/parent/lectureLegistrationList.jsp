@@ -8,13 +8,16 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	body {
-	tab-size: 4;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background-color: #f9fafc;
-	margin: 0;
-	color: #222;
+	  html, body {
+  background-color: #f4f7fb !important;
 	}
+  body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, #f4f7fb 600px, #ffffff);
+    margin: 0;
+  }
+
 	
 	h1 {
 		text-align: center;

@@ -12,7 +12,7 @@
     body {
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
-      background-color: #f5f6fa;
+      background-color: #f9f9fb;
       color: #333;
     }
     

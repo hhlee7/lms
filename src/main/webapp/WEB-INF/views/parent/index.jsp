@@ -183,7 +183,7 @@
 <!-- 메인중앙 배너 -->
 <div class="hero" style="
   background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-              url('https://postfiles.pstatic.net/MjAyNTA2MTZfMjU4/MDAxNzUwMDM5NDU1Mzk4.jMKDgxoq4lLb_mbIDoTPJwl-eAeqbvZNvKH_AW1pwBwg.JPX1Be5bgNfpz5Zny8nGoEUg7v0dCR6QLJvu8T2Ukvkg.PNG/ChatGPT_Image_2025%EB%85%84_6%EC%9B%94_16%EC%9D%BC_%EC%98%A4%EC%A0%84_11_04_04.png?type=w773') 
+              url('/images/index.png')
               no-repeat center center;
   background-size: contain;
   background-color: #000;
