@@ -15,7 +15,7 @@
 <style>
     body {
         font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
-        background: linear-gradient(to right, #e3f2fd, #f5f6fa);
+        background-color: #f9f9fb;
         margin: 0;
         padding: 0;
         color: #333;

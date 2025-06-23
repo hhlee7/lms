@@ -17,7 +17,7 @@
 <style>
     body {
         font-family: 'Noto Sans KR', sans-serif;
-        background-color: #f5f6fa;
+        background-color: #f9f9fb;
         margin: 0;
     }
 
