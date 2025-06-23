@@ -545,11 +545,6 @@ public class ParentController {
  		Map<String,Object> album = parentService.albumOne(Integer.parseInt(albumId));
  		List<AlbumPhoto> photoList = parentService.albumPhotoList(Integer.parseInt(albumId));
  		
- 		// 웹에 노출 가능한 경로로 변환
- 	    for (AlbumPhoto photo : photoList) {
- 	        photo.setFilePath("/images/" + photo.getFilePath());
- 	    }
- 		
  		model.addAttribute("photoList",photoList);
  		model.addAttribute("album",album);
  		return "/parent/albumOne";

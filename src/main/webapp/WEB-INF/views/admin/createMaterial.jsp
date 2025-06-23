@@ -43,7 +43,7 @@
           <label for="lectureId" class="form-label fw-semibold">수업 선택</label>
           <select class="form-select" name="lectureId" id="lectureId">
             <c:forEach var="list" items="${list}">
-              <option value="${list.lectureId}">${list.lectureId}(${list.subjectName})</option>
+              <option value="${list.lectureId}">${list.subjectName} ${list.lectureId}기</option>
             </c:forEach>
           </select>
         </div>
