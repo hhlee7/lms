@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +57,6 @@
         transform: translateY(-4px);
     }
 
-    /* 한 줄에 과목, 강사 같이 배치 */
     .info-row-top {
         display: flex;
         gap: 40px;
@@ -80,7 +80,6 @@
         min-width: 80px;
     }
 
-    /* 평점 줄은 따로 한 줄씩 */
     .info-row {
         margin-bottom: 15px;
         color: #000;
@@ -107,12 +106,12 @@
         color: #333;
         white-space: pre-wrap;
         word-break: break-word;
+        text-align: left;
     }
 
-    .review-content strong {
-        display: block;
-        margin-bottom: 8px;
+    .review-content .title {
         font-weight: 700;
+        margin-bottom: 10px;
     }
 </style>
 </head>
@@ -164,8 +163,8 @@
 
                 <c:if test="${not empty history.content}">
                     <div class="review-content">
-                        <strong>📝 후기 내용:</strong>
-                        ${history.content}
+                        <div class="title">📝 후기 내용:</div>
+                        <div>${history.content}</div>
                     </div>
                 </c:if>
             </div>
