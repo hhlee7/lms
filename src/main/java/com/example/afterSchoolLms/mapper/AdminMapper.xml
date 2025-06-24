@@ -971,7 +971,7 @@
 	<!-- 강사 + 강사에 배정된 과목 리스트 조회 -->
 	<select id="selectTeacherList" resultType="map">
 		SELECT
-			t.user_id AS userId,
+			DISTINCT t.user_id AS userId,
 			t.name AS userName,
 			IFNULL (sb.name, '미배정') AS subjectName
 		FROM (SELECT user_id, name FROM user WHERE role_id = 3) t
