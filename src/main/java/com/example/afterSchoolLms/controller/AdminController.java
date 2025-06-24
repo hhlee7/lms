@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -46,6 +47,8 @@ import com.example.afterSchoolLms.mapper.TeacherMapper;
 import com.example.afterSchoolLms.service.AdminService;
 import com.example.afterSchoolLms.service.LoginService;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -519,7 +522,7 @@ public class AdminController {
                              BindingResult result,
                              @ModelAttribute StudentParent studentParent,
                              Errors errors,
-                             Model model) {
+                             Model model)  throws MessagingException {
 
         // 유효성 검사 실패 시 다시 등록 폼으로
     	if (result.hasErrors() || user.getBirth().trim().isEmpty()) {
@@ -551,10 +554,32 @@ public class AdminController {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom("admin@localhost.com");
         msg.setTo(user.getEmail());
-        msg.setSubject("ㅇㅇ초등학교입니다. 계정 가입을 완료했습니다.");
-        msg.setText("아이디 : " + user.getUserId() + "\n비밀번호 : " + user.getPassword() + "\n로그인 후 비밀번호를 수정해 주세요.");
+        msg.setSubject("송린초등학교입니다. 계정 가입을 완료했습니다.");
+
+
+     // 메일 생성
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(user.getEmail());
+        helper.setFrom("admin@localhost.com");
+        helper.setSubject("송린초등학교 회원가입 완료 안내");
+
+        String htmlContent = "<div style='font-family:Arial,sans-serif;padding:30px;background:#f9f9f9;border:1px solid #ddd;border-radius:10px;'>"
+                + "<h2 style='color:#2c3e50;'>회원가입을 환영합니다!</h2>"
+                + "<p>안녕하세요, <strong>송린초등학교</strong>입니다.</p>"
+                + "<p>방과후 교육에 참여해주셔서 진심으로 감사드립니다.<br/>아이들 교육에 최선을 다하겠습니다.</p>"
+                + "<hr style='margin:20px 0;'>"
+                + "<p><strong>아이디:</strong> " + user.getUserId() + "</p>"
+                + "<p><strong>임시 비밀번호:</strong> " + user.getPassword() + "</p>"
+                + "<p style='color:#e74c3c;'>※ 로그인 후 반드시 비밀번호를 변경해주세요.</p>"
+                + "<br><p style='font-size:12px;color:#888;'>본 메일은 발신 전용입니다.</p>"
+                + "</div>";
+
+        helper.setText(htmlContent, true); // true = HTML
+
         try {
-            javaMailSender.send(msg);
+            javaMailSender.send(message);
         } catch (MailException e) {	// 이메일 전송 실패
             // 예외 로그 출력 (원하는 로깅 방식 사용)
             // e.printStackTrace();
