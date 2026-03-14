@@ -884,23 +884,13 @@ public class AdminController {
 		return "admin/refundList";
 	}
 	
-	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
+	// 환불 처리 서비스 호출
 	@PostMapping("/admin/changeRefund")
 	public String changeRefund(@RequestParam int enrollmentId) {
-		int row = adminService.changeRefund(enrollmentId);
-		
-		if(row != 1) {
-			log.info("update error");
-			return "redirect:/admin/refundList";
-		}
-		
-	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
-		int row2 = adminService.removePayment(enrollmentId);
-		
-		if(row2 != 1) {
-			log.info("delete error");
-			return "redirect:/admin/refundList";
-			
+		try {
+			adminService.refundEnrollment(enrollmentId);
+		} catch (Exception e) {
+			log.info("refund error : {}", e.getMessage());
 		}
 		
 		return "redirect:/admin/refundList";

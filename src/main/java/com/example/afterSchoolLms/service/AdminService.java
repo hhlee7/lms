@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.afterSchoolLms.dto.Album;
@@ -368,6 +369,22 @@ public class AdminService {
 		return adminMapper.getTotalRefundList(page);
 	}
 
+	// 환불 처리 업무 단위
+	@Transactional
+	public void refundEnrollment(int enrollmentId) {
+		// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
+		int row = adminMapper.changeRefund(enrollmentId);
+		if(row != 1) {
+			throw new IllegalStateException("환불 상태 변경 실패");
+		}
+		
+		// 환불 처리 후 payment 테이블의 결제 데이터 삭제
+		int row2 = adminMapper.removePayment(enrollmentId);
+		if(row2 != 1) {
+			throw new IllegalStateException("결제 데이터 삭제 실패");
+		}
+	}
+	
 	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
 	public int changeRefund(int enrollmentId) {
 		return adminMapper.changeRefund(enrollmentId);
