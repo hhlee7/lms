@@ -64,3 +64,4 @@ build/
 # Spring Boot configuration
 application.properties
 application.yml
+.factorypath
