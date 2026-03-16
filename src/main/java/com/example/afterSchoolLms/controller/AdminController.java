@@ -52,7 +52,6 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional
 @Controller
 @Slf4j
 public class AdminController {
@@ -886,12 +885,9 @@ public class AdminController {
 	
 	// 환불 처리 서비스 호출
 	@PostMapping("/admin/changeRefund")
-	public String changeRefund(@RequestParam int enrollmentId) {
-		try {
-			adminService.refundEnrollment(enrollmentId);
-		} catch (Exception e) {
-			log.info("refund error : {}", e.getMessage());
-		}
+	public String changeRefund(@RequestParam int enrollmentId, RedirectAttributes redirectAttributes) {
+		adminService.refundEnrollment(enrollmentId);
+		redirectAttributes.addFlashAttribute("msg", "환불 처리가 완료되었습니다.");
 		
 		return "redirect:/admin/refundList";
 	}
