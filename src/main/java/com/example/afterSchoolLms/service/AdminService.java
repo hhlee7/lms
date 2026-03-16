@@ -28,7 +28,7 @@ import com.example.afterSchoolLms.dto.User;
 import com.example.afterSchoolLms.dto.Vehicle;
 import com.example.afterSchoolLms.dto.VehicleAssignment;
 import com.example.afterSchoolLms.dto.VehiclePassenger;
-
+import com.example.afterSchoolLms.exception.RefundProcessException;
 import com.example.afterSchoolLms.mapper.AdminMapper;
 
 @Service
@@ -373,28 +373,18 @@ public class AdminService {
 	@Transactional
 	public void refundEnrollment(int enrollmentId) {
 		// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
-		int row = adminMapper.changeRefund(enrollmentId);
-		if(row != 1) {
-			throw new IllegalStateException("환불 상태 변경 실패");
+		int updatedRow = adminMapper.changeRefund(enrollmentId);
+		if(updatedRow != 1) {
+			throw new RefundProcessException(enrollmentId, "환불 상태 변경 실패");
 		}
 		
 		// 환불 처리 후 payment 테이블의 결제 데이터 삭제
-		int row2 = adminMapper.removePayment(enrollmentId);
-		if(row2 != 1) {
-			throw new IllegalStateException("결제 데이터 삭제 실패");
+		int deletedRow = adminMapper.removePayment(enrollmentId);
+		if(deletedRow != 1) {
+			throw new RefundProcessException(enrollmentId, "결제 데이터 삭제 실패");
 		}
 	}
 	
-	// 환불 대기중(수강 신청의 status가 'REFUNDWAIT')인 수강 신청 건 환불 처리
-	public int changeRefund(int enrollmentId) {
-		return adminMapper.changeRefund(enrollmentId);
-	}
-
-	// 환불 처리 후 payment 테이블의 결제 데이터 삭제
-	public int removePayment(int enrollmentId) {
-		return adminMapper.removePayment(enrollmentId);
-	}
-
 	// 수업 목록 조회
 	public List<Map<String, Object>> getLectureList(Page page) {
 		return adminMapper.selectAllLectureList(page);
